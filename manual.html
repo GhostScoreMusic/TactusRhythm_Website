@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tactus. Manual.</title>
+  <link rel="stylesheet" href="assets/tactus-tokens.css">
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--ui);
+      font-size: 16px; line-height: 1.45;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      font-variant-numeric: tabular-nums;
+      scroll-behavior: smooth;
+    }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--accent-dim); color: var(--fg); }
+
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 56px;
+    }
+    @media (max-width: 720px) { .wrap { padding: 0 24px; } }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(15,15,16,0.78);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      font-weight: 700; letter-spacing: -0.02em; font-size: 17px;
+    }
+    .brand-mark { width: 24px; height: 24px; flex-shrink: 0; display: block; }
+    .nav-links {
+      display: flex; align-items: center; gap: 28px;
+      font-size: 14px; color: var(--fg-2);
+    }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-links a.current { color: var(--accent); }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-key);
+      color: var(--fg);
+      font-size: 13px; font-weight: 500;
+      background: var(--bg-elev-1);
+      transition: border-color 240ms var(--ease-out), background 240ms var(--ease-out);
+    }
+    .nav-cta:hover { border-color: var(--accent); background: var(--bg-elev-2); }
+    .nav-cta .price { color: var(--fg-3); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; }
+    @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      padding: 88px 0 64px;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 12px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+      margin-bottom: 24px;
+    }
+    h1.hero-h {
+      font-size: clamp(40px, 5.2vw, 64px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      margin: 0 0 24px;
+      text-wrap: balance;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.55;
+      color: var(--fg-2);
+      max-width: 620px;
+      margin: 0 0 32px;
+      text-wrap: pretty;
+    }
+    .meta-line {
+      display: flex; flex-wrap: wrap; gap: 14px 28px;
+      font-size: 13px; color: var(--fg-3);
+      letter-spacing: -0.005em;
+    }
+    .meta-line span { display: inline-flex; gap: 8px; align-items: baseline; }
+    .meta-line .k { color: var(--fg-4); font-weight: 500; }
+    .meta-line .v { color: var(--fg-2); }
+
+    /* ── Doc layout: sticky TOC + content ────────────────────── */
+    .doc {
+      display: grid;
+      grid-template-columns: minmax(220px, 268px) minmax(0, 1fr);
+      gap: 72px;
+      padding: 64px 0 24px;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .doc { grid-template-columns: 1fr; gap: 32px; padding-top: 40px; }
+    }
+    .toc {
+      position: sticky; top: 88px;
+      display: flex; flex-direction: column;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--bg-elev-1);
+      overflow: hidden;
+      max-height: calc(100vh - 112px);
+      overflow-y: auto;
+    }
+    @media (max-width: 980px) { .toc { position: static; max-height: none; } }
+    .toc-h {
+      padding: 14px 16px;
+      border-bottom: 0.5px solid var(--hair);
+      font-size: 12.5px; font-weight: 600;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+      position: sticky; top: 0;
+      background: var(--bg-elev-1);
+    }
+    .toc a {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 10px;
+      padding: 11px 16px;
+      border-bottom: 0.5px solid var(--hair);
+      font-size: 14.5px;
+      color: var(--fg-2);
+      transition: background 200ms var(--ease-out), color 200ms var(--ease-out);
+    }
+    .toc a:last-child { border-bottom: 0; }
+    .toc a:hover { background: var(--bg-elev-2); color: var(--fg); }
+    .toc a .n {
+      font-family: var(--mono); font-size: 12.5px;
+      color: var(--fg-4);
+      letter-spacing: 0;
+      font-feature-settings: "tnum";
+    }
+    .toc a:hover .n { color: var(--accent); }
+    .toc a.active { background: var(--bg-elev-2); color: var(--fg); }
+    .toc a.active .n { color: var(--accent); }
+
+    /* ── Chapters ────────────────────────────────────────────── */
+    .content { min-width: 0; }
+    .chapter {
+      padding-bottom: 64px;
+      margin-bottom: 64px;
+      border-bottom: 0.5px solid var(--hair);
+      scroll-margin-top: 88px;
+    }
+    .chapter:last-child { border-bottom: 0; margin-bottom: 0; }
+    .chapter-label {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 16px; font-weight: 600;
+      color: var(--fg-2);
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
+    .chapter-label .n {
+      font-family: var(--mono); font-size: 13.5px; font-weight: 500;
+      color: var(--accent);
+      padding: 4px 10px; border-radius: 7px;
+      background: rgba(131,183,175,0.08);
+      border: 0.5px solid var(--accent-dim);
+      letter-spacing: 0;
+    }
+    h2 {
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin: 0 0 20px;
+      max-width: 720px;
+      text-wrap: balance;
+    }
+    h3 {
+      font-size: 18px; font-weight: 600;
+      letter-spacing: -0.015em;
+      margin: 40px 0 12px;
+    }
+    p.lede {
+      font-size: 17px; color: var(--fg-2);
+      max-width: 680px; line-height: 1.6;
+      margin: 0 0 16px;
+      text-wrap: pretty;
+    }
+    p.body {
+      font-size: 15.5px; color: var(--fg-2);
+      max-width: 680px; line-height: 1.62;
+      margin: 0 0 14px;
+      text-wrap: pretty;
+    }
+    .code {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      color: var(--accent);
+      background: rgba(131,183,175,0.06);
+      border: 0.5px solid var(--accent-dim);
+      padding: 1px 6px;
+      border-radius: 5px;
+      letter-spacing: 0;
+      font-feature-settings: "tnum";
+    }
+    strong { color: var(--fg); font-weight: 600; }
+    a.inline {
+      color: var(--accent);
+      border-bottom: 0.5px solid var(--accent-dim);
+      transition: border-color 200ms var(--ease-out);
+    }
+    a.inline:hover { border-bottom-color: var(--accent); }
+
+    /* ── Gesture / step lists ────────────────────────────────── */
+    .gestures {
+      list-style: none; margin: 22px 0 0; padding: 0;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--bg-elev-1);
+      overflow: hidden;
+      max-width: 680px;
+    }
+    .gestures li {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 18px;
+      padding: 14px 20px;
+      border-bottom: 0.5px solid var(--hair);
+      font-size: 14.5px; color: var(--fg-2); line-height: 1.5;
+      align-items: baseline;
+    }
+    .gestures li:last-child { border-bottom: 0; }
+    .gestures .g {
+      font-size: 12px; font-weight: 600;
+      color: var(--fg);
+      letter-spacing: -0.005em;
+    }
+    @media (max-width: 560px) {
+      .gestures li { grid-template-columns: 1fr; gap: 4px; }
+    }
+
+    ol.steps {
+      counter-reset: step;
+      list-style: none; margin: 22px 0 0; padding: 0;
+      max-width: 680px;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    ol.steps li {
+      position: relative;
+      padding: 12px 0 12px 44px;
+      font-size: 15.5px; color: var(--fg-2); line-height: 1.55;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    ol.steps li:last-child { border-bottom: 0; }
+    ol.steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute; left: 0; top: 11px;
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 12px; font-weight: 500;
+      color: var(--accent);
+      border: 0.5px solid var(--accent-dim);
+      border-radius: 50%;
+      background: rgba(131,183,175,0.06);
+    }
+
+    ul.bullets {
+      margin: 18px 0 0; padding: 0; list-style: none;
+      max-width: 680px;
+    }
+    ul.bullets li {
+      position: relative;
+      padding: 7px 0 7px 22px;
+      font-size: 15.5px; color: var(--fg-2); line-height: 1.55;
+    }
+    ul.bullets li::before {
+      content: ""; position: absolute;
+      left: 4px; top: 14px;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent);
+    }
+    ul.bullets li strong { color: var(--fg); }
+
+    /* ── Tables (accent states, settings) ────────────────────── */
+    .table {
+      margin: 24px 0 0;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--bg-elev-1);
+      overflow: hidden;
+      max-width: 720px;
+    }
+    .table .tr {
+      display: grid;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .table .tr:last-child { border-bottom: 0; }
+    .table .tr.head {
+      background: rgba(255,255,255,0.012);
+      font-size: 11px; font-weight: 600;
+      color: var(--fg-3); letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .table .td {
+      padding: 15px 20px;
+      font-size: 14.5px; color: var(--fg-2); line-height: 1.5;
+      border-right: 0.5px solid var(--hair);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .table .td:last-child { border-right: 0; }
+    .table .tr.head .td { padding: 11px 20px; }
+    .table .td .name { color: var(--fg); font-weight: 600; }
+    .table .td .mono { font-family: var(--mono); font-size: 13px; color: var(--accent); font-feature-settings: "tnum"; }
+
+    .accent-table .tr { grid-template-columns: 1.1fr 1.4fr 1.4fr; }
+    .settings-table .tr { grid-template-columns: 0.9fr 1.6fr; }
+    @media (max-width: 640px) {
+      .accent-table .tr { grid-template-columns: 1fr; }
+      .settings-table .tr { grid-template-columns: 1fr; }
+      .table .td { border-right: 0; border-bottom: 0.5px solid var(--hair); }
+      .table .tr .td:last-child { border-bottom: 0; }
+      .table .tr.head { display: none; }
+    }
+
+    /* dot samples in accent table */
+    .dot-sample {
+      width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+      background: var(--dot-normal);
+    }
+    .dot-sample.strong { width: 18px; height: 18px; background: var(--dot-strong); }
+    .dot-sample.soft   { width: 12px; height: 12px; background: var(--dot-soft); }
+    .dot-sample.silent { background: transparent; box-shadow: inset 0 0 0 1.5px var(--dot-silent); }
+
+    /* ── Note callout ────────────────────────────────────────── */
+    .note {
+      margin: 24px 0 0;
+      max-width: 680px;
+      border: 0.5px solid var(--hair);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 var(--r-row) var(--r-row) 0;
+      background: var(--bg-elev-1);
+      padding: 16px 20px;
+      display: grid; grid-template-columns: auto 1fr; gap: 14px;
+      align-items: start;
+    }
+    .note .tag {
+      font-size: 11px; font-weight: 600; color: var(--accent);
+      letter-spacing: -0.005em;
+      padding-top: 1px;
+      white-space: nowrap;
+    }
+    .note p { margin: 0; font-size: 14.5px; color: var(--fg-2); line-height: 1.55; }
+
+    /* ── Concept cards ───────────────────────────────────────── */
+    .concepts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--hair);
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      overflow: hidden;
+      margin-top: 24px;
+    }
+    @media (max-width: 560px) { .concepts { grid-template-columns: 1fr; } }
+    .concept {
+      background: var(--bg);
+      padding: 22px 22px 20px;
+    }
+    .concept .ct { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .concept .cd { font-size: 13.5px; color: var(--fg-3); line-height: 1.55; }
+
+    /* ── Macro → micro flow ──────────────────────────────────── */
+    .flow {
+      margin-top: 28px;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--bg-elev-1);
+      overflow: hidden;
+      max-width: 720px;
+    }
+    .flow-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 13px 20px; border-bottom: 0.5px solid var(--hair);
+      font-size: 12.5px; font-weight: 500; color: var(--fg-3);
+    }
+    .flow-axis {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--mono); font-size: 10.5px; color: var(--fg-4);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .flow-axis .bar {
+      width: 56px; height: 3px; border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--fg-4));
+    }
+    .flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 640px) { .flow-grid { grid-template-columns: 1fr; } }
+    .flow-step {
+      padding: 22px 22px 24px;
+      border-right: 0.5px solid var(--hair);
+    }
+    .flow-step:last-child { border-right: 0; }
+    @media (max-width: 640px) {
+      .flow-step { border-right: 0; border-bottom: 0.5px solid var(--hair); }
+      .flow-step:last-child { border-bottom: 0; }
+    }
+    .flow-step .scale {
+      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      letter-spacing: 0; margin-bottom: 14px;
+      font-feature-settings: "tnum";
+    }
+    .flow-step .st { font-size: 16px; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 8px; }
+    .flow-step .sd { font-size: 13.5px; color: var(--fg-3); line-height: 1.55; }
+
+    /* ── Die-face cluster legend ─────────────────────────────── */
+    .legend {
+      margin-top: 24px;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--bg-elev-1);
+      overflow: hidden;
+      max-width: 680px;
+    }
+    .legend-head {
+      padding: 13px 20px;
+      border-bottom: 0.5px solid var(--hair);
+      font-size: 12px; font-weight: 500; color: var(--fg-3);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px; background: var(--hair);
+    }
+    @media (max-width: 560px) { .legend-grid { grid-template-columns: repeat(3, 1fr); } }
+    .legend-cell {
+      background: var(--bg-elev-1);
+      aspect-ratio: 1 / 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; position: relative;
+    }
+    .legend-cell .lbl {
+      position: absolute; top: 10px; left: 12px;
+      font-family: var(--mono); font-size: 10px; color: var(--fg-4);
+    }
+    .cluster {
+      width: 46px; height: 46px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      place-items: center;
+    }
+    .cluster .d { width: 8px; height: 8px; border-radius: 50%; background: var(--dot-normal); }
+    .cluster .d.empty { visibility: hidden; }
+
+    /* ── Closing ─────────────────────────────────────────────── */
+    .closing {
+      padding: 100px 0 120px;
+      text-align: center;
+      border-top: 0.5px solid var(--hair);
+    }
+    .closing h2 { margin: 0 auto 18px; font-size: clamp(30px, 4vw, 46px); max-width: 720px; }
+    .closing p { font-size: 17px; color: var(--fg-2); max-width: 520px; margin: 0 auto 30px; }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 20px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-key);
+      color: var(--fg);
+      font-size: 14px; font-weight: 500;
+      background: var(--bg-elev-1);
+      transition: border-color 200ms var(--ease-out), background 200ms var(--ease-out);
+    }
+    .btn-secondary:hover { border-color: var(--accent); background: var(--bg-elev-2); }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      border-top: 0.5px solid var(--hair);
+      padding: 40px 0 56px;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px;
+      font-size: 12px; color: var(--fg-3);
+    }
+    .footer-inner .brand { font-size: 14px; color: var(--fg-2); }
+    .footer-inner .brand-mark { width: 18px; height: 18px; }
+    .footer-links {
+      display: flex; gap: 24px;
+      letter-spacing: -0.005em;
+      font-size: 12px; font-weight: 500; color: var(--fg-3);
+    }
+    .footer-links a:hover { color: var(--fg); }
+    .footer-links a.current { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ─────────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="wrap nav-inner">
+      <a class="brand" href="index.html">
+        <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
+          <rect x="0" y="0" width="1024" height="1024" rx="230" ry="230" fill="#0F0F10"/>
+          <circle cx="215" cy="215" r="133" fill="#949495"/>
+          <circle cx="512" cy="512" r="82" fill="#575759"/>
+          <circle cx="809" cy="809" r="82" fill="#83B7AF"/>
+        </svg>
+        Tactus
+      </a>
+      <div class="nav-links">
+        <a href="index.html#features">Features</a>
+        <a class="current" href="manual.html">Manual</a>
+        <a href="index.html#faq">FAQ</a>
+        <a class="nav-cta" href="index.html#download">
+          Get notified
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────────────────── -->
+  <header class="hero" data-screen-label="01 Manual hero">
+    <div class="wrap">
+      <div class="eyebrow">User manual</div>
+      <h1 class="hero-h">Everything Tactus does, in order.</h1>
+      <p class="hero-sub">
+        Tactus is a rhythm-first metronome. Instead of a single repeating click, you build a
+        precise map of a passage, bar by bar, beat by beat, and play it back as an
+        intelligent click. This is the complete reference.
+      </p>
+      <div class="meta-line">
+        <span><span class="k">Applies to</span><span class="v">Tactus for iPhone &amp; iPad</span></span>
+        <span><span class="k">Sections</span><span class="v">14</span></span>
+        <span><span class="k">Formerly</span><span class="v">MeterMap</span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Doc body ────────────────────────────────────────────────────── -->
+  <div class="wrap doc">
+
+    <!-- Sticky TOC -->
+    <aside>
+      <nav class="toc" id="toc">
+        <div class="toc-h">Contents</div>
+        <a href="#concepts"><span class="n">01</span><span>Core concepts</span></a>
+        <a href="#library"><span class="n">02</span><span>Library</span></a>
+        <a href="#passage"><span class="n">03</span><span>Building a passage</span></a>
+        <a href="#inspector"><span class="n">04</span><span>Beat Inspector</span></a>
+        <a href="#meter"><span class="n">05</span><span>Meter</span></a>
+        <a href="#tempo"><span class="n">06</span><span>Tempo &amp; ramps</span></a>
+        <a href="#accents"><span class="n">07</span><span>Accent states</span></a>
+        <a href="#conducted"><span class="n">08</span><span>Conducted feel</span></a>
+        <a href="#playback"><span class="n">09</span><span>Playback &amp; count-in</span></a>
+        <a href="#sound"><span class="n">10</span><span>Click sound</span></a>
+        <a href="#link"><span class="n">11</span><span>Ableton Link</span></a>
+        <a href="#share"><span class="n">12</span><span>Import &amp; export</span></a>
+        <a href="#settings"><span class="n">13</span><span>Settings reference</span></a>
+        <a href="#glossary"><span class="n">14</span><span>Glossary</span></a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- 01 Core concepts -->
+      <section class="chapter" id="concepts" data-screen-label="02 Core concepts">
+        <div class="chapter-label"><span class="n">01</span>Core concepts</div>
+        <h2>Five words that run through everything.</h2>
+        <p class="lede">
+          Tactus has a small, consistent vocabulary. Learn these five terms and the rest of
+          the app reads like plain language.
+        </p>
+        <div class="concepts">
+          <div class="concept">
+            <div class="ct">Passage</div>
+            <div class="cd">A single rhythmic map: an ordered list of bars, each with its own meter, tempo, and beat structure. Think one movement, one section, one piece.</div>
+          </div>
+          <div class="concept">
+            <div class="ct">Bar</div>
+            <div class="cd">A single measure, with a meter, an optional per-bar tempo, and a set of beat elements.</div>
+          </div>
+          <div class="concept">
+            <div class="ct">Beat</div>
+            <div class="cd">One beat position within a bar, the main unit of structure. Each beat holds one or more pulses and carries an accent state.</div>
+          </div>
+          <div class="concept">
+            <div class="ct">Pulse</div>
+            <div class="cd">A single click event within a beat. The number of pulses sets the subdivision; each pulse can be divided again into sub-pulses.</div>
+          </div>
+          <div class="concept">
+            <div class="ct">Work (Piece)</div>
+            <div class="cd">An optional grouping. Collect multiple passages from the same piece into one Work for organisation.</div>
+          </div>
+        </div>
+
+        <h3>How to think about Tactus: macro to micro</h3>
+        <p class="body">
+          Work in Tactus runs in one direction, from the widest choice down to the smallest
+          detail. You rarely reach for the fine controls until the coarse ones are in place.
+        </p>
+        <div class="flow">
+          <div class="flow-head">
+            <span>The shape of a session</span>
+            <span class="flow-axis">Macro <span class="bar"></span> Micro</span>
+          </div>
+          <div class="flow-grid">
+            <div class="flow-step">
+              <div class="scale">01 · Macro</div>
+              <div class="st">Choose</div>
+              <div class="sd">Open a Work or a passage in the Library, or start a new one.</div>
+            </div>
+            <div class="flow-step">
+              <div class="scale">02 · Mid</div>
+              <div class="st">Lay in the bars</div>
+              <div class="sd">Tap meters on the Meter Keyboard to build the bar sequence, in order.</div>
+            </div>
+            <div class="flow-step">
+              <div class="scale">03 · Micro</div>
+              <div class="st">Refine each beat</div>
+              <div class="sd">Open the Beat Inspector to set accents, subdivisions, and tuplets, beat by beat.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 Library -->
+      <section class="chapter" id="library" data-screen-label="03 Library">
+        <div class="chapter-label"><span class="n">02</span>Library</div>
+        <h2>The home screen.</h2>
+        <p class="lede">
+          The Library lists every passage and Work you&rsquo;ve made. Each passage row shows its
+          name, meter, tempo, bar count, and a six-dot preview of the accent structure.
+        </p>
+
+        <h3>Passage gestures</h3>
+        <ul class="gestures">
+          <li><span class="g">Tap</span><span>Open the passage in the Editor.</span></li>
+          <li><span class="g">Swipe left</span><span>Delete the passage.</span></li>
+          <li><span class="g">Swipe right</span><span>Remove a grouped passage from its Work.</span></li>
+          <li><span class="g">Long-press</span><span>Share, Move to Work, Reorder, or Delete.</span></li>
+        </ul>
+
+        <h3>Works</h3>
+        <p class="body">
+          Works appear as expandable sections holding an ordered collection of passages.
+          <strong>Tap</strong> a Work to open its detail view, where you can add, remove, reorder, and
+          export its passages. <strong>Long-press</strong> a Work to rename or delete it.
+        </p>
+
+        <h3>Creating &amp; reordering</h3>
+        <ul class="bullets">
+          <li><strong>New passage</strong>: tap <span class="code">+</span>. A blank passage opens immediately in the Editor.</li>
+          <li><strong>New Work</strong>: tap the folder icon and enter a name.</li>
+          <li><strong>Reorder</strong>: tap the reorder icon in the toolbar, then drag rows by their handles.</li>
+        </ul>
+      </section>
+
+      <!-- 03 Building a passage -->
+      <section class="chapter" id="passage" data-screen-label="04 Building a passage">
+        <div class="chapter-label"><span class="n">03</span>Building a passage</div>
+        <h2>From empty bar to full map.</h2>
+        <p class="lede">
+          A new passage opens in the Editor with one empty bar. The Editor is the main
+          workspace, a vertical scrollable list of bars with the focal bar centred on screen.
+        </p>
+
+        <ol class="steps">
+          <li><strong>Add bars</strong> by tapping <span class="code">+</span> to open the Meter Keyboard.</li>
+          <li><strong>Name the passage</strong> by tapping the title at the top of the Editor.</li>
+          <li><strong>Set the tempo</strong> with the BPM controls in the transport bar.</li>
+          <li><strong>Edit beats</strong> by tapping any bar row to open the Beat Inspector.</li>
+        </ol>
+
+        <h3>The Meter Keyboard</h3>
+        <p class="body">
+          Tap meter buttons to queue them up. A preview of the queue appears at the bottom.
+          Tap <strong>Add</strong> to append the queued bars, or the undo arrow to remove the last one.
+          Denominators available: <span class="code">/2</span> <span class="code">/4</span>
+          <span class="code">/8</span> <span class="code">/16</span>. Custom meters support any
+          numerator from 1&ndash;32 over any of those denominators (plus <span class="code">/1</span> and <span class="code">/32</span>).
+        </p>
+
+        <h3>Selecting &amp; editing ranges</h3>
+        <p class="body">
+          Tap <strong>Select</strong> in the toolbar to enter selection mode, then tap rows to select a
+          <em>contiguous</em> range. With bars selected you can <strong>Copy</strong>, <strong>Paste</strong>
+          (inserts after the last selected bar), or <strong>Create a tempo ramp</strong> across the range.
+        </p>
+        <div class="note">
+          <span class="tag">Note</span>
+          <p>A passage must keep at least one bar. The last remaining bar can&rsquo;t be deleted. Delete others by long-pressing a row, or swiping it left.</p>
+        </div>
+      </section>
+
+      <!-- 04 Beat Inspector -->
+      <section class="chapter" id="inspector" data-screen-label="05 Beat Inspector">
+        <div class="chapter-label"><span class="n">04</span>Beat Inspector</div>
+        <h2>Where each beat gets its shape.</h2>
+        <p class="lede">
+          Tap any bar row to open the Beat Inspector, a detail editor for that bar. A horizontal
+          strip at the top shows every beat; tap one to focus it, or use the
+          <span class="code">&larr; &rarr;</span> arrows to move between bars.
+        </p>
+
+        <h3>Editing accents</h3>
+        <p class="body">
+          The central cluster shows the selected beat. Tap individual dots to cycle the accent for
+          that pulse: <strong>Strong &rarr; Normal &rarr; Soft &rarr; Silent &rarr; Strong</strong>.
+          Each state is visualised by dot size and opacity.
+        </p>
+
+        <h3>Subdivision &amp; tuplets</h3>
+        <ul class="bullets">
+          <li><strong>Notes per beat</strong>: the Notes stepper (1&ndash;9) sets how many pulses subdivide the beat into equal parts.</li>
+          <li><strong>Subdivisions per note</strong>: each pulse can be divided again (Off, or 2&ndash;9). A tab appears per pulse so you can edit sub-pulse accents individually.</li>
+          <li><strong>Group as Tuplet</strong>: select consecutive beats and tap to place N notes over M beat durations, shown in bracket notation (e.g. <span class="code">3:2</span>). Select and tap <strong>Ungroup</strong> to undo.</li>
+          <li><strong>Bar preview</strong>: tap the play-bar button to hear that single bar in isolation.</li>
+        </ul>
+
+        <div class="legend">
+          <div class="legend-head">
+            <span>Die-face clusters: how subdivisions render</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--fg-4);">1&ndash;9 pulses</span>
+          </div>
+          <div class="legend-grid" id="legend-grid"><!-- clusters injected by script --></div>
+        </div>
+        <p class="body" style="margin-top:16px;color:var(--fg-3);font-size:14.5px;">
+          Each beat reads as a die face. A five always looks like a five; a seven always looks
+          like a seven, so you recognise the structure instead of counting dots.
+        </p>
+      </section>
+
+      <!-- 05 Meter -->
+      <section class="chapter" id="meter" data-screen-label="06 Meter">
+        <div class="chapter-label"><span class="n">05</span>Meter</div>
+        <h2>Every bar carries its own time signature.</h2>
+        <p class="lede">
+          There is no global meter. Each bar defines its own, so a passage can change as often
+          as the score does.
+        </p>
+        <h3>Changing a bar&rsquo;s meter</h3>
+        <p class="body">
+          Long-press a bar row and choose <strong>Change Meter</strong>, or use the meter display in the
+          Beat Inspector toolbar. Picking a new meter adjusts the bar&rsquo;s elements: excess beats
+          are trimmed from the end; new default beats are added if the meter grows.
+        </p>
+        <h3>Display bar numbers</h3>
+        <p class="body">
+          Tap any bar number to set a display offset. If your excerpt starts on bar 12 of a score,
+          set the offset to <span class="code">12</span> so bar numbers line up with the page.
+        </p>
+      </section>
+
+      <!-- 06 Tempo & ramps -->
+      <section class="chapter" id="tempo" data-screen-label="07 Tempo">
+        <div class="chapter-label"><span class="n">06</span>Tempo &amp; ramps</div>
+        <h2>Fixed, per-bar, or a drawn curve.</h2>
+        <p class="lede">
+          The passage&rsquo;s base tempo lives in the transport bar. From there you can override any
+          single bar, or draw a continuous curve across a range.
+        </p>
+
+        <h3>Global tempo</h3>
+        <ul class="bullets">
+          <li><strong>&minus; / +</strong> adjust BPM by one.</li>
+          <li><strong>Tap the BPM field</strong> to type a value on the digit pad.</li>
+          <li><strong>Tap Tempo</strong>: tap the metronome icon repeatedly; the average of recent taps applies. The counter resets after 2 seconds of inactivity.</li>
+        </ul>
+        <div class="note">
+          <span class="tag">Note value</span>
+          <p>The note-value button (♩ ♪ ♬ ♩. …) changes only the <em>display</em>. Tempo is always stored as quarter-note BPM, so ♩=120 and ♪=240 are the same internal tempo.</p>
+        </div>
+
+        <h3>Per-bar tempo</h3>
+        <p class="body">
+          Long-press a bar and choose <strong>Set Bar Tempo</strong> (or use the Beat Inspector). A small
+          tempo pill appears on the row; the bar plays at that tempo regardless of the global setting.
+          Tap the pill to clear it.
+        </p>
+
+        <h3>Tempo ramps, the Tempo Shape editor</h3>
+        <p class="body">
+          Select two or more consecutive bars and tap <strong>Tempo Shape</strong>. The canvas plots time
+          (beats) against BPM, with a dashed line marking the entry tempo.
+        </p>
+        <ul class="bullets">
+          <li><strong>Add nodes</strong>: tap the canvas to place a control node (snaps to the nearest beat). Up to 5 per ramp.</li>
+          <li><strong>Move</strong>: drag a node; horizontal snaps to beats, vertical is free.</li>
+          <li><strong>Edit BPM</strong>: tap a node and use the slider or type a value.</li>
+          <li><strong>Segment curve</strong>: select a segment and drag the bias slider: <span class="code">0</span> linear, <span class="code">+1.0</span> accelerando (convex), <span class="code">&minus;1.0</span> ritardando (concave).</li>
+        </ul>
+        <div class="note">
+          <span class="tag">Conflict</span>
+          <p>If a bar has both a per-bar tempo and falls inside a ramp, the ramp wins. A warning badge <span class="code">!</span> flags the conflict; tap it to resolve.</p>
+        </div>
+      </section>
+
+      <!-- 07 Accent states -->
+      <section class="chapter" id="accents" data-screen-label="08 Accent states">
+        <div class="chapter-label"><span class="n">07</span>Accent states</div>
+        <h2>Four states. Four distinct sounds.</h2>
+        <p class="lede">
+          Every pulse and sub-pulse holds one of four accent states. The state drives both the
+          dot&rsquo;s appearance and the click&rsquo;s volume and pitch. Tap a dot to cycle
+          <strong>Strong &rarr; Normal &rarr; Soft &rarr; Silent &rarr; Strong</strong>.
+        </p>
+
+        <div class="table accent-table">
+          <div class="tr head">
+            <div class="td">Accent</div>
+            <div class="td">Dot</div>
+            <div class="td">Sound</div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="dot-sample strong"></span><span class="name">Strong</span></div>
+            <div class="td">Large, fully opaque</div>
+            <div class="td">Loudest, highest pitch <span class="mono">~4200 Hz</span></div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="dot-sample"></span><span class="name">Normal</span></div>
+            <div class="td">Medium, ~60% opacity</div>
+            <div class="td">Medium volume <span class="mono">~2800 Hz</span></div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="dot-sample soft"></span><span class="name">Soft</span></div>
+            <div class="td">Small, ~34% opacity</div>
+            <div class="td">Quiet, lower pitch <span class="mono">~1600 Hz</span></div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="dot-sample silent"></span><span class="name">Silent</span></div>
+            <div class="td">Outline ring only</div>
+            <div class="td">No sound, visual only</div>
+          </div>
+        </div>
+
+        <h3>Default accent rules</h3>
+        <p class="body">If a pulse has no manual override, accents are assigned automatically:</p>
+        <ul class="bullets">
+          <li><strong>Bar downbeat</strong>: Strong (if Strong Downbeats is on) or Normal.</li>
+          <li><strong>Beat downbeat</strong> (first pulse of a beat): Normal.</li>
+          <li><strong>Subdivisions &amp; tuplet inner notes</strong>: Soft.</li>
+        </ul>
+        <p class="body" style="margin-top:14px;">
+          Use <strong>Clear Accents</strong> from the long-press menu to reset overrides for a bar or the
+          whole passage. <strong>Strong Downbeats</strong> (a passage setting) forces beat 1 of every bar to
+          Strong when on; off, downbeats default to Normal and are freely overridable.
+        </p>
+      </section>
+
+      <!-- 08 Conducted feel -->
+      <section class="chapter" id="conducted" data-screen-label="09 Conducted feel">
+        <div class="chapter-label"><span class="n">08</span>Conducted feel</div>
+        <h2>A conductor&rsquo;s beat, laid over the grid.</h2>
+        <p class="lede">
+          Conducted feel adds a visual layer of pulses reflecting how a conductor would beat the
+          meter, independent of the notated subdivision. A 6/8 bar might be conducted in 2, or in 6.
+        </p>
+        <p class="body">
+          Open the Beat Inspector for a bar, choose <strong>Conducted</strong>, and pick 2, 3, 4, 5, 6, or 8
+          beats, or <strong>Off</strong>. Conducted beats are <strong>visual only</strong>; they make no extra
+          click. During playback the bar&rsquo;s top edge flashes at each conducted pulse.
+        </p>
+      </section>
+
+      <!-- 09 Playback -->
+      <section class="chapter" id="playback" data-screen-label="10 Playback">
+        <div class="chapter-label"><span class="n">09</span>Playback &amp; count-in</div>
+        <h2>Start, loop, and walk in on the meter.</h2>
+        <p class="lede">
+          The transport bar holds play/stop, loop, count-in, BPM, and note value. Playback starts
+          from the manual start bar if one is set, otherwise from the first bar.
+        </p>
+        <ul class="bullets">
+          <li><strong>Start bar</strong>: tap any bar number to flag it as the start bar (a teal flag marks it). Playback returns here after each loop or stop.</li>
+          <li><strong>Loop</strong>: tap the repeat icon; playback restarts from the start bar when it reaches the end.</li>
+          <li><strong>Focal scroll</strong>: the Editor keeps the currently playing bar centred.</li>
+          <li><strong>Beat animation</strong>: active dots scale up on each click, then decay.</li>
+        </ul>
+
+        <h3>Count-in</h3>
+        <p class="body">
+          Toggle the count-in button in the transport. It adds one or more bars of clicks before
+          playback, using the meter and tempo of the bar immediately before the start bar (or the
+          first bar&rsquo;s meter, if you start at the top). Count-in uses Strong on beat 1 and Normal
+          elsewhere, so you walk in feeling the meter, not counting it.
+        </p>
+
+        <h3>Practice tempo</h3>
+        <p class="body">
+          A global speed multiplier applied on top of every tempo without changing any stored value, ideal for slow practice. Drag the <strong>Practice Tempo</strong> slider in passage settings;
+          range <span class="code">50%&ndash;125%</span>. The current scale shows next to the BPM readout
+          (e.g. <span class="code">120&nbsp;80%</span>).
+        </p>
+      </section>
+
+      <!-- 10 Click sound -->
+      <section class="chapter" id="sound" data-screen-label="11 Click sound">
+        <div class="chapter-label"><span class="n">10</span>Click sound</div>
+        <h2>Two sound paths.</h2>
+        <p class="lede">Switch between them in passage settings. Both respect all four accent levels.</p>
+        <div class="concepts" style="grid-template-columns: repeat(2, 1fr);">
+          <div class="concept">
+            <div class="ct">Synth</div>
+            <div class="cd">Synthesised sine-burst clicks generated in real time. Consistent and battery-friendly.</div>
+          </div>
+          <div class="concept">
+            <div class="ct">Samples</div>
+            <div class="cd">Pre-recorded click samples, pitch-shifted per accent level for a more acoustic quality.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 Ableton Link -->
+      <section class="chapter" id="link" data-screen-label="12 Ableton Link">
+        <div class="chapter-label"><span class="n">11</span>Ableton Link</div>
+        <h2>One tempo grid across the room.</h2>
+        <p class="lede">
+          Ableton Link synchronises tempo and playback between apps and devices on the same local
+          network. No password or pairing; devices find each other automatically.
+        </p>
+        <h3>Enabling &amp; status</h3>
+        <p class="body">
+          Toggle <strong>Ableton Link</strong> on in passage settings. Once active, Tactus advertises to
+          other Link-enabled apps.
+        </p>
+        <ul class="bullets">
+          <li><strong>Off</strong>: Link is disabled.</li>
+          <li><strong>Active</strong>: enabled, listening for peers.</li>
+          <li><strong>Connected</strong>: at least one peer detected.</li>
+        </ul>
+        <h3>Tempo &amp; transport sync</h3>
+        <p class="body">
+          When connected, all peers share one tempo. Changing tempo in Tactus proposes it to the
+          session; a remote change re-syncs Tactus to the new tempo. Toggle <strong>Start/Stop Sync</strong>
+          to broadcast play/stop across all connected apps, and vice versa.
+        </p>
+      </section>
+
+      <!-- 12 Import & export -->
+      <section class="chapter" id="share" data-screen-label="13 Import & export">
+        <div class="chapter-label"><span class="n">12</span>Import &amp; export</div>
+        <h2>Share a passage in a single file.</h2>
+        <ul class="bullets">
+          <li><strong>Export a passage</strong>: long-press it in the Library and tap <strong>Share</strong> to send a <span class="code">.rhythmmap</span> file via Messages, Mail, AirDrop, or Files.</li>
+          <li><strong>Export a Work</strong>: open the Work detail view and tap the export button.</li>
+          <li><strong>Import</strong>: open a <span class="code">.rhythmmap</span> file from anywhere; Tactus adds it to the Library automatically.</li>
+          <li><strong>Import a tempo map</strong>: in passage settings, tap <strong>Import Tempo Map</strong> and pick another passage. Its bar structure (meters and tempos) is copied in while your current beat content is kept; extra bars pad with defaults, fewer bars truncate to match.</li>
+        </ul>
+      </section>
+
+      <!-- 13 Settings reference -->
+      <section class="chapter" id="settings" data-screen-label="14 Settings">
+        <div class="chapter-label"><span class="n">13</span>Settings reference</div>
+        <h2>Every passage setting at a glance.</h2>
+        <div class="table settings-table">
+          <div class="tr head">
+            <div class="td">Setting</div>
+            <div class="td">Description</div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="name">Practice Tempo</span></div>
+            <div class="td">Global speed multiplier, <span class="mono">50%&ndash;125%</span>.</div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="name">Click Sound</span></div>
+            <div class="td">Synth or Samples.</div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="name">Strong Downbeats</span></div>
+            <div class="td">Automatically accent bar downbeats.</div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="name">Display Size</span></div>
+            <div class="td">Normal or Large (<span class="mono">1.35&times;</span> scale), useful on smaller phones or at a distance.</div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="name">Ableton Link</span></div>
+            <div class="td">Enable network tempo sync.</div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="name">Start/Stop Sync</span></div>
+            <div class="td">Sync play/pause with Link peers.</div>
+          </div>
+          <div class="tr">
+            <div class="td"><span class="name">Import Tempo Map</span></div>
+            <div class="td">Copy bar structure from another passage.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14 Glossary -->
+      <section class="chapter" id="glossary" data-screen-label="15 Glossary">
+        <div class="chapter-label"><span class="n">14</span>Glossary</div>
+        <h2>Terms, defined once.</h2>
+        <div class="concepts" style="grid-template-columns: repeat(2, 1fr);">
+          <div class="concept"><div class="ct">Passage</div><div class="cd">A rhythmic map of a section or piece, an ordered list of bars.</div></div>
+          <div class="concept"><div class="ct">Bar</div><div class="cd">One measure, with its own meter, optional per-bar tempo, and beat elements.</div></div>
+          <div class="concept"><div class="ct">Beat</div><div class="cd">One beat position within a bar.</div></div>
+          <div class="concept"><div class="ct">Pulse</div><div class="cd">A single click event; the primary unit of subdivision within a beat.</div></div>
+          <div class="concept"><div class="ct">Sub-pulse</div><div class="cd">A secondary subdivision within a pulse.</div></div>
+          <div class="concept"><div class="ct">Tuplet</div><div class="cd">A group of N notes spread evenly over M beats.</div></div>
+          <div class="concept"><div class="ct">Tempo ramp</div><div class="cd">A continuous tempo curve across a range of bars.</div></div>
+          <div class="concept"><div class="ct">Conducted feel</div><div class="cd">A visual-only layer of conductor-beat pulses, independent of the click structure.</div></div>
+          <div class="concept"><div class="ct">Work / Piece</div><div class="cd">A named collection of passages in the Library.</div></div>
+          <div class="concept"><div class="ct">Accent</div><div class="cd">A click&rsquo;s dynamic level: Strong, Normal, Soft, or Silent.</div></div>
+          <div class="concept"><div class="ct">Note value</div><div class="cd">The unit used to display tempo (♩ = quarter, ♪ = eighth). Doesn&rsquo;t change the underlying tempo.</div></div>
+          <div class="concept"><div class="ct">.rhythmmap</div><div class="cd">The file format used to share and import passages.</div></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ── Closing ────────────────────────────────────────────────────── -->
+  <section class="closing" data-screen-label="16 Closing">
+    <div class="wrap">
+      <h2>That&rsquo;s the whole app.</h2>
+      <p>Keep this open on a second screen while you map your first passage.</p>
+      <a class="btn-secondary" href="index.html">
+        Back to Tactus
+        <svg viewBox="0 0 14 14" width="12" height="12" fill="none" aria-hidden="true">
+          <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="wrap footer-inner">
+      <a class="brand" href="index.html">
+        <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
+          <rect x="0" y="0" width="1024" height="1024" rx="230" ry="230" fill="#0F0F10"/>
+          <circle cx="215" cy="215" r="133" fill="#949495"/>
+          <circle cx="512" cy="512" r="82" fill="#575759"/>
+          <circle cx="809" cy="809" r="82" fill="#83B7AF"/>
+        </svg>
+        Tactus
+      </a>
+      <div style="color: var(--fg-3); font-size:12px;">
+        © 2026 Alan Molina. Mixed meter. Built for you.
+      </div>
+      <div class="footer-links">
+        <a class="current" href="manual.html">Manual</a>
+        <a href="#">Support</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Die-face cluster legend (1–9) ──────────────────────────
+    // Die layout maps a count to a 3×3 grid (row-major cells 0..8).
+    (function () {
+      const grid = document.getElementById('legend-grid');
+      if (!grid) return;
+      // Which of the 9 cells are filled for each pip count, matching dice faces.
+      const FACES = {
+        1: [4],
+        2: [0, 8],
+        3: [0, 4, 8],
+        4: [0, 2, 6, 8],
+        5: [0, 2, 4, 6, 8],
+        6: [0, 2, 3, 5, 6, 8],
+        7: [0, 2, 3, 4, 5, 6, 8],
+        8: [0, 1, 2, 3, 5, 6, 7, 8],
+        9: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      };
+      for (let n = 1; n <= 9; n++) {
+        const cell = document.createElement('div');
+        cell.className = 'legend-cell';
+        const lbl = document.createElement('span');
+        lbl.className = 'lbl';
+        lbl.textContent = n;
+        const cluster = document.createElement('div');
+        cluster.className = 'cluster';
+        const on = new Set(FACES[n]);
+        for (let i = 0; i < 9; i++) {
+          const d = document.createElement('span');
+          d.className = 'd' + (on.has(i) ? '' : ' empty');
+          cluster.appendChild(d);
+        }
+        cell.appendChild(lbl);
+        cell.appendChild(cluster);
+        grid.appendChild(cell);
+      }
+    })();
+
+    // ── TOC scroll-spy ─────────────────────────────────────────
+    (function () {
+      const links = [...document.querySelectorAll('#toc a')];
+      const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+      const sections = [...document.querySelectorAll('.chapter')];
+      let active = null;
+      const obs = new IntersectionObserver((entries) => {
+        // pick the entry nearest the top that is intersecting
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) {
+          const id = visible[0].target.id;
+          if (id !== active && map.has(id)) {
+            if (active && map.get(active)) map.get(active).classList.remove('active');
+            map.get(id).classList.add('active');
+            active = id;
+          }
+        }
+      }, { rootMargin: '-88px 0px -65% 0px', threshold: 0 });
+      sections.forEach(s => obs.observe(s));
+    })();
+  </script>
+</body>
+</html>

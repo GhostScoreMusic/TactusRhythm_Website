@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tactus. Privacy policy.</title>
+  <link rel="stylesheet" href="assets/tactus-tokens.css">
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--ui);
+      font-size: 16px; line-height: 1.45;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      font-variant-numeric: tabular-nums;
+    }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--accent-dim); color: var(--fg); }
+
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 56px;
+    }
+    @media (max-width: 720px) { .wrap { padding: 0 24px; } }
+
+    /* ── Nav (copied from Landing) ───────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(15,15,16,0.78);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      font-weight: 700; letter-spacing: -0.02em; font-size: 17px;
+    }
+    .brand-mark { width: 24px; height: 24px; flex-shrink: 0; display: block; }
+    .nav-links {
+      display: flex; align-items: center; gap: 28px;
+      font-size: 14px; color: var(--fg-2);
+    }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-key);
+      color: var(--fg);
+      font-size: 13px; font-weight: 500;
+      background: var(--bg-elev-1);
+      transition: border-color 240ms var(--ease-out), background 240ms var(--ease-out);
+    }
+    .nav-cta:hover { border-color: var(--accent); background: var(--bg-elev-2); }
+    .nav-cta .price { color: var(--fg-3); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      padding: 96px 0 72px;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero { padding: 64px 0 56px; }
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--ui); font-size: 12px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+      margin-bottom: 28px;
+    }
+    h1.hero-h {
+      font-size: clamp(40px, 5.2vw, 68px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      margin: 0 0 28px;
+      text-wrap: balance;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.55;
+      color: var(--fg-2);
+      max-width: 540px;
+      margin: 0 0 32px;
+      text-wrap: pretty;
+    }
+    .meta-line {
+      display: flex; flex-wrap: wrap; gap: 14px 28px;
+      font-family: var(--ui);
+      font-size: 13px; color: var(--fg-3);
+      letter-spacing: -0.005em;
+    }
+    .meta-line span { display: inline-flex; gap: 8px; align-items: baseline; }
+    .meta-line .k { color: var(--fg-4); font-weight: 500; }
+    .meta-line .v { color: var(--fg-2); }
+
+    /* TL;DR card on the right of hero */
+    .tldr {
+      background: var(--bg-elev-1);
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .tldr-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .tldr-title { font-size: 13px; color: var(--fg-2); font-weight: 500; }
+    .tldr-tag {
+      font-family: var(--ui); font-size: 11px; font-weight: 600;
+      color: var(--accent);
+      padding: 3px 8px; border-radius: 6px;
+      background: rgba(131,183,175,0.08);
+      border: 0.5px solid var(--accent-dim);
+      letter-spacing: -0.005em;
+    }
+    .tldr-body {
+      padding: 24px 22px 22px;
+    }
+    .tldr-h {
+      font-size: 22px; font-weight: 600;
+      letter-spacing: -0.02em; line-height: 1.2;
+      margin: 0 0 14px;
+      text-wrap: balance;
+    }
+    .tldr-p {
+      font-size: 14.5px; line-height: 1.55;
+      color: var(--fg-2);
+      margin: 0;
+      text-wrap: pretty;
+    }
+    .tldr-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 0.5px solid var(--hair);
+    }
+    .tldr-stat {
+      padding: 18px 16px;
+      border-right: 0.5px solid var(--hair);
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .tldr-stat:last-child { border-right: 0; }
+    .tldr-stat .n {
+      font-family: var(--mono); font-weight: 600;
+      font-size: 22px; letter-spacing: -0.02em;
+      color: var(--fg);
+      line-height: 1;
+      font-feature-settings: "tnum";
+    }
+    .tldr-stat .l {
+      font-family: var(--ui); font-size: 12px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+    }
+
+    /* ── Section base ────────────────────────────────────────── */
+    section.policy {
+      padding: 84px 0;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    @media (max-width: 720px) { section.policy { padding: 64px 0; } }
+    .section-label {
+      font-family: var(--ui); font-size: 15px; font-weight: 600;
+      color: var(--fg-2);
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+      display: inline-flex; align-items: center; gap: 12px;
+    }
+    .section-label .dice {
+      width: 20px; height: 20px;
+      flex-shrink: 0;
+      background: var(--accent);
+      -webkit-mask: var(--dice-mask) center/contain no-repeat;
+              mask: var(--dice-mask) center/contain no-repeat;
+      filter: drop-shadow(0 0 4px var(--accent-glow));
+    }
+    .section-label .dice[data-face="1"] { --dice-mask: var(--dice-1); }
+    .section-label .dice[data-face="2"] { --dice-mask: var(--dice-2); }
+    .section-label .dice[data-face="3"] { --dice-mask: var(--dice-3); }
+    .section-label .dice[data-face="4"] { --dice-mask: var(--dice-4); }
+    .section-label .dice[data-face="5"] { --dice-mask: var(--dice-5); }
+    .section-label .dice[data-face="6"] { --dice-mask: var(--dice-6); }
+    .section-label .dice[data-face="7"] { --dice-mask: var(--dice-7); }
+    :root {
+      --dice-1: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='11' cy='11' r='1.7' fill='black'/></svg>");
+      --dice-2: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-3: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-4: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-5: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-6: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='11' r='1.7' fill='black'/><circle cx='17' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-7: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='11' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='17' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+    }
+    h2 {
+      font-size: clamp(28px, 3.4vw, 42px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 24px;
+      max-width: 780px;
+      text-wrap: balance;
+    }
+    .lede {
+      font-size: 17px; color: var(--fg-2);
+      max-width: 680px; line-height: 1.6;
+      margin: 0;
+      text-wrap: pretty;
+    }
+    .lede + .lede { margin-top: 16px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .split { grid-template-columns: 1fr; gap: 16px; }
+    }
+
+    /* Sticky section index — right column on policy sections */
+    .section-head { position: relative; }
+
+    /* ── KV grid (storage location, format, etc.) ────────────── */
+    .kv {
+      margin-top: 36px;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--bg-elev-1);
+      overflow: hidden;
+    }
+    .kv-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .kv-row:last-child { border-bottom: 0; }
+    .kv-row .k {
+      padding: 16px 22px;
+      font-family: var(--ui); font-size: 13px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+      border-right: 0.5px solid var(--hair);
+      background: rgba(255,255,255,0.012);
+    }
+    .kv-row .v {
+      padding: 16px 22px;
+      font-size: 14.5px;
+      color: var(--fg);
+      line-height: 1.55;
+    }
+    .kv-row .v .code {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: var(--accent);
+      background: rgba(131,183,175,0.06);
+      border: 0.5px solid var(--accent-dim);
+      padding: 2px 7px;
+      border-radius: 5px;
+      letter-spacing: 0;
+      font-feature-settings: "tnum";
+    }
+    .kv-row.no .v { color: var(--fg-2); }
+    .kv-row.no .v::before {
+      content: "No";
+      display: inline-block;
+      font-family: var(--ui); font-size: 11px; font-weight: 600;
+      color: var(--accent);
+      padding: 2px 8px; border-radius: 5px;
+      background: rgba(131,183,175,0.08);
+      border: 0.5px solid var(--accent-dim);
+      letter-spacing: -0.005em;
+      margin-right: 12px;
+      transform: translateY(-1px);
+    }
+    @media (max-width: 720px) {
+      .kv-row { grid-template-columns: 1fr; }
+      .kv-row .k { border-right: 0; border-bottom: 0.5px solid var(--hair); }
+    }
+
+    /* ── "Does not collect" grid ─────────────────────────────── */
+    .not-grid {
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--hair);
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      overflow: hidden;
+    }
+    @media (max-width: 900px) { .not-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .not-grid { grid-template-columns: 1fr; } }
+    .not-cell {
+      background: var(--bg);
+      padding: 22px 22px 20px;
+      display: flex; flex-direction: column; gap: 8px;
+      min-height: 120px;
+    }
+    .not-cell .not-h {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14.5px; font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+    }
+    .not-cell .not-p {
+      font-size: 13px; line-height: 1.5;
+      color: var(--fg-3);
+      margin: 0;
+    }
+    .not-cell .not-tag {
+      margin-top: auto;
+      font-family: var(--ui); font-size: 11px; font-weight: 500;
+      color: var(--fg-4);
+      letter-spacing: -0.005em;
+      padding-top: 10px;
+    }
+
+    /* ── Callout (Ableton Link) ─────────────────────────────── */
+    .callout {
+      margin-top: 36px;
+      background: var(--bg-elev-1);
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      overflow: hidden;
+    }
+    .callout-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 0.5px solid var(--hair);
+      font-family: var(--ui); font-size: 12px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+    }
+    .callout-head .indicator {
+      display: inline-flex; align-items: center;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .callout-body {
+      padding: 24px 22px;
+    }
+    .callout ul {
+      list-style: none;
+      padding: 0; margin: 18px 0 0;
+      display: flex; flex-direction: column;
+      border-top: 0.5px solid var(--hair);
+    }
+    .callout li {
+      display: block;
+      padding: 14px 22px;
+      border-bottom: 0.5px solid var(--hair);
+      font-size: 14.5px; line-height: 1.5;
+      color: var(--fg-2);
+    }
+    .callout li:last-child { border-bottom: 0; }
+    .callout li strong { color: var(--fg); font-weight: 500; }
+    .callout-list-wrap { margin: 0 -22px; }
+
+    /* ── Quiet/Inline link ──────────────────────────────────── */
+    a.inline {
+      color: var(--accent);
+      border-bottom: 0.5px solid var(--accent-dim);
+      transition: border-color 240ms var(--ease-out);
+    }
+    a.inline:hover { border-bottom-color: var(--accent); }
+
+    /* ── Footer note (changes / contact) ─────────────────────── */
+    .end-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      overflow: hidden;
+      background: var(--bg-elev-1);
+      margin-top: 56px;
+    }
+    @media (max-width: 720px) { .end-grid { grid-template-columns: 1fr; } }
+    .end-cell {
+      padding: 28px 26px;
+      border-right: 0.5px solid var(--hair);
+    }
+    .end-cell:last-child { border-right: 0; }
+    @media (max-width: 720px) {
+      .end-cell { border-right: 0; border-bottom: 0.5px solid var(--hair); }
+      .end-cell:last-child { border-bottom: 0; }
+    }
+    .end-cell .ix {
+      font-family: var(--ui); font-size: 11px; font-weight: 500;
+      color: var(--fg-4);
+      letter-spacing: -0.005em;
+      margin-bottom: 14px;
+    }
+    .end-cell h3 {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: -0.015em;
+      margin: 0 0 10px;
+    }
+    .end-cell p {
+      font-size: 14px; color: var(--fg-2);
+      line-height: 1.55; margin: 0;
+    }
+
+    /* ── TOC pill row above hero on mobile, sticky aside on desk ─ */
+    .toc {
+      display: flex; flex-direction: column;
+      gap: 0;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--bg-elev-1);
+      overflow: hidden;
+      position: sticky;
+      top: 84px;
+    }
+    .toc-h {
+      padding: 12px 16px;
+      border-bottom: 0.5px solid var(--hair);
+      font-family: var(--ui); font-size: 11px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+    }
+    .toc a {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 0.5px solid var(--hair);
+      font-size: 13.5px;
+      color: var(--fg-2);
+      transition: background 240ms var(--ease-out), color 240ms var(--ease-out);
+    }
+    .toc a:last-child { border-bottom: 0; }
+    .toc a:hover { background: var(--bg-elev-2); color: var(--fg); }
+    .toc a .n {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--fg-4);
+      letter-spacing: 0;
+      font-feature-settings: "tnum";
+    }
+    .toc a:hover .n { color: var(--accent); }
+
+    /* ── Closing CTA ────────────────────────────────────────── */
+    .closing {
+      padding: 120px 0;
+      text-align: center;
+    }
+    .closing h2 {
+      margin: 0 auto 20px;
+      font-size: clamp(32px, 4vw, 52px);
+      letter-spacing: -0.03em;
+      max-width: 760px;
+    }
+    .closing p {
+      font-size: 17px; color: var(--fg-2);
+      max-width: 540px; margin: 0 auto 32px;
+    }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 20px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-key);
+      color: var(--fg);
+      font-size: 14px; font-weight: 500;
+      background: var(--bg-elev-1);
+      transition: border-color 240ms var(--ease-out), background 240ms var(--ease-out);
+    }
+    .btn-secondary:hover { border-color: var(--accent); background: var(--bg-elev-2); }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      border-top: 0.5px solid var(--hair);
+      padding: 40px 0 56px;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px;
+      font-size: 12px; color: var(--fg-3);
+    }
+    .footer-inner .brand { font-size: 14px; color: var(--fg-2); }
+    .footer-inner .brand-mark { width: 18px; height: 18px; }
+    .footer-links {
+      display: flex; gap: 24px;
+      font-family: var(--ui); letter-spacing: -0.005em;
+      font-size: 12px; font-weight: 500; color: var(--fg-3);
+    }
+    .footer-links a:hover { color: var(--fg); }
+    .footer-links a.current { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ─────────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="wrap nav-inner">
+      <a class="brand" href="index.html">
+        <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
+          <rect x="0" y="0" width="1024" height="1024" rx="230" ry="230" fill="#0F0F10"/>
+          <circle cx="215" cy="215" r="133" fill="#949495"/>
+          <circle cx="512" cy="512" r="82" fill="#575759"/>
+          <circle cx="809" cy="809" r="82" fill="#83B7AF"/>
+        </svg>
+        Tactus
+      </a>
+      <div class="nav-links">
+        <a href="index.html#features">Features</a>
+        <a href="manual.html">Manual</a>
+        <a href="index.html#faq">FAQ</a>
+        <a class="nav-cta" href="index.html#download">
+          Get notified
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────────────────── -->
+  <header class="hero" data-screen-label="01 Hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Privacy policy</div>
+        <h1 class="hero-h">Your passages stay yours. Nothing leaves this device.</h1>
+        <p class="hero-sub">
+          Tactus has no accounts, no analytics, no advertising, and no server of its own.
+          Everything you make lives on your device and, if you choose, in your iCloud.
+        </p>
+        <div class="meta-line">
+          <span><span class="k">Effective</span><span class="v">[INSERT DATE]</span></span>
+          <span><span class="k">Developer</span><span class="v">Alan Molina</span></span>
+          <span><span class="k">App</span><span class="v">Tactus (formerly MeterMap)</span></span>
+        </div>
+      </div>
+
+      <aside class="tldr">
+        <div class="tldr-header">
+          <div class="tldr-title">The short version</div>
+          <div class="tldr-tag">TL;DR</div>
+        </div>
+        <div class="tldr-body">
+          <h2 class="tldr-h">Tactus does not collect your personal information.</h2>
+          <p class="tldr-p">
+            No accounts. No analytics. No advertising. No server of its own.
+            Your passages live on your device and in your iCloud account. That is it.
+          </p>
+        </div>
+        <div class="tldr-stats">
+          <div class="tldr-stat">
+            <div class="n">0</div>
+            <div class="l">Accounts</div>
+          </div>
+          <div class="tldr-stat">
+            <div class="n">0</div>
+            <div class="l">Trackers</div>
+          </div>
+          <div class="tldr-stat">
+            <div class="n">0</div>
+            <div class="l">Servers</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <!-- ── Section 01 — Storage ───────────────────────────────────────── -->
+  <section class="policy" id="storage" data-screen-label="02 Storage">
+    <div class="wrap split">
+      <aside class="section-head">
+        <nav class="toc">
+          <div class="toc-h">On this page</div>
+          <a href="#storage"><span class="n">01</span><span>Storage</span></a>
+          <a href="#never"><span class="n">02</span><span>What it doesn't collect</span></a>
+          <a href="#link"><span class="n">03</span><span>Ableton Link</span></a>
+          <a href="#audio"><span class="n">04</span><span>Audio synthesis</span></a>
+          <a href="#app-store"><span class="n">05</span><span>App Store &amp; payments</span></a>
+          <a href="#children"><span class="n">06</span><span>Children's privacy</span></a>
+          <a href="#changes"><span class="n">07</span><span>Changes &amp; contact</span></a>
+        </nav>
+      </aside>
+      <div>
+        <div class="section-label"><span class="dice" data-face="1" aria-label="Section 1"></span>Storage</div>
+        <h2>What Tactus stores, and where.</h2>
+        <p class="lede">
+          Everything you create, passages, bar structures, meters, accent maps, tempo shapes, is stored as files on your device. If you have iCloud Drive enabled, those files sync to your personal iCloud account so they appear on all your devices.
+        </p>
+        <p class="lede">
+          Apple operates iCloud and is subject to <a class="inline" href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a>. Tactus itself has no visibility into your iCloud files.
+        </p>
+
+        <div class="kv">
+          <div class="kv-row">
+            <div class="k">Location</div>
+            <div class="v">Your device's local storage, and optionally <span class="code">iCloud.com.alanmolina.tactus</span> in your iCloud Drive.</div>
+          </div>
+          <div class="kv-row">
+            <div class="k">Format</div>
+            <div class="v">JSON files with a <span class="code">.rhythmmap</span> extension.</div>
+          </div>
+          <div class="kv-row">
+            <div class="k">Who can see them</div>
+            <div class="v">Only you, through your own Apple ID and iCloud account.</div>
+          </div>
+          <div class="kv-row no">
+            <div class="k">Developer access</div>
+            <div class="v">Alan Molina and third parties have no access to your files.</div>
+          </div>
+        </div>
+
+        <h2 style="font-size: clamp(22px, 2.4vw, 28px); margin: 56px 0 16px;">Exported files</h2>
+        <p class="lede">
+          When you share a passage from the share sheet, a <span style="font-family: var(--mono); font-size: 14px; color: var(--accent);">.rhythmmap</span> file is created in your device's temporary storage and passed to whichever app or service you choose, AirDrop, Mail, Messages, Files. Tactus does not transmit this file anywhere on its own. You choose where it goes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 02 — Not collected ─────────────────────────────────── -->
+  <section class="policy" id="never" data-screen-label="03 Not collected">
+    <div class="wrap">
+      <div class="section-label"><span class="dice" data-face="2" aria-label="Section 2"></span>What Tactus does not collect</div>
+      <h2>Nine things that aren't here.</h2>
+      <p class="lede">
+        The fastest way to describe what an app does with your data is to list what it never asks for. Here is the complete list for Tactus.
+      </p>
+
+      <div class="not-grid">
+        <div class="not-cell">
+          <div class="not-h">Account</div>
+          <p class="not-p">No login, no email address, no name. There is no concept of a Tactus account.</p>
+          <div class="not-tag">001 Identity</div>
+        </div>
+        <div class="not-cell">
+          <div class="not-h">Analytics</div>
+          <p class="not-p">No usage tracking of any kind. No first-party or third-party analytics SDKs.</p>
+          <div class="not-tag">002 Telemetry</div>
+        </div>
+        <div class="not-cell">
+          <div class="not-h">Crash reporting</div>
+          <p class="not-p">No crash reports sent to any server we operate. iOS may offer to send crash data to Apple separately.</p>
+          <div class="not-tag">003 Diagnostics</div>
+        </div>
+        <div class="not-cell">
+          <div class="not-h">Advertising</div>
+          <p class="not-p">No ad SDKs, no targeting, no banners. Tactus is paid for once and never sees you again.</p>
+          <div class="not-tag">004 Monetization</div>
+        </div>
+        <div class="not-cell">
+          <div class="not-h">Microphone</div>
+          <p class="not-p">Tap Tempo uses touch timing only. No audio is recorded at any point.</p>
+          <div class="not-tag">005 Hardware</div>
+        </div>
+        <div class="not-cell">
+          <div class="not-h">Camera</div>
+          <p class="not-p">No camera access is requested or used.</p>
+          <div class="not-tag">006 Hardware</div>
+        </div>
+        <div class="not-cell">
+          <div class="not-h">Location</div>
+          <p class="not-p">No location data, coarse or precise, is requested or used.</p>
+          <div class="not-tag">007 Sensors</div>
+        </div>
+        <div class="not-cell">
+          <div class="not-h">Contacts</div>
+          <p class="not-p">Sharing a passage uses the system share sheet. Your address book never touches the app.</p>
+          <div class="not-tag">008 System</div>
+        </div>
+        <div class="not-cell">
+          <div class="not-h">Purchase history</div>
+          <p class="not-p">App Store purchases are handled entirely by Apple. Tactus stores no payment information.</p>
+          <div class="not-tag">009 Commerce</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 03 — Local network / Ableton Link ──────────────────── -->
+  <section class="policy" id="link" data-screen-label="04 Ableton Link">
+    <div class="wrap split">
+      <aside class="section-head">
+        <div class="section-label"><span class="dice" data-face="3" aria-label="Section 3"></span>Local network</div>
+        <h2 style="font-size: clamp(26px, 3vw, 36px); margin-bottom: 16px;">Ableton Link, in detail.</h2>
+        <p class="lede" style="font-size: 15.5px;">
+          If you enable Link in settings, Tactus uses your device's local network to discover and connect to other Link-enabled apps on the same WiFi network, like Ableton Live, Logic Pro, or other iOS apps.
+        </p>
+        <p class="lede" style="font-size: 14px; color: var(--fg-3); margin-top: 14px;">
+          The Ableton Link SDK is developed by Ableton AG. When Link is active, it uses Bonjour (mDNS) for peer discovery. No personal data is transmitted.
+        </p>
+      </aside>
+
+      <div class="callout">
+        <div class="callout-head">
+          <span>Link, runtime behavior</span>
+          <span class="indicator">Local only</span>
+        </div>
+        <div class="callout-body">
+          <div style="font-size: 14.5px; color: var(--fg-2); line-height: 1.55;">
+            Link is a local-only protocol. The connection exists between devices on the same WiFi network. Nothing is sent to a server on the internet.
+          </div>
+          <div class="callout-list-wrap">
+            <ul>
+              <li><div><strong>No data leaves your local network.</strong> No connection is made to any server on the internet.</div></li>
+              <li><div><strong>Only tempo and transport state are exchanged.</strong> BPM and play/stop, with peers on the same WiFi.</div></li>
+              <li><div><strong>Link is disabled by default.</strong> You opt in explicitly in settings.</div></li>
+              <li><div><strong>Turning off the toggle ends all network activity immediately.</strong> No background reconnection.</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 04 — Audio ─────────────────────────────────────────── -->
+  <section class="policy" id="audio" data-screen-label="05 Audio">
+    <div class="wrap split">
+      <aside class="section-head">
+        <div class="section-label"><span class="dice" data-face="4" aria-label="Section 4"></span>Audio synthesis</div>
+      </aside>
+      <div>
+        <h2>Clicks are synthesized. Nothing is recorded.</h2>
+        <p class="lede">
+          Tactus generates click sounds using your device's audio hardware via <span style="font-family: var(--mono); font-size: 14.5px; color: var(--accent);">AVAudioEngine</span>. It does not record audio. It does not access your microphone. All audio is synthesized locally and plays through your speaker or headphones.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 05 — App Store ─────────────────────────────────────── -->
+  <section class="policy" id="app-store" data-screen-label="06 App Store">
+    <div class="wrap split">
+      <aside class="section-head">
+        <div class="section-label"><span class="dice" data-face="5" aria-label="Section 5"></span>App Store &amp; payments</div>
+      </aside>
+      <div>
+        <h2>Apple handles every cent.</h2>
+        <p class="lede">
+          Tactus is a one-time purchase sold through the Apple App Store. Payment processing, purchase records, and receipt validation are handled entirely by Apple. Tactus does not receive or store your payment information.
+        </p>
+        <p class="lede">
+          See <a class="inline" href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a> for details on how Apple handles App Store transactions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 06 — Children ──────────────────────────────────────── -->
+  <section class="policy" id="children" data-screen-label="07 Children">
+    <div class="wrap split">
+      <aside class="section-head">
+        <div class="section-label"><span class="dice" data-face="6" aria-label="Section 6"></span>Children's privacy</div>
+      </aside>
+      <div>
+        <h2>No data collected, from anyone.</h2>
+        <p class="lede">
+          Tactus does not knowingly collect any personal information from anyone, including children under 13 (or the applicable age in your jurisdiction). Because the app collects no personal data at all, it presents no specific risk to younger users.
+        </p>
+        <p class="lede">
+          If you have questions, contact us at <a class="inline" href="mailto:[INSERT CONTACT EMAIL]">[INSERT CONTACT EMAIL]</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 07 — Changes & contact ─────────────────────────────── -->
+  <section class="policy" id="changes" data-screen-label="08 Changes & contact" style="border-bottom: 0;">
+    <div class="wrap split">
+      <aside class="section-head">
+        <div class="section-label"><span class="dice" data-face="7" aria-label="Section 7"></span>Changes &amp; contact</div>
+      </aside>
+      <div>
+        <h2>If something changes, it gets written here.</h2>
+        <p class="lede">
+          If the app adds features that change how data is handled, this policy will be updated and the effective date at the top will change. Significant changes will be noted in the App Store release notes.
+        </p>
+
+        <div class="end-grid">
+          <div class="end-cell">
+            <div class="ix">Effective date</div>
+            <h3>[INSERT DATE]</h3>
+            <p>The version above governs the current release of Tactus on the App Store.</p>
+          </div>
+          <div class="end-cell">
+            <div class="ix">Contact</div>
+            <h3>Questions, in plain language.</h3>
+            <p>Write to <a class="inline" href="mailto:[INSERT CONTACT EMAIL]">[INSERT CONTACT EMAIL]</a> and Alan will answer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Closing ────────────────────────────────────────────────────── -->
+  <section class="closing" data-screen-label="09 Closing">
+    <div class="wrap">
+      <h2>The rhythm is yours. So is the data.</h2>
+      <p>That's the whole story. Now go map a passage.</p>
+      <a class="btn-secondary" href="index.html">
+        Back to Tactus
+        <svg viewBox="0 0 14 14" width="12" height="12" fill="none" aria-hidden="true">
+          <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="wrap footer-inner">
+      <a class="brand" href="index.html">
+        <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
+          <rect x="0" y="0" width="1024" height="1024" rx="230" ry="230" fill="#0F0F10"/>
+          <circle cx="215" cy="215" r="133" fill="#949495"/>
+          <circle cx="512" cy="512" r="82" fill="#575759"/>
+          <circle cx="809" cy="809" r="82" fill="#83B7AF"/>
+        </svg>
+        Tactus
+      </a>
+      <div style="color: var(--fg-3); font-size:12px;">
+        © 2026 Alan Molina. Mixed meter. Built for you.
+      </div>
+      <div class="footer-links">
+        <a href="manual.html">Manual</a>
+        <a href="#">Support</a>
+        <a class="current" href="privacy.html">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

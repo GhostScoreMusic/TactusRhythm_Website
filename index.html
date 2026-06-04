@@ -1,0 +1,1736 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tactus. Built for the passages that break metronomes.</title>
+  <link rel="stylesheet" href="assets/tactus-tokens.css">
+  <style>
+    /* ── Page chrome ─────────────────────────────────────────── */
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--ui);
+      font-size: 16px; line-height: 1.45;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      font-variant-numeric: tabular-nums;
+    }
+    body { min-height: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--accent-dim); color: var(--fg); }
+
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 56px;
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 0 24px; }
+    }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(15,15,16,0.78);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      font-weight: 700; letter-spacing: -0.02em; font-size: 17px;
+    }
+    .brand-mark {
+      width: 24px; height: 24px; flex-shrink: 0;
+      display: block;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 28px;
+      font-size: 14px; color: var(--fg-2);
+    }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-key);
+      color: var(--fg);
+      font-size: 13px; font-weight: 500;
+      background: var(--bg-elev-1);
+      transition: border-color 240ms var(--ease-out), background 240ms var(--ease-out);
+    }
+    .nav-cta:hover {
+      border-color: var(--accent);
+      background: var(--bg-elev-2);
+    }
+    .nav-cta .price { color: var(--fg-3); font-family: var(--ui); font-weight: 500; font-size: 13px; letter-spacing: -0.01em; }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      padding: 96px 0 88px;
+      position: relative;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: 72px;
+      align-items: center;
+    }
+    @media (max-width: 980px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 56px; }
+      .hero { padding: 64px 0; }
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--ui); font-size: 12px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+      margin-bottom: 28px;
+    }
+    h1.hero-h {
+      font-size: clamp(40px, 5.6vw, 72px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      margin: 0 0 28px;
+      text-wrap: balance;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.5;
+      color: var(--fg-2);
+      max-width: 540px;
+      margin: 0 0 40px;
+      text-wrap: pretty;
+    }
+    .cta-row {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 16px 22px;
+      background: var(--accent);
+      color: #0F0F10;
+      border-radius: var(--r-key);
+      font-weight: 600; font-size: 15px;
+      letter-spacing: -0.005em;
+      transition: filter 240ms var(--ease-out), transform 240ms var(--ease-pop);
+    }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary .price {
+      font-family: var(--ui); font-weight: 600;
+      letter-spacing: -0.015em;
+      padding-left: 12px;
+      border-left: 1px solid rgba(15,15,16,0.35);
+    }
+    .trust-line {
+      font-size: 13px; color: var(--fg-3);
+      margin-top: 22px;
+      font-family: var(--ui);
+      letter-spacing: -0.005em;
+    }
+
+    /* ── Hero passage panel (right column) ───────────────────── */
+    .passage {
+      background: var(--bg-elev-1);
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      padding: 8px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .passage-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px 14px;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .passage-title {
+      font-size: 13px; color: var(--fg-2);
+      font-weight: 500;
+    }
+    .passage-meta {
+      font-family: var(--mono); font-size: 11px; color: var(--fg-3);
+      letter-spacing: 0.02em;
+      font-feature-settings: "tnum";
+    }
+    .bar {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 18px;
+      padding: 18px 22px 22px;
+      border-bottom: 0.5px solid var(--hair);
+      position: relative;
+      align-items: center;
+    }
+    .bar:last-child { border-bottom: 0; }
+    .bar.active::before {
+      content: ""; position: absolute;
+      left: 0; top: 18%; bottom: 18%; width: 2px;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+      border-radius: 2px;
+    }
+    .meter {
+      display: flex; flex-direction: column; align-items: center;
+      font-family: var(--ui); font-weight: 700;
+      font-size: 22px; line-height: 0.98;
+      letter-spacing: -0.06em;
+      color: var(--fg-2);
+    }
+    .bar.active .meter { color: var(--fg); }
+    .meter span { display: block; }
+    .clusters {
+      display: flex; align-items: center; gap: 14px;
+      flex-wrap: wrap;
+    }
+    .tempo-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      padding: 3px 8px; border-radius: 6px;
+      background: rgba(131,183,175,0.08);
+      border: 0.5px solid var(--accent-dim);
+      margin-right: 4px;
+    }
+
+    /* die-face dot cluster — pure CSS */
+    .cluster {
+      width: 44px; height: 44px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 0;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .cluster.lg { width: 64px; height: 64px; }
+    .cluster.sm { width: 32px; height: 32px; }
+    .cluster .d {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--dot-normal);
+    }
+    .cluster.lg .d { width: 11px; height: 11px; }
+    .cluster.sm .d { width: 6px; height: 6px; }
+    .cluster .d.strong { background: var(--dot-strong); }
+    .cluster .d.soft   { background: var(--dot-soft); }
+    .cluster .d.silent {
+      background: transparent;
+      box-shadow: inset 0 0 0 1px var(--dot-silent);
+    }
+    .cluster .d.empty { visibility: hidden; }
+    .cluster .d.hit {
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+      animation: pulse 380ms var(--ease-out);
+    }
+    @keyframes pulse {
+      0%   { transform: scale(1); }
+      18%  { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+    /* die-face positional helpers — cells go 1..9 row-major */
+    .cluster .d { grid-area: auto; }
+
+    /* ── Hero video (iPhone-framed portrait) ──────────────────── */
+    .hero-video-stage {
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      padding: 8px 0;
+    }
+    /* soft accent halo behind the phone */
+    .hero-video-stage::before {
+      content: "";
+      position: absolute;
+      top: 8%; left: 50%;
+      width: 110%; height: 70%;
+      transform: translateX(-50%);
+      background: radial-gradient(closest-side, rgba(131,183,175,0.10), transparent 70%);
+      filter: blur(20px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-video {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      padding: 10px;
+      /* aspect-ratio lives on the screen now so the inner area exactly matches
+         the source video (1206×2622) instead of being squished by padding. */
+      border-radius: 46px;
+      background: linear-gradient(180deg, #1a1a1c 0%, #0a0a0b 100%);
+      box-shadow:
+        inset 0 0 0 0.5px rgba(255,255,255,0.08),
+        inset 0 0 0 1.5px #000,
+        0 30px 60px -20px rgba(0,0,0,0.7),
+        0 12px 24px -12px rgba(0,0,0,0.5),
+        0 0 0 0.5px rgba(255,255,255,0.04);
+      isolation: isolate;
+      z-index: 1;
+    }
+    /* side button hints */
+    .hero-video::before,
+    .hero-video::after {
+      content: "";
+      position: absolute;
+      left: -2px;
+      width: 3px;
+      background: #18181a;
+      border-radius: 2px 0 0 2px;
+      box-shadow: inset 1px 0 0 rgba(0,0,0,0.6);
+    }
+    .hero-video::before { top: 18%; height: 6%; }   /* silent switch */
+    .hero-video::after  { top: 28%; height: 16%; }  /* volume buttons */
+    .hero-video-screen {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1206 / 2622;     /* exact source ratio — no crop */
+      border-radius: 34px;
+      overflow: hidden;
+      background: #000;
+    }
+    .hero-video-el {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: block;
+      background: #000;
+      object-fit: cover;
+    }
+    .hero-video[data-state="poster"] .hero-video-el {
+      visibility: hidden;
+    }
+    /* loading spinner shown while video buffers after click */
+    .hero-video-loading {
+      position: absolute; inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 14px;
+      background: rgba(0,0,0,0.55);
+      z-index: 3;
+      pointer-events: none;
+    }
+    .hero-video[data-state="loading"] .hero-video-loading { display: flex; }
+    .hero-video[data-state="loading"] .hero-video-poster { opacity: 0; }
+    .hero-video-spinner {
+      width: 44px; height: 44px;
+      border: 2.5px solid rgba(255,255,255,0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: hv-spin 0.9s linear infinite;
+    }
+    .hero-video-progress {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    @keyframes hv-spin { to { transform: rotate(360deg); } }
+    .hero-video-poster {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0;
+      background: transparent;
+      border: 0; color: inherit;
+      font: inherit;
+      cursor: pointer;
+      z-index: 2;
+      transition: opacity 320ms var(--ease-out);
+    }
+    .hero-video[data-state="playing"] .hero-video-poster {
+      opacity: 0;
+      pointer-events: none;
+    }
+    /* poster frame fills the screen — uses the extracted jpg */
+    .hero-video-poster-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .hero-video-poster::before {
+      /* subtle dim so the play button reads */
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(40% 30% at 50% 50%, rgba(0,0,0,0.55), rgba(0,0,0,0.15) 70%, transparent);
+      z-index: 1;
+    }
+    .hero-video-play {
+      position: relative; z-index: 2;
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #0F0F10;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow:
+        0 0 0 8px rgba(131,183,175,0.10),
+        0 0 0 1px rgba(255,255,255,0.18) inset,
+        0 0 32px rgba(131,183,175,0.35),
+        0 6px 20px rgba(0,0,0,0.4);
+      transition: transform 320ms var(--ease-pop), box-shadow 320ms var(--ease-out);
+    }
+    .hero-video-play svg { width: 28px; height: 28px; margin-left: 4px; }
+    .hero-video-poster:hover .hero-video-play {
+      transform: scale(1.06);
+      box-shadow:
+        0 0 0 12px rgba(131,183,175,0.14),
+        0 0 0 1px rgba(255,255,255,0.22) inset,
+        0 0 48px rgba(131,183,175,0.45),
+        0 6px 20px rgba(0,0,0,0.4);
+    }
+    .hero-video-caption {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--ui); font-size: 12px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+      padding: 8px 14px;
+      border: 0.5px solid var(--hair);
+      border-radius: 999px;
+      background: rgba(15,15,16,0.6);
+      backdrop-filter: blur(8px);
+    }
+    .hero-video-caption .hv-sep {
+      width: 0.5px; height: 10px; background: var(--hair);
+    }
+    @media (max-width: 980px) {
+      .hero-video { max-width: 280px; }
+    }
+
+    /* ── Section base ────────────────────────────────────────── */
+    section.feature {
+      padding: 120px 0;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    @media (max-width: 720px) { section.feature { padding: 80px 0; } }
+    .section-label {
+      font-family: var(--ui); font-size: 15px; font-weight: 600;
+      color: var(--fg-2);
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+      display: inline-flex; align-items: center; gap: 12px;
+    }
+    /* Die-face numerals — same vocabulary as the beat clusters.
+       Painted via CSS mask so they inherit accent color cleanly. */
+    .section-label .dice {
+      width: 20px; height: 20px;
+      flex-shrink: 0;
+      background: var(--accent);
+      -webkit-mask: var(--dice-mask) center/contain no-repeat;
+              mask: var(--dice-mask) center/contain no-repeat;
+      filter: drop-shadow(0 0 4px var(--accent-glow));
+    }
+    .section-label .dice[data-face="1"] { --dice-mask: var(--dice-1); }
+    .section-label .dice[data-face="2"] { --dice-mask: var(--dice-2); }
+    .section-label .dice[data-face="3"] { --dice-mask: var(--dice-3); }
+    .section-label .dice[data-face="4"] { --dice-mask: var(--dice-4); }
+    .section-label .dice[data-face="5"] { --dice-mask: var(--dice-5); }
+    .section-label .dice[data-face="6"] { --dice-mask: var(--dice-6); }
+    .section-label .dice[data-face="7"] { --dice-mask: var(--dice-7); }
+    :root {
+      --dice-1: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='11' cy='11' r='1.7' fill='black'/></svg>");
+      --dice-2: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-3: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-4: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-5: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-6: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='11' r='1.7' fill='black'/><circle cx='17' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-7: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='11' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='17' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+    }
+    h2 {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin: 0 0 24px;
+      max-width: 780px;
+      text-wrap: balance;
+    }
+    .lede {
+      font-size: 18px; color: var(--fg-2);
+      max-width: 620px; line-height: 1.55;
+      margin: 0;
+      text-wrap: pretty;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 80px;
+      align-items: center;
+    }
+    .split.reverse > :first-child { order: 2; }
+    @media (max-width: 980px) {
+      .split { grid-template-columns: 1fr; gap: 48px; }
+      .split.reverse > :first-child { order: 0; }
+    }
+
+    /* ── Cluster gallery (1..9 dots) ─────────────────────────── */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      overflow: hidden;
+      background: var(--bg-elev-1);
+    }
+    .gallery .cell {
+      aspect-ratio: 1 / 1;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      border-right: 0.5px solid var(--hair);
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .gallery .cell:nth-child(3n) { border-right: 0; }
+    .gallery .cell:nth-child(n+7) { border-bottom: 0; }
+    .gallery .cell .lbl {
+      position: absolute; top: 12px; left: 14px;
+      font-family: var(--ui); font-size: 11px; font-weight: 500;
+      color: var(--fg-4);
+      letter-spacing: -0.005em;
+    }
+    .gallery .cluster.lg { width: 78px; height: 78px; }
+    .gallery .cluster.lg .d { width: 13px; height: 13px; }
+
+    /* ── Accent states diagram ───────────────────────────────── */
+    .states {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--bg-elev-1);
+      overflow: hidden;
+    }
+    @media (max-width: 720px) { .states { grid-template-columns: repeat(2, 1fr); } }
+    .state {
+      padding: 28px 22px;
+      border-right: 0.5px solid var(--hair);
+      display: flex; flex-direction: column; gap: 16px;
+      min-height: 200px;
+    }
+    .state:last-child { border-right: 0; }
+    @media (max-width: 720px) {
+      .state:nth-child(2n) { border-right: 0; }
+      .state:nth-child(-n+2) { border-bottom: 0.5px solid var(--hair); }
+    }
+    .state .dot-sample {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--dot-normal);
+    }
+    .state.strong .dot-sample { background: var(--dot-strong); }
+    .state.soft   .dot-sample { background: var(--dot-soft); }
+    .state.silent .dot-sample {
+      background: transparent;
+      box-shadow: inset 0 0 0 1.5px var(--dot-silent);
+    }
+    .state .name {
+      font-size: 15px; font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .state .freq {
+      font-family: var(--mono); font-size: 12px;
+      color: var(--fg-3);
+      font-feature-settings: "tnum";
+    }
+    .state .desc {
+      font-size: 13px; color: var(--fg-2); line-height: 1.5;
+      margin-top: auto;
+    }
+
+    /* ── Devices ─────────────────────────────────────────────── */
+    .devices {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      align-items: end;
+    }
+    @media (max-width: 980px) { .devices { grid-template-columns: 1fr; } }
+    .device {
+      background: var(--bg-elev-1);
+      border: 0.5px solid var(--hair);
+      border-radius: 22px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .device .device-tag {
+      position: absolute; top: 18px; right: 22px;
+      font-family: var(--ui); font-size: 11px; font-weight: 500;
+      color: var(--fg-4);
+      letter-spacing: -0.005em;
+    }
+    .ipad-screen {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 20px 22px;
+      height: 360px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .ipad-screen .ipad-row {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 14px;
+      padding: 10px 4px;
+      align-items: center;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .ipad-screen .ipad-row:last-child { border-bottom: 0; }
+    .ipad-screen .ipad-row .meter { font-size: 16px; }
+    .ipad-screen .cluster { width: 32px; height: 32px; }
+    .ipad-screen .cluster .d { width: 6px; height: 6px; }
+    .ipad-screen .clusters { gap: 10px; }
+
+    .iphone-screen {
+      background: var(--bg);
+      border-radius: 32px;
+      padding: 18px;
+      height: 460px;
+      max-width: 260px;
+      margin: 0 auto;
+      position: relative;
+      display: flex; flex-direction: column;
+    }
+    .iphone-notch {
+      width: 80px; height: 26px;
+      background: #000;
+      border-radius: 20px;
+      margin: 0 auto 14px;
+    }
+    .iphone-focal {
+      flex: 1;
+      display: flex; flex-direction: column; gap: 0;
+      position: relative;
+    }
+    .iphone-bar {
+      padding: 14px 8px;
+      border-bottom: 0.5px solid var(--hair);
+      display: grid; grid-template-columns: 26px 1fr; gap: 10px;
+      align-items: center;
+      opacity: 0.4;
+      transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out);
+    }
+    .iphone-bar.is-active {
+      opacity: 1;
+      transform: scale(1.08);
+      transform-origin: left center;
+      position: relative;
+    }
+    .iphone-bar.is-active::before {
+      content: ""; position: absolute;
+      left: -10px; top: 20%; bottom: 20%; width: 2px;
+      background: var(--accent); border-radius: 2px;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+    .iphone-bar .meter { font-size: 13px; }
+    .iphone-bar .cluster { width: 26px; height: 26px; }
+    .iphone-bar .cluster .d { width: 5px; height: 5px; }
+    .iphone-bar .clusters { gap: 7px; }
+    .iphone-transport {
+      margin-top: auto; padding-top: 14px;
+      border-top: 0.5px solid var(--hair);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .bpm {
+      font-family: var(--mono); font-weight: 500; font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+    }
+    .bpm .unit { color: var(--fg-3); font-size: 11px; margin-left: 3px; }
+    .play-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .play-btn svg { width: 14px; height: 14px; }
+
+    /* ── Link section ────────────────────────────────────────── */
+    .link-card {
+      background: var(--bg-elev-1);
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+    @media (max-width: 720px) { .link-card { grid-template-columns: 1fr; } }
+    .peer-list {
+      display: flex; flex-direction: column; gap: 0;
+      background: var(--bg-elev-2);
+      border-radius: var(--r-row);
+      overflow: hidden;
+      border: 0.5px solid var(--hair);
+    }
+    .peer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 0.5px solid var(--hair);
+      font-size: 14px;
+    }
+    .peer:last-child { border-bottom: 0; }
+    .peer .name { display: flex; align-items: center; gap: 12px; }
+    .peer .indicator { display: none; }
+    .peer .bpm-mini {
+      font-family: var(--mono); font-size: 12px; color: var(--fg-2);
+      font-feature-settings: "tnum";
+    }
+    .peer.self { background: rgba(131,183,175,0.05); }
+    .peer.self .name { color: var(--fg); font-weight: 500; }
+    .peer-header {
+      padding: 12px 16px;
+      font-family: var(--ui); font-size: 11px; font-weight: 500;
+      color: var(--fg-3); letter-spacing: -0.005em;
+      border-bottom: 0.5px solid var(--hair);
+      background: var(--bg-elev-1);
+      display: flex; justify-content: space-between;
+    }
+
+    /* ── Tempo shape ─────────────────────────────────────────── */
+    .shape-panel {
+      background: var(--bg-elev-1);
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      padding: 28px;
+    }
+    .shape-panel .shape-meta {
+      display: flex; justify-content: space-between;
+      font-family: var(--ui); font-size: 12px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+      margin-bottom: 18px;
+    }
+    .shape-panel svg { display: block; width: 100%; height: auto; }
+
+    /* ── Power features grid ─────────────────────────────────── */
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--hair);
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      overflow: hidden;
+    }
+    @media (max-width: 980px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .tiles { grid-template-columns: 1fr; } }
+    .tile {
+      background: var(--bg);
+      padding: 32px 28px;
+      min-height: 220px;
+      display: flex; flex-direction: column;
+    }
+    .tile h3 {
+      font-size: 18px; font-weight: 600;
+      letter-spacing: -0.015em;
+      margin: 0 0 12px;
+    }
+    .tile p {
+      font-size: 14px; color: var(--fg-2);
+      line-height: 1.55; margin: 0;
+      text-wrap: pretty;
+    }
+    .tile .ix {
+      font-family: var(--ui); font-size: 11px; font-weight: 500; color: var(--fg-4);
+      letter-spacing: -0.005em; margin-bottom: 18px;
+    }
+
+    /* ── Capability list (B-list) ────────────────────────────── */
+    .caps {
+      list-style: none;
+      margin: 0; padding: 0;
+      border-top: 0.5px solid var(--hair);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 64px;
+    }
+    @media (max-width: 720px) { .caps { grid-template-columns: 1fr; column-gap: 0; } }
+    .caps li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 20px;
+      align-items: baseline;
+      padding: 18px 0;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .caps .cap-name {
+      font-size: 15px; font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+    }
+    .caps .cap-line {
+      font-size: 14px; color: var(--fg-3);
+      line-height: 1.45;
+      text-wrap: pretty;
+    }
+    .manual-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 40px;
+      font-family: var(--ui); font-size: 14px; font-weight: 500;
+      color: var(--fg-2);
+      letter-spacing: -0.005em;
+      transition: color 200ms var(--ease-out), gap 200ms var(--ease-out);
+    }
+    .manual-link:hover { color: var(--accent); gap: 12px; }
+    .manual-link svg { width: 14px; height: 14px; }
+
+    /* ── Pricing block ───────────────────────────────────────── */
+    .pricing {
+      text-align: center;
+      padding: 140px 0;
+      border-bottom: 0.5px solid var(--hair);
+    }
+    .pricing .price-tag {
+      font-family: var(--ui);
+      font-size: clamp(56px, 7vw, 88px);
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      line-height: 1;
+      margin: 24px 0 18px;
+      font-variant-numeric: proportional-nums;
+    }
+    .pricing .price-tag .currency {
+      color: var(--fg-2);
+      font-size: 0.5em;
+      font-weight: 600;
+      vertical-align: 0.62em;
+      margin-right: 3px;
+      letter-spacing: 0;
+    }
+    .pricing .price-detail {
+      display: flex; align-items: center; justify-content: center;
+      gap: 32px; flex-wrap: wrap;
+      font-size: 13px; color: var(--fg-2);
+      margin-bottom: 40px;
+      letter-spacing: -0.005em;
+    }
+    .pricing .price-detail span { display: inline-flex; align-items: center; }
+
+    /* ── Launch signup (Formspree) ───────────────────────────── */
+    .pricing-note {
+      font-size: 15px; color: var(--fg-2);
+      max-width: 440px; margin: 0 auto 28px;
+      line-height: 1.55; text-wrap: pretty;
+      letter-spacing: -0.005em;
+    }
+    .notify { max-width: 460px; margin: 0 auto; text-align: left; }
+    .notify-row { display: flex; gap: 10px; }
+    @media (max-width: 520px) { .notify-row { flex-direction: column; } }
+    .notify-input {
+      flex: 1; min-width: 0;
+      padding: 16px 18px;
+      background: var(--bg-elev-1);
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-key);
+      color: var(--fg);
+      font-family: var(--ui); font-size: 15px;
+      letter-spacing: -0.005em;
+      transition: border-color 200ms var(--ease-out), background 200ms var(--ease-out);
+    }
+    .notify-input::placeholder { color: var(--fg-4); }
+    .notify-input:focus { outline: none; border-color: var(--accent); background: var(--bg-elev-2); }
+    .notify-btn {
+      white-space: nowrap;
+      -webkit-appearance: none; appearance: none;
+      border: 0;
+      font-family: var(--ui);
+      color: #0F0F10;
+      cursor: pointer;
+    }
+    .notify-btn:disabled { opacity: 0.55; cursor: progress; }
+    .notify-status {
+      margin: 16px 0 0; font-size: 14px;
+      letter-spacing: -0.005em; line-height: 1.5;
+      color: var(--fg-2); text-wrap: pretty;
+      text-align: center;
+    }
+    .notify-status.is-error { color: oklch(0.72 0.14 25); }
+    .notify-status.is-ok {
+      color: var(--accent);
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 16px; font-weight: 500;
+    }
+    .notify.is-done .notify-row { display: none; }
+    .notify-hint {
+      margin: 14px 0 0; text-align: center;
+      font-size: 12.5px; color: var(--fg-4);
+      letter-spacing: -0.005em;
+    }
+    .notify.is-done .notify-hint { display: none; }
+
+    /* ── FAQ ─────────────────────────────────────────────────── */
+    .faq {
+      max-width: 820px; margin: 0 auto;
+    }
+    .faq details {
+      border-bottom: 0.5px solid var(--hair);
+      padding: 22px 0;
+    }
+    .faq details:first-of-type { border-top: 0.5px solid var(--hair); }
+    .faq summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 18px;
+      font-size: 17px; font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary .chev {
+      width: 14px; height: 14px;
+      color: var(--fg-3);
+      transition: transform 240ms var(--ease-out), color 240ms var(--ease-out);
+    }
+    .faq details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    .faq .answer {
+      margin-top: 14px;
+      font-size: 15px; line-height: 1.6; color: var(--fg-2);
+      max-width: 680px;
+      text-wrap: pretty;
+    }
+
+    /* ── Closing CTA ────────────────────────────────────────── */
+    .closing {
+      padding: 160px 0 140px;
+      text-align: center;
+      position: relative;
+    }
+    .closing h2 {
+      margin: 0 auto 22px;
+      font-size: clamp(40px, 5.6vw, 72px);
+      letter-spacing: -0.035em;
+      max-width: 900px;
+    }
+    .closing p {
+      font-size: 19px; color: var(--fg-2);
+      max-width: 540px; margin: 0 auto 48px;
+    }
+
+    /* ── Screenshot placeholder ──────────────────────────────── */
+    .shot {
+      position: relative;
+      border: 0.5px solid var(--hair);
+      border-radius: var(--r-card);
+      background:
+        repeating-linear-gradient(
+          135deg,
+          rgba(255,255,255,0.018) 0 8px,
+          transparent 8px 16px
+        ),
+        var(--bg-elev-1);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+    }
+    .shot::after {
+      /* corner brackets to read as a placeholder, not a card */
+      content: "";
+      position: absolute; inset: 14px;
+      border: 1px dashed rgba(255,255,255,0.06);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+    .shot-meta {
+      position: relative; z-index: 1;
+      padding: 22px 26px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--ui); font-size: 12px; font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: -0.005em;
+      border-bottom: 0.5px solid var(--hair);
+      background: rgba(15,15,16,0.4);
+    }
+    .shot-meta .tag {
+      padding: 4px 8px;
+      background: var(--bg-elev-3);
+      border: 0.5px solid var(--stroke);
+      border-radius: 4px;
+      color: var(--accent);
+      letter-spacing: -0.005em;
+      font-family: var(--ui); font-weight: 500;
+    }
+    .shot-body {
+      position: relative; z-index: 1;
+      flex: 1;
+      padding: 32px 26px;
+      display: flex; flex-direction: column; gap: 14px;
+      justify-content: flex-end;
+    }
+    .shot-label {
+      font-family: var(--ui);
+      font-size: 18px; font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--fg-2);
+      max-width: 320px;
+      line-height: 1.3;
+    }
+    .shot-spec {
+      font-family: var(--ui); font-size: 13px; font-weight: 400; color: var(--fg-4);
+      letter-spacing: -0.005em;
+      line-height: 1.55;
+    }
+
+    /* ── Real app screenshot (portrait device frame) ──────────── */
+    .app-shot {
+      position: relative;
+      width: 100%;
+      max-width: 296px;
+      margin: 0 auto;
+      padding: 9px;
+      border-radius: 44px;
+      background: linear-gradient(180deg, #1a1a1c 0%, #0a0a0b 100%);
+      box-shadow:
+        inset 0 0 0 0.5px rgba(255,255,255,0.08),
+        inset 0 0 0 1.5px #000,
+        0 30px 60px -20px rgba(0,0,0,0.7),
+        0 12px 24px -12px rgba(0,0,0,0.5),
+        0 0 0 0.5px rgba(255,255,255,0.04);
+    }
+    /* soft accent halo, matching the hero phone */
+    .app-shot::before {
+      content: "";
+      position: absolute;
+      top: 6%; left: 50%;
+      width: 118%; height: 76%;
+      transform: translateX(-50%);
+      background: radial-gradient(closest-side, rgba(131,183,175,0.10), transparent 70%);
+      filter: blur(22px);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .app-shot img {
+      display: block;
+      width: 100%;
+      border-radius: 36px;
+      background: #000;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      border-top: 0.5px solid var(--hair);
+      padding: 40px 0 56px;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px;
+      font-size: 12px; color: var(--fg-3);
+    }
+    .footer-inner .brand { font-size: 14px; color: var(--fg-2); }
+    .footer-inner .brand-mark { width: 18px; height: 18px; }
+    .footer-links {
+      display: flex; gap: 24px;
+      font-family: var(--ui); letter-spacing: -0.005em;
+      font-size: 12px; font-weight: 500; color: var(--fg-3);
+    }
+    .footer-links a:hover { color: var(--fg); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ─────────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="wrap nav-inner">
+      <a class="brand" href="#">
+        <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
+          <rect x="0" y="0" width="1024" height="1024" rx="230" ry="230" fill="#0F0F10"/>
+          <circle cx="215" cy="215" r="133" fill="#949495"/>
+          <circle cx="512" cy="512" r="82" fill="#575759"/>
+          <circle cx="809" cy="809" r="82" fill="#83B7AF"/>
+        </svg>
+        Tactus
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="manual.html">Manual</a>
+        <a href="#faq">FAQ</a>
+        <a class="nav-cta" href="#download">
+          Get notified
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────────────────── -->
+  <header class="hero" data-screen-label="01 Hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Rhythmic mapping for iOS</div>
+        <h1 class="hero-h">Built for the passages that break metronomes.</h1>
+        <p class="hero-sub">
+          Tactus maps the exact rhythmic shape of any piece. Every meter change,
+          every accent, every subdivision, played back as a click track that
+          reflects what you actually wrote.
+        </p>
+        <div class="cta-row">
+          <a class="btn-primary" href="#download">
+            Get notified at launch
+          </a>
+        </div>
+        <div class="trust-line">
+          One-time purchase, no subscription. iPhone &amp; iPad.
+        </div>
+      </div>
+
+      <!-- Hero video: portrait iPhone walkthrough. -->
+      <div class="hero-video-stage">
+        <div class="hero-video" data-state="poster">
+          <div class="hero-video-screen">
+            <video
+              class="hero-video-el"
+              preload="none"
+              playsinline
+              controls
+              poster="assets/images/walkthrough-poster.jpg">
+              <source src="assets/video/walkthrough.mp4" type="video/mp4">
+            </video>
+            <button class="hero-video-poster" type="button" aria-label="Play walkthrough">
+              <img class="hero-video-poster-img" src="assets/images/walkthrough-poster.jpg" alt="Tactus editor showing a 7-bar passage in mixed meter">
+              <span class="hero-video-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/>
+                </svg>
+              </span>
+            </button>
+            <div class="hero-video-loading" aria-hidden="true">
+              <div class="hero-video-spinner"></div>
+              <div class="hero-video-progress" data-progress>Loading…</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-video-caption">
+          <span>Walkthrough, 6:40</span>
+          <span class="hv-sep"></span>
+          <span>Tap to play</span>
+        </div>
+      </div>
+      <div class="passage" hidden aria-hidden="true">
+        <div class="passage-header">
+          <div class="passage-title">Lachenmann, Pression, mm. 47–50</div>
+          <div class="passage-meta">♩ = 92</div>
+        </div>
+
+        <div class="bar">
+          <div class="meter"><span>5</span><span>8</span></div>
+          <div class="clusters">
+            <div class="cluster"><span class="d strong"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span></div>
+            <!-- pair: TL + BR -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span></div>
+            <!-- 3 → 1,5,9 diag -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d soft"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span></div>
+            <!-- single -->
+            <div class="cluster"><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span></div>
+            <!-- pair -->
+            <div class="cluster"><span class="d soft"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d soft"></span></div>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="meter"><span>7</span><span>16</span></div>
+          <div class="clusters">
+            <span class="tempo-pill">♩ = 108</span>
+            <!-- 4 → corners -->
+            <div class="cluster"><span class="d strong"></span><span class="d empty"></span><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span><span class="d empty"></span><span class="d normal"></span></div>
+            <!-- 3 -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d soft"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span></div>
+            <!-- silent + 2 normal (pair via TL/BR? we have only 2) -->
+            <div class="cluster"><span class="d silent"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d soft"></span></div>
+          </div>
+        </div>
+
+        <div class="bar active" id="active-bar">
+          <div class="meter"><span>4</span><span>4</span></div>
+          <div class="clusters">
+            <!-- beat 1: 5 dots, hit dot index 0 (TL) -->
+            <div class="cluster"><span class="d strong hit"></span><span class="d empty"></span><span class="d normal"></span><span class="d empty"></span><span class="d soft"></span><span class="d empty"></span><span class="d normal"></span><span class="d empty"></span><span class="d normal"></span></div>
+            <!-- beat 2: 4 dots -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span><span class="d empty"></span><span class="d soft"></span></div>
+            <!-- beat 3: 3 dots diagonal -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d soft"></span></div>
+            <!-- beat 4: 7 dots -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d normal"></span><span class="d normal"></span><span class="d normal"></span><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span></div>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="meter"><span>3</span><span>8</span></div>
+          <div class="clusters">
+            <!-- beat 1: 6 dots (2 cols of 3) -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d normal"></span><span class="d normal"></span><span class="d empty"></span><span class="d normal"></span><span class="d normal"></span><span class="d empty"></span><span class="d normal"></span></div>
+            <!-- beat 2: 3 -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d soft"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span></div>
+            <!-- beat 3: 2 -->
+            <div class="cluster"><span class="d normal"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d normal"></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Section 01 — Speed of entry ─────────────────────────────────── -->
+  <section class="feature" id="features" data-screen-label="02 Speed of entry">
+    <div class="wrap split reverse">
+      <!-- visual: meter keyboard screenshot placeholder.
+           Per handoff capture #5: “Meter Keyboard — entry sheet open, preview
+           strip with 5-bar mixed-meter sequence being built.” -->
+      <div>
+        <div class="app-shot">
+          <img src="assets/images/meter-keyboard.png" alt="Tactus meter keyboard: Add Bars sheet mid-build with a 3-bar 4/8, 5/4, 4/16 preview strip and the cursor on the next slot." loading="lazy">
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label"><span class="dice" data-face="1" aria-label="Section 1"></span>Speed of entry</div>
+        <h2>A passage in seconds, not minutes.</h2>
+        <p class="lede">
+          Tap the meter keyboard. Each tap adds a bar, 5/8, 7/16, 4/4, 3/8, in any
+          order, landing with musically correct accents already in place. For the
+          bars that need more, every subdivision is one tap away.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 02 — Ableton Link ──────────────────────────────────── -->
+  <!-- HEADLINE OPTIONS:
+         A. Start in sync with everyone in the room.
+         B. One tap. Every device in the room, in sync.
+         C. Sync with anyone on the network, instantly.   ← current
+         D. Lock into the session. Every app, every device.
+  -->
+  <section class="feature" id="link" data-screen-label="03 Ableton Link">
+    <div class="wrap">
+      <div class="section-label"><span class="dice" data-face="2" aria-label="Section 2"></span>Ableton Link</div>
+      <h2>Start, bend, and stop the tempo together.</h2>
+      <p class="lede" style="margin-bottom: 20px;">
+        It's not just DAWs. Every player running Tactus starts, stops, and rides tempo
+        from one shared grid, each following their own accents and subdivisions. And
+        because Tactus speaks Ableton Link, that same grid extends to Logic Pro,
+        Ableton Live, and anything else that speaks it.
+      </p>
+      <p class="lede" style="margin-bottom: 56px; color:var(--fg-3); font-size:15px;">
+        Starting together is automatic. <em>Staying</em> together through a rit or accel
+        means everyone needs the same tempo map, so Tactus lets you share a passage and
+        import the whole thing, or just its tempo map. At a steady tempo, matching BPM
+        is all it takes.
+      </p>
+
+      <div class="link-card">
+        <div>
+          <!-- Per handoff capture #6: “Settings — Ableton Link section: toggle in
+               active/connected state, showing peer count > 0.” -->
+          <div class="app-shot">
+            <img src="assets/images/ableton-link-connected.png" alt="Tactus Settings with Ableton Link active, showing a green ‘1 Link’ connected banner and Sync Start/Stop enabled." loading="lazy">
+          </div>
+        </div>
+        <div>
+          <div class="peer-list" style="margin-bottom: 24px;">
+            <div class="peer-header"><span>Session &middot; &#9833; = 120</span><span>4 linked</span></div>
+            <div class="peer self"><span class="name">This iPhone</span><span class="bpm-mini">120.0</span></div>
+            <div class="peer"><span class="name">Viola &middot; iPad</span><span class="bpm-mini">120.0</span></div>
+            <div class="peer"><span class="name">Cello &middot; iPhone</span><span class="bpm-mini">120.0</span></div>
+            <div class="peer"><span class="name">Ableton Live</span><span class="bpm-mini">120.0</span></div>
+          </div>
+          <div style="font-size:14px; line-height:1.6; color:var(--fg-3); margin-bottom: 18px;">
+            Anyone with Tactus, plus anything with Link. Bidirectional tempo, shared Start/Stop.
+          </div>
+          <div class="link-tags">
+            <span class="ltag">Tactus &rarr; Tactus</span>
+            <span class="ltag">Logic Pro</span>
+            <span class="ltag">Ableton Live</span>
+            <span class="ltag">Camelot</span>
+            <span class="ltag">+ anything with Link</span>
+          </div>
+          <style>
+            .link-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+            .link-tags .ltag {
+              display: inline-block;
+              padding: 6px 12px;
+              background: var(--bg-elev-2);
+              border: 0.5px solid var(--hair);
+              border-radius: 999px;
+              font-family: var(--ui);
+              font-size: 12.5px; font-weight: 500;
+              color: var(--fg-2);
+              letter-spacing: -0.005em;
+            }
+            .link-tags .ltag:first-child {
+              color: var(--accent);
+              border-color: var(--accent-dim);
+              background: rgba(131,183,175,0.07);
+            }
+          </style>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 06 — Tempo Shape ───────────────────────────────────── -->
+  <!-- HEADLINE OPTIONS:
+         A. Shape any ritardando or accelerando the way it should sound.
+         B. Draw the ritardando you actually want.
+         C. Sculpt rits and accels the way you hear them.   ← current
+         D. Shape tempo curves by ear.
+  -->
+  <section class="feature" data-screen-label="04 Tempo Shape">
+    <div class="wrap split">
+      <div>
+        <div class="section-label"><span class="dice" data-face="3" aria-label="Section 3"></span>Tempo shape editor</div>
+        <h2>Sculpt rits and accels the way you hear them.</h2>
+        <p class="lede">
+          Draw a tempo curve across any range of bars, linear, ease-in, or ease-out
+          per segment. A ritardando that lands softly. An accelerando that plateaus
+          before the downbeat.
+        </p>
+        <p class="lede" style="margin-top:18px; color:var(--fg-3); font-size:15px;">
+          The click track follows the curve.
+        </p>
+      </div>
+
+      <div>
+        <div class="app-shot">
+          <img src="assets/images/tempo-shape.png" alt="Tactus Tempo Shape editor: a 3-node curve ramping 120 to 161 to 204 bpm with per-segment easing sliders below." loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 07 — Power features grid ───────────────────────────── -->
+  <section class="feature" data-screen-label="05 Power features">
+    <div class="wrap">
+      <div class="section-label"><span class="dice" data-face="4" aria-label="Section 4"></span>Built deep</div>
+      <h2>Everything else, already in the box.</h2>
+      <p class="lede" style="margin-bottom: 48px;">
+        One app, one purchase. No feature gating, no upsells.
+      </p>
+
+      <ul class="caps">
+        <li>
+          <span class="cap-name">Die-face dot clusters</span>
+          <span class="cap-line">Read each beat as a die face, not a count.</span>
+        </li>
+        <li>
+          <span class="cap-name">Four accent states</span>
+          <span class="cap-line">Strong, normal, soft, silent, each its own click.</span>
+        </li>
+        <li>
+          <span class="cap-name">Subdivision independence</span>
+          <span class="cap-line">Split any beat 2&ndash;9 ways, per beat.</span>
+        </li>
+        <li>
+          <span class="cap-name">Conducted feel</span>
+          <span class="cap-line">Overlay a conductor&rsquo;s beat pattern on any bar.</span>
+        </li>
+        <li>
+          <span class="cap-name">Practice speed</span>
+          <span class="cap-line">Slow the whole passage, 50&ndash;125%, in one tap.</span>
+        </li>
+        <li>
+          <span class="cap-name">Count-in</span>
+          <span class="cap-line">Mirrors the coming meter before you start.</span>
+        </li>
+        <li>
+          <span class="cap-name">iPad &amp; iPhone</span>
+          <span class="cap-line">Both native, synced through iCloud.</span>
+        </li>
+        <li>
+          <span class="cap-name">.rhythmmap export</span>
+          <span class="cap-line">Share a passage in a single file.</span>
+        </li>
+      </ul>
+
+      <a class="manual-link" href="manual.html">
+        Full feature reference in the manual
+        <svg viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Pricing ────────────────────────────────────────────────────── -->
+  <section class="pricing" id="download" data-screen-label="09 Pricing">
+    <div class="wrap">
+      <div class="section-label" style="justify-content:center;"><span class="dice" data-face="5" aria-label="Section 5"></span>Coming soon</div>
+      <div class="price-tag"><span class="currency">$</span>19.99</div>
+      <div class="price-detail">
+        <span>One-time purchase</span>
+        <span>iPhone &amp; iPad</span>
+        <span>No subscription</span>
+        <span>Lifetime updates</span>
+      </div>
+      <p class="pricing-note">
+        Tactus is still in the studio. Leave your email and we&rsquo;ll write you once,
+        the day it lands on the App Store.
+      </p>
+      <form class="notify" id="notify-form" action="https://formspree.io/f/xbderwrg" method="POST">
+        <div class="notify-row">
+          <input class="notify-input" type="email" name="email" required
+                 placeholder="you@email.com" aria-label="Email address" autocomplete="email">
+          <button class="btn-primary notify-btn" type="submit">Notify me at launch</button>
+        </div>
+        <!-- Formspree honeypot: bots fill this, humans never see it -->
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true"
+               style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
+        <p class="notify-hint">No spam, no list-selling. One email, then we&rsquo;re done.</p>
+        <p class="notify-status" data-status role="status" aria-live="polite" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ── FAQ ────────────────────────────────────────────────────────── -->
+  <section class="feature" id="faq" data-screen-label="10 FAQ">
+    <div class="wrap">
+      <div style="text-align:center; margin-bottom: 56px;">
+        <div class="section-label" style="justify-content:center;"><span class="dice" data-face="6" aria-label="Section 6"></span>Frequently asked</div>
+        <h2 style="margin: 0 auto;">Questions, in plain language.</h2>
+      </div>
+
+      <div class="faq">
+        <details>
+          <summary>
+            <span>Is this a metronome?</span>
+            <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </summary>
+          <div class="answer">
+            Not really. A metronome repeats one click at a fixed tempo. Tactus maps the
+            rhythmic shape of a specific passage, changing meters, subdivisions, accents, and plays that back. A rehearsal-prep tool, not a drill tool.
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>Does it work with a DAW?</span>
+            <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </summary>
+          <div class="answer">
+            Yes, via Ableton Link. Join the same WiFi network and tempos sync
+            bidirectionally with zero setup. Optional Start/Stop Sync controls every
+            connected app at once.
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>Can the tempo change within a passage?</span>
+            <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </summary>
+          <div class="answer">
+            Yes, two ways: per-bar BPM overrides, or the Tempo Shape editor for a gradual
+            ramp across a range of bars.
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>Does it sync between my iPad and iPhone?</span>
+            <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </summary>
+          <div class="answer">
+            Yes, passages sync via iCloud and appear on all your devices automatically.
+            Nothing beyond your Apple ID required.
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>Is there a subscription?</span>
+            <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </summary>
+          <div class="answer">
+            No. One-time purchase, everything included, free updates for the lifetime of the
+            major version.
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>Can I share passages with collaborators?</span>
+            <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </summary>
+          <div class="answer">
+            Yes, export a .rhythmmap file and send it any way you like. They open it
+            directly in their copy of Tactus.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="wrap footer-inner">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
+          <rect x="0" y="0" width="1024" height="1024" rx="230" ry="230" fill="#0F0F10"/>
+          <circle cx="215" cy="215" r="133" fill="#949495"/>
+          <circle cx="512" cy="512" r="82" fill="#575759"/>
+          <circle cx="809" cy="809" r="82" fill="#83B7AF"/>
+        </svg>
+        Tactus
+      </div>
+      <div style="color: var(--fg-3); font-size:12px;">
+        © 2026 Alan Molina. Mixed meter. Built for you.
+      </div>
+      <div class="footer-links">
+        <a href="manual.html">Manual</a>
+        <a href="#">Support</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    /* ── Ambient motion & scroll reveals ─────────────────────── */
+    /* Device shots & tiles lift slightly on hover (subtle, fast). */
+    .app-shot { transition: transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out); }
+    .app-shot:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        inset 0 0 0 0.5px rgba(255,255,255,0.08),
+        inset 0 0 0 1.5px #000,
+        0 42px 80px -24px rgba(0,0,0,0.8),
+        0 16px 32px -12px rgba(0,0,0,0.55),
+        0 0 0 0.5px rgba(255,255,255,0.05);
+    }
+    .tile { transition: background 320ms var(--ease-out); }
+    .tile:hover { background: var(--bg-elev-1); }
+
+    /* While the page is scrolling, neutralize hover on the lift elements so the
+       pointer parking over a card doesn't replay the hover animation. */
+    html.is-scrolling .app-shot,
+    html.is-scrolling .tile { pointer-events: none; }
+
+    /* Live indicator on the synced session (the "self" peer). */
+    .peer.self .name::before {
+      content: ""; flex-shrink: 0;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      /* Scroll reveal: fade + rise, gated on JS so no-JS stays visible. */
+      html.js-anim [data-reveal] {
+        opacity: 0;
+        transform: translateY(22px);
+        transition: opacity 760ms var(--ease-out), transform 760ms var(--ease-out);
+      }
+      html.js-anim .app-shot[data-reveal] { transform: translateY(30px) scale(0.985); }
+      html.js-anim [data-reveal].is-in { opacity: 1; transform: none; }
+
+      /* Slow float on the hero phone — uses `translate` so it never fights
+         the reveal/hover transforms. */
+      html.js-anim .hero-video {
+        animation: hv-float 8s ease-in-out 1200ms infinite;
+      }
+      @keyframes hv-float {
+        0%, 100% { translate: 0 0; }
+        50%      { translate: 0 -10px; }
+      }
+
+      /* Pulsing live ring on the synced session dot. */
+      .peer.self .name::before {
+        animation: live-pulse 2.6s var(--ease-out) infinite;
+      }
+      @keyframes live-pulse {
+        0%   { box-shadow: 0 0 0 0 rgba(131,183,175,0.5); }
+        70%  { box-shadow: 0 0 0 8px rgba(131,183,175,0); }
+        100% { box-shadow: 0 0 0 0 rgba(131,183,175,0); }
+      }
+    }
+  </style>
+
+  <script>
+    // ── Scroll reveals: fade-up on entry, with stagger for grouped lists ──
+    (function () {
+      const root = document.documentElement;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      root.classList.add('js-anim');
+
+      // Individually-revealed blocks.
+      document.querySelectorAll(
+        '.eyebrow, h1.hero-h, .hero-sub, .cta-row, .trust-line, .hero-video-stage,'
+        + 'section .section-label, section h2, section .lede, .app-shot, .shape-panel,'
+        + '.link-card, .price-tag, .price-detail, .pricing-note, .notify,'
+        + '.closing h2, .closing p'
+      ).forEach(el => el.setAttribute('data-reveal', ''));
+
+      // Stagger groups: children cascade in sequence.
+      document.querySelectorAll('.peer-list, .link-tags, .tiles, .caps, .faq').forEach(group => {
+        [...group.children].forEach((kid, i) => {
+          kid.setAttribute('data-reveal', '');
+          kid.style.transitionDelay = (i * 65) + 'ms';
+        });
+      });
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+
+      document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+    })();
+
+    // ── Suppress hover-lift during scroll (prevents the pointer parking over a
+    //    card and re-triggering its hover animation as content slides past). ──
+    (function () {
+      const root = document.documentElement;
+      let t = null;
+      window.addEventListener('scroll', () => {
+        if (t === null) root.classList.add('is-scrolling');
+        else clearTimeout(t);
+        t = setTimeout(() => { root.classList.remove('is-scrolling'); t = null; }, 140);
+      }, { passive: true });
+    })();
+  </script>
+
+  <script>
+    // Tiny ambient pulse — fires the "hit" animation on the hero active bar
+    // every ~720ms so the page feels alive without being noisy.
+    (function () {
+      const bar = document.getElementById('active-bar');
+      if (!bar) return;
+      const clusters = bar.querySelectorAll('.cluster');
+      let beat = 0;
+      // For each cluster, find the first visible (non-empty) dot to hit.
+      function tick() {
+        clusters.forEach(c => c.querySelectorAll('.d.hit').forEach(d => d.classList.remove('hit')));
+        const c = clusters[beat % clusters.length];
+        const dots = [...c.querySelectorAll('.d')].filter(d => !d.classList.contains('empty'));
+        if (dots[0]) {
+          const target = dots[0];
+          // restart animation
+          target.classList.remove('hit');
+          // force reflow
+          void target.offsetWidth;
+          target.classList.add('hit');
+        }
+        beat++;
+      }
+      tick();
+      setInterval(tick, 720);
+    })();
+
+    // Hero video — click poster to play.
+    //
+    // We fetch the .mp4 as a blob and use a blob: URL rather than letting
+    // the <video> stream from the server, for two reasons:
+    //   1. Some preview/dev servers don't support HTTP Range requests, which
+    //      modern video pipelines need. Blob URLs sidestep that entirely.
+    //   2. We can show real download progress while the user waits.
+    // The <source> tag in markup is left as a graceful no-JS fallback.
+    (function () {
+      const wrap = document.querySelector('.hero-video');
+      if (!wrap) return;
+      const video    = wrap.querySelector('.hero-video-el');
+      const poster   = wrap.querySelector('.hero-video-poster');
+      const progress = wrap.querySelector('[data-progress]');
+      const srcUrl   = video.querySelector('source')?.src || 'assets/video/walkthrough.mp4';
+
+      video.addEventListener('playing', () => { wrap.dataset.state = 'playing'; });
+      video.addEventListener('ended',   () => { wrap.dataset.state = 'poster'; video.currentTime = 0; });
+      video.addEventListener('error',   () => { wrap.dataset.state = 'poster'; });
+
+      let loading = false, blobUrl = null;
+      poster.addEventListener('click', async () => {
+        if (loading) return;
+        wrap.dataset.state = 'loading';
+        progress.textContent = 'Loading…';
+
+        if (!blobUrl) {
+          loading = true;
+          try {
+            const resp = await fetch(srcUrl);
+            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+            const total = +resp.headers.get('content-length') || 0;
+            const reader = resp.body.getReader();
+            const chunks = [];
+            let received = 0;
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+              received += value.length;
+              if (total) {
+                const pct = Math.min(99, Math.round(received / total * 100));
+                progress.textContent = pct + '%';
+              } else {
+                progress.textContent = (received / 1024 / 1024).toFixed(1) + ' MB';
+              }
+            }
+            const blob = new Blob(chunks, { type: 'video/mp4' });
+            blobUrl = URL.createObjectURL(blob);
+            // Remove the <source> so the video element doesn't keep the old src
+            video.querySelector('source')?.remove();
+            video.src = blobUrl;
+          } catch (e) {
+            console.warn('Walkthrough load failed:', e);
+            wrap.dataset.state = 'poster';
+            loading = false;
+            return;
+          }
+          loading = false;
+        }
+
+        try {
+          await video.play();
+        } catch (e) {
+          console.warn('Walkthrough play() failed:', e);
+          wrap.dataset.state = 'poster';
+        }
+      });
+    })();
+
+    // ── Launch signup → Formspree (AJAX, no page reload) ──────────
+    (function () {
+      const form = document.getElementById('notify-form');
+      if (!form) return;
+      const status = form.querySelector('[data-status]');
+      const btn    = form.querySelector('.notify-btn');
+      const input  = form.querySelector('.notify-input');
+
+      function setStatus(msg, kind) {
+        status.hidden = false;
+        status.className = 'notify-status' + (kind ? ' is-' + kind : '');
+        status.innerHTML = msg;
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        btn.disabled = true;
+        const label = btn.textContent;
+        btn.textContent = 'Sending…';
+        try {
+          const resp = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { Accept: 'application/json' },
+          });
+          if (resp.ok) {
+            form.classList.add('is-done');
+            setStatus('✓&nbsp; You\u2019re on the list. We\u2019ll be in touch the day Tactus ships.', 'ok');
+          } else {
+            const data = await resp.json().catch(() => ({}));
+            const msg = data && data.errors && data.errors.length
+              ? data.errors.map((x) => x.message).join(', ')
+              : 'Something went wrong. Please try again, or email us directly.';
+            setStatus(msg, 'error');
+            btn.disabled = false;
+            btn.textContent = label;
+          }
+        } catch (err) {
+          setStatus('Network error. Check your connection and try again.', 'error');
+          btn.disabled = false;
+          btn.textContent = label;
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
