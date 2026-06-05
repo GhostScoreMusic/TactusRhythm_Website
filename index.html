@@ -55,6 +55,9 @@
       font-size: 14px; color: var(--fg-2);
     }
     .nav-links a:hover { color: var(--fg); }
+    @media (max-width: 600px) {
+      .nav-links a:not(.nav-cta) { display: none; }
+    }
     .nav-cta {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 8px 14px;
