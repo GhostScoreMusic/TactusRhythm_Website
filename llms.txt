@@ -1,0 +1,34 @@
+# Tactus
+
+> Tactus is a rhythmic mapping app for iOS (iPhone and iPad) built for musicians working with complex music: mixed meters, changing time signatures, ritardandos, accelerandos, and non-standard accents.
+
+Tactus is not a metronome. A metronome repeats one click at a fixed tempo. Tactus maps the exact rhythmic shape of a specific musical passage and plays it back as a custom click track. It is a rehearsal and practice tool for performers, composers, and conductors.
+
+## Key features
+
+- **Meter keyboard**: Tap to add bars in any time signature (5/8, 7/16, 4/4, 3/8, etc.) with musically correct accents already in place.
+- **Die-face dot clusters**: Each beat is displayed as a die-face pattern, letting you read the subdivision count at a glance without counting.
+- **Four accent states**: Strong, normal, soft, and silent, each with its own distinct click sound.
+- **Subdivision independence**: Split any beat 2 to 9 ways, independently, per beat.
+- **Ableton Link**: Sync tempo and start/stop with other devices and DAWs (Logic Pro, Ableton Live, Camelot, and anything else that speaks Ableton Link) over a shared Wi-Fi network.
+- **Tempo Shape editor**: Draw ritardando and accelerando curves across any range of bars, with linear, ease-in, and ease-out options per segment.
+- **Conducted feel**: Overlay a conductor's beat pattern on any bar.
+- **Practice speed**: Slow the entire passage 50 to 125% in one tap.
+- **Count-in**: Mirrors the coming meter before playback begins.
+- **iCloud sync**: Passages sync automatically across all your Apple devices.
+- **.rhythmmap export**: Share any passage as a single portable file.
+- **iPad and iPhone native**: Both supported, one purchase.
+
+## Pricing
+
+$19.99, one-time purchase. No subscription. Lifetime updates included for the major version. iPhone and iPad both included.
+
+## Status
+
+Coming soon on the App Store. Email notification signup available at https://tactusrhythm.com/#download
+
+## Pages
+
+- [Home](https://tactusrhythm.com/): Product overview, feature walkthrough video, and launch notification signup.
+- [Manual](https://tactusrhythm.com/manual.html): Full feature reference documentation.
+- [Privacy Policy](https://tactusrhythm.com/privacy.html): Privacy policy and data handling information.
