@@ -47,9 +47,16 @@
     }
     .brand {
       display: flex; align-items: center; gap: 12px;
-      font-weight: 700; letter-spacing: -0.02em; font-size: 17px;
+      font-size: 17px;
     }
     .brand-mark { width: 24px; height: 24px; flex-shrink: 0; display: block; }
+    .wordmark {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.92);
+    }
     .nav-links {
       display: flex; align-items: center; gap: 28px;
       font-size: 14px; color: var(--fg-2);
@@ -92,7 +99,7 @@
     }
     h1.hero-h {
       font-size: clamp(40px, 5.2vw, 68px);
-      font-weight: 700;
+      font-weight: 600;
       line-height: 1.02;
       letter-spacing: -0.035em;
       margin: 0 0 28px;
@@ -217,7 +224,7 @@
     }
     h2 {
       font-size: clamp(28px, 3.4vw, 42px);
-      font-weight: 700;
+      font-weight: 600;
       line-height: 1.08;
       letter-spacing: -0.03em;
       margin: 0 0 24px;
@@ -520,12 +527,11 @@
     <div class="wrap nav-inner">
       <a class="brand" href="index.html">
         <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
-          <rect x="0" y="0" width="1024" height="1024" rx="230" ry="230" fill="#0F0F10"/>
-          <circle cx="215" cy="215" r="133" fill="#949495"/>
-          <circle cx="512" cy="512" r="82" fill="#575759"/>
-          <circle cx="809" cy="809" r="82" fill="#83B7AF"/>
+          <circle cx="215" cy="215" r="99" fill="#83B7AF"/>
+          <circle cx="512" cy="512" r="99" fill="#FFFFFF"/>
+          <circle cx="809" cy="809" r="99" fill="#FFFFFF"/>
         </svg>
-        Tactus
+        <span class="wordmark">Tactus</span>
       </a>
       <div class="nav-links">
         <a href="index.html#features">Features</a>
@@ -830,12 +836,11 @@
     <div class="wrap footer-inner">
       <a class="brand" href="index.html">
         <svg class="brand-mark" viewBox="0 0 1024 1024" aria-hidden="true">
-          <rect x="0" y="0" width="1024" height="1024" rx="230" ry="230" fill="#0F0F10"/>
-          <circle cx="215" cy="215" r="133" fill="#949495"/>
-          <circle cx="512" cy="512" r="82" fill="#575759"/>
-          <circle cx="809" cy="809" r="82" fill="#83B7AF"/>
+          <circle cx="215" cy="215" r="99" fill="#83B7AF"/>
+          <circle cx="512" cy="512" r="99" fill="#FFFFFF"/>
+          <circle cx="809" cy="809" r="99" fill="#FFFFFF"/>
         </svg>
-        Tactus
+        <span class="wordmark">Tactus</span>
       </a>
       <div style="color: var(--fg-3); font-size:12px;">
         © 2026 Alan Molina. Mixed meter. Built for you.

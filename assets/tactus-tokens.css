@@ -17,20 +17,20 @@
 
   /* ── Text ──────────────────────────────────────────────────── */
   --fg:           rgba(255,255,255,0.92);
-  --fg-2:         rgba(255,255,255,0.55);
-  --fg-3:         rgba(255,255,255,0.32);
-  --fg-4:         rgba(255,255,255,0.18);
+  --fg-2:         rgba(255,255,255,0.68);
+  --fg-3:         rgba(255,255,255,0.42);
+  --fg-4:         rgba(255,255,255,0.20);
 
   /* ── Dot weights (the product) ─────────────────────────────── */
   --dot-strong:   rgba(255,255,255,1.00);
-  --dot-normal:   rgba(255,255,255,0.72);
-  --dot-soft:     rgba(255,255,255,0.40);
+  --dot-normal:   rgba(255,255,255,0.58);
+  --dot-soft:     rgba(255,255,255,0.34);
   --dot-silent:   rgba(255,255,255,0.22); /* used as stroke only */
 
   /* ── Accent (teal default) ─────────────────────────────────── */
   --accent:       oklch(0.74 0.055 185);
   --accent-dim:   oklch(0.74 0.055 185 / 0.35);
-  --accent-glow:  oklch(0.78 0.07 185 / 0.45);
+  --accent-glow:  rgba(139,190,182,0.45); /* #8BBEB6 @ 45% */
 
   /* ── Destructive (rare) ────────────────────────────────────── */
   --destructive:  oklch(0.65 0.13 25);
@@ -85,13 +85,17 @@
 .t-helper   { font-family: var(--ui);   font-size: 11px; font-weight: 400; color: var(--fg-4); letter-spacing: 0; }
 
 /* ── Dot animation ──────────────────────────────────────────── */
+/* No glow on the dot itself — the glow lives on the active-bar edge
+   and the meter-picker caret instead. Attack 20ms / hold ~50ms / release
+   80ms, ~150ms total. */
 @keyframes tactus-hit {
-  0%   { transform: scale(1);    filter: drop-shadow(0 0 0 var(--accent-glow)); }
-  18%  { transform: scale(1.35); filter: drop-shadow(0 0 8px var(--accent-glow)); }
-  100% { transform: scale(1);    filter: drop-shadow(0 0 0 var(--accent-glow)); }
+  0%   { transform: scale(1); }
+  13%  { transform: scale(1.22); }
+  47%  { transform: scale(1.22); }
+  100% { transform: scale(1); }
 }
 .tactus-dot.hit {
-  animation: tactus-hit 380ms var(--ease-out);
+  animation: tactus-hit 150ms var(--ease-out);
 }
 
 /* Active-bar focal ring is drawn with a hairline accent on left edge. */
@@ -99,9 +103,9 @@
   content: "";
   position: absolute;
   left: 0; top: 12%; bottom: 12%;
-  width: 2px; border-radius: 2px;
+  width: 3px; border-radius: 2px;
   background: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 /* Selection ring for tapped beat clusters (Editor only) */
