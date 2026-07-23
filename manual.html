@@ -12,6 +12,9 @@
   <meta property="og:site_name" content="Tactus">
   <meta property="og:title" content="Tactus. Manual.">
   <meta property="og:description" content="Full feature reference for Tactus: meter entry, accent states, subdivisions, Ableton Link, tempo shape curves, conducted feel, and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/tactus-tokens.css">
   <style>
     html, body {
@@ -53,9 +56,9 @@
     }
     .brand-mark { width: 24px; height: 24px; flex-shrink: 0; display: block; }
     .wordmark {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      font-family: "Jost", sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.92);
     }
@@ -93,7 +96,7 @@
     }
     h1.hero-h {
       font-size: clamp(40px, 5.2vw, 64px);
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.02;
       letter-spacing: -0.035em;
       margin: 0 0 24px;
@@ -140,7 +143,7 @@
     .toc-h {
       padding: 14px 16px;
       border-bottom: 0.5px solid var(--hair);
-      font-size: 12.5px; font-weight: 600;
+      font-size: 12.5px; font-weight: 500;
       color: var(--fg-3);
       letter-spacing: -0.005em;
       position: sticky; top: 0;
@@ -179,7 +182,7 @@
     .chapter:last-child { border-bottom: 0; margin-bottom: 0; }
     .chapter-label {
       display: inline-flex; align-items: center; gap: 12px;
-      font-size: 16px; font-weight: 600;
+      font-size: 16px; font-weight: 500;
       color: var(--fg-2);
       letter-spacing: -0.01em;
       margin-bottom: 20px;
@@ -194,7 +197,7 @@
     }
     h2 {
       font-size: clamp(26px, 3vw, 36px);
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.1;
       letter-spacing: -0.03em;
       margin: 0 0 20px;
@@ -202,7 +205,7 @@
       text-wrap: balance;
     }
     h3 {
-      font-size: 18px; font-weight: 600;
+      font-size: 18px; font-weight: 500;
       letter-spacing: -0.015em;
       margin: 40px 0 12px;
     }
@@ -229,7 +232,7 @@
       letter-spacing: 0;
       font-feature-settings: "tnum";
     }
-    strong { color: var(--fg); font-weight: 600; }
+    strong { color: var(--fg); font-weight: 500; }
     a.inline {
       color: var(--accent);
       border-bottom: 0.5px solid var(--accent-dim);
@@ -257,7 +260,7 @@
     }
     .gestures li:last-child { border-bottom: 0; }
     .gestures .g {
-      font-size: 12px; font-weight: 600;
+      font-size: 12px; font-weight: 500;
       color: var(--fg);
       letter-spacing: -0.005em;
     }
@@ -324,7 +327,7 @@
     .table .tr:last-child { border-bottom: 0; }
     .table .tr.head {
       background: rgba(255,255,255,0.012);
-      font-size: 11px; font-weight: 600;
+      font-size: 11px; font-weight: 500;
       color: var(--fg-3); letter-spacing: 0.02em; text-transform: uppercase;
     }
     .table .td {
@@ -335,7 +338,7 @@
     }
     .table .td:last-child { border-right: 0; }
     .table .tr.head .td { padding: 11px 20px; }
-    .table .td .name { color: var(--fg); font-weight: 600; }
+    .table .td .name { color: var(--fg); font-weight: 500; }
     .table .td .mono { font-family: var(--mono); font-size: 13px; color: var(--accent); font-feature-settings: "tnum"; }
 
     .accent-table .tr { grid-template-columns: 1.1fr 1.4fr 1.4fr; }
@@ -370,7 +373,7 @@
       align-items: start;
     }
     .note .tag {
-      font-size: 11px; font-weight: 600; color: var(--accent);
+      font-size: 11px; font-weight: 500; color: var(--accent);
       letter-spacing: -0.005em;
       padding-top: 1px;
       white-space: nowrap;
@@ -393,7 +396,7 @@
       background: var(--bg);
       padding: 22px 22px 20px;
     }
-    .concept .ct { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .concept .ct { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 8px; }
     .concept .cd { font-size: 13.5px; color: var(--fg-3); line-height: 1.55; }
 
     /* ── Macro → micro flow ──────────────────────────────────── */
@@ -435,7 +438,7 @@
       letter-spacing: 0; margin-bottom: 14px;
       font-feature-settings: "tnum";
     }
-    .flow-step .st { font-size: 16px; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 8px; }
+    .flow-step .st { font-size: 16px; font-weight: 500; letter-spacing: -0.015em; margin-bottom: 8px; }
     .flow-step .sd { font-size: 13.5px; color: var(--fg-3); line-height: 1.55; }
 
     /* ── Die-face cluster legend ─────────────────────────────── */

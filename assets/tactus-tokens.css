@@ -36,12 +36,15 @@
   --destructive:  oklch(0.65 0.13 25);
 
   /* ── Type ──────────────────────────────────────────────────────
-     Chrome:  Helvetica Neue (predates the AI-design aesthetic; ships on
-              every Apple device, never reads as a Figma export).
+     Chrome:  Jost 500 — matches the shipping app's wordmark, labels,
+              buttons, titles, and body copy.
      Data:    SF Mono — reserved strictly for numbers, ratios, BPM, meter,
-              time / bar / beat. Not for category labels. */
-  --ui:   "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+              time / bar / beat. Not for category labels.
+     Meter:   Helvetica Neue Bold — meter/time signatures only, kept off
+              Jost on purpose (reads as engraved notation). See .meter. */
+  --ui:     "Jost", sans-serif;
+  --mono:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --meter-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   /* ── Radii / motion ────────────────────────────────────────── */
   --r-card: 14px;
