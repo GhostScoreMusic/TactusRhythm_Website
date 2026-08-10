@@ -25,10 +25,10 @@ $9.99, one-time purchase. No subscription. Lifetime updates included for the maj
 
 ## Status
 
-Coming soon on the App Store. Email notification signup available at https://tactusrhythm.com/#download
+Available now on the App Store: https://apps.apple.com/app/tactus/id6770496883
 
 ## Pages
 
-- [Home](https://tactusrhythm.com/): Product overview, feature walkthrough video, and launch notification signup.
+- [Home](https://tactusrhythm.com/): Product overview, feature walkthrough video, and App Store download link.
 - [Manual](https://tactusrhythm.com/manual.html): Full feature reference documentation.
 - [Privacy Policy](https://tactusrhythm.com/privacy.html): Privacy policy and data handling information.

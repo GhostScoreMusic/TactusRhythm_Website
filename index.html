@@ -42,8 +42,10 @@
       "offers": {
         "@type": "Offer",
         "price": "9.99",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
       },
+      "downloadUrl": "https://apps.apple.com/app/tactus/id6770496883",
       "url": "https://tactusrhythm.com",
       "author": {
         "@type": "Person",
@@ -727,36 +729,6 @@
       align-items: center;
     }
     @media (max-width: 720px) { .link-card { grid-template-columns: 1fr; } }
-    .peer-list {
-      display: flex; flex-direction: column; gap: 0;
-      background: var(--bg-elev-2);
-      border-radius: var(--r-row);
-      overflow: hidden;
-      border: 0.5px solid var(--hair);
-    }
-    .peer {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 16px;
-      border-bottom: 0.5px solid var(--hair);
-      font-size: 14px;
-    }
-    .peer:last-child { border-bottom: 0; }
-    .peer .name { display: flex; align-items: center; gap: 12px; }
-    .peer .indicator { display: none; }
-    .peer .bpm-mini {
-      font-family: var(--mono); font-size: 12px; color: var(--fg-2);
-      font-feature-settings: "tnum";
-    }
-    .peer.self { background: rgba(131,183,175,0.05); }
-    .peer.self .name { color: var(--fg); font-weight: 500; }
-    .peer-header {
-      padding: 12px 16px;
-      font-family: var(--ui); font-size: 11px; font-weight: 500;
-      color: var(--fg-3); letter-spacing: -0.005em;
-      border-bottom: 0.5px solid var(--hair);
-      background: var(--bg-elev-1);
-      display: flex; justify-content: space-between;
-    }
 
     /* ── Tempo shape ─────────────────────────────────────────── */
     .shape-panel {
@@ -878,57 +850,13 @@
     }
     .pricing .price-detail span { display: inline-flex; align-items: center; }
 
-    /* ── Launch signup (Formspree) ───────────────────────────── */
+    /* ── Download CTA ────────────────────────────────────────── */
     .pricing-note {
       font-size: 15px; color: var(--fg-2);
       max-width: 440px; margin: 0 auto 28px;
       line-height: 1.55; text-wrap: pretty;
       letter-spacing: -0.005em;
     }
-    .notify { max-width: 460px; margin: 0 auto; text-align: left; }
-    .notify-row { display: flex; gap: 10px; }
-    @media (max-width: 520px) { .notify-row { flex-direction: column; } }
-    .notify-input {
-      flex: 1; min-width: 0;
-      padding: 16px 18px;
-      background: var(--bg-elev-1);
-      border: 1px solid var(--stroke);
-      border-radius: var(--r-key);
-      color: var(--fg);
-      font-family: var(--ui); font-size: 15px;
-      letter-spacing: -0.005em;
-      transition: border-color 200ms var(--ease-out), background 200ms var(--ease-out);
-    }
-    .notify-input::placeholder { color: var(--fg-4); }
-    .notify-input:focus { outline: none; border-color: var(--accent); background: var(--bg-elev-2); }
-    .notify-btn {
-      white-space: nowrap;
-      -webkit-appearance: none; appearance: none;
-      border: 0;
-      font-family: var(--ui);
-      color: #0F0F10;
-      cursor: pointer;
-    }
-    .notify-btn:disabled { opacity: 0.55; cursor: progress; }
-    .notify-status {
-      margin: 16px 0 0; font-size: 14px;
-      letter-spacing: -0.005em; line-height: 1.5;
-      color: var(--fg-2); text-wrap: pretty;
-      text-align: center;
-    }
-    .notify-status.is-error { color: oklch(0.72 0.14 25); }
-    .notify-status.is-ok {
-      color: var(--accent);
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 16px; font-weight: 500;
-    }
-    .notify.is-done .notify-row { display: none; }
-    .notify-hint {
-      margin: 14px 0 0; text-align: center;
-      font-size: 12.5px; color: var(--fg-4);
-      letter-spacing: -0.005em;
-    }
-    .notify.is-done .notify-hint { display: none; }
 
     /* ── FAQ ─────────────────────────────────────────────────── */
     .faq {
@@ -1115,7 +1043,7 @@
         <a href="manual.html">Manual</a>
         <a href="#faq">FAQ</a>
         <a class="nav-cta" href="#download">
-          Get notified
+          Download
         </a>
       </div>
     </div>
@@ -1133,8 +1061,8 @@
           reflects what you actually wrote.
         </p>
         <div class="cta-row">
-          <a class="btn-primary" href="#download">
-            Get notified at launch
+          <a class="btn-primary" href="https://apps.apple.com/app/tactus/id6770496883" target="_blank" rel="noopener">
+            Download on the App Store
           </a>
         </div>
         <div class="trust-line">
@@ -1272,12 +1200,11 @@
   <section class="feature" id="link" data-screen-label="03 Ableton Link">
     <div class="wrap">
       <div class="section-label"><span class="dice" data-face="2" aria-label="Section 2"></span>Ableton Link</div>
-      <h2>Start, bend, and stop the tempo together.</h2>
+      <h2>Every musician on the same tempo, together.</h2>
       <p class="lede" style="margin-bottom: 20px;">
-        It's not just DAWs. Every player running Tactus starts, stops, and rides tempo
-        from one shared grid, each following their own accents and subdivisions. And
-        because Tactus speaks Ableton Link, that same grid extends to Logic Pro,
-        Ableton Live, and anything else that speaks it.
+        Start, stop, and ride the tempo as one ensemble. Every player running Tactus
+        joins the same session automatically and stays locked to a shared grid, each
+        following their own accents and subdivisions.
       </p>
       <p class="lede" style="margin-bottom: 56px; color:var(--fg-3); font-size:15px;">
         Starting together is automatic. <em>Staying</em> together through a rit or accel
@@ -1295,42 +1222,17 @@
           </div>
         </div>
         <div>
-          <div class="peer-list" style="margin-bottom: 24px;">
-            <div class="peer-header"><span>Session &middot; &#9833; = 120</span><span>4 linked</span></div>
-            <div class="peer self"><span class="name">This iPhone</span><span class="bpm-mini">120.0</span></div>
-            <div class="peer"><span class="name">Viola &middot; iPad</span><span class="bpm-mini">120.0</span></div>
-            <div class="peer"><span class="name">Cello &middot; iPhone</span><span class="bpm-mini">120.0</span></div>
-            <div class="peer"><span class="name">Ableton Live</span><span class="bpm-mini">120.0</span></div>
-          </div>
-          <div style="font-size:14px; line-height:1.6; color:var(--fg-3); margin-bottom: 18px;">
-            Anyone with Tactus, plus anything with Link. Bidirectional tempo, shared Start/Stop.
-          </div>
-          <div class="link-tags">
-            <span class="ltag">Tactus &rarr; Tactus</span>
-            <span class="ltag">Logic Pro</span>
-            <span class="ltag">Ableton Live</span>
-            <span class="ltag">Camelot</span>
-            <span class="ltag">+ anything with Link</span>
-          </div>
-          <style>
-            .link-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-            .link-tags .ltag {
-              display: inline-block;
-              padding: 6px 12px;
-              background: var(--bg-elev-2);
-              border: 0.5px solid var(--hair);
-              border-radius: 999px;
-              font-family: var(--ui);
-              font-size: 12.5px; font-weight: 500;
-              color: var(--fg-2);
-              letter-spacing: -0.005em;
-            }
-            .link-tags .ltag:first-child {
-              color: var(--accent);
-              border-color: var(--accent-dim);
-              background: rgba(131,183,175,0.07);
-            }
-          </style>
+          <h3 style="font-size:18px; font-weight:500; letter-spacing:-0.015em; margin:0 0 14px;">
+            Built for the whole ensemble
+          </h3>
+          <p style="font-size:14px; line-height:1.6; color:var(--fg-2); margin: 0 0 16px;">
+            Every device running Tactus finds the others on the network automatically and
+            shares one tempo and one Start/Stop &mdash; no pairing, no host device.
+          </p>
+          <p style="font-size:13.5px; line-height:1.6; color:var(--fg-4); margin: 0;">
+            Rehearsing alongside a DAW? Tactus also speaks Ableton Link, so the same
+            session syncs with Logic Pro, Ableton Live, and anything else that supports it.
+          </p>
         </div>
       </div>
     </div>
@@ -1420,7 +1322,7 @@
   <!-- ── Pricing ────────────────────────────────────────────────────── -->
   <section class="pricing" id="download" data-screen-label="09 Pricing">
     <div class="wrap">
-      <div class="section-label" style="justify-content:center;"><span class="dice" data-face="5" aria-label="Section 5"></span>Coming soon</div>
+      <div class="section-label" style="justify-content:center;"><span class="dice" data-face="5" aria-label="Section 5"></span>Available now</div>
       <div class="price-tag"><span class="currency">$</span>9.99</div>
       <div class="price-detail">
         <span>One-time purchase</span>
@@ -1429,21 +1331,11 @@
         <span>Lifetime updates</span>
       </div>
       <p class="pricing-note">
-        Tactus is still in the studio. Leave your email and we&rsquo;ll write you once,
-        the day it lands on the App Store.
+        Tactus is live on the App Store. Download it and map your first passage today.
       </p>
-      <form class="notify" id="notify-form" action="https://formspree.io/f/xbderwrg" method="POST">
-        <div class="notify-row">
-          <input class="notify-input" type="email" name="email" required
-                 placeholder="you@email.com" aria-label="Email address" autocomplete="email">
-          <button class="btn-primary notify-btn" type="submit">Notify me at launch</button>
-        </div>
-        <!-- Formspree honeypot: bots fill this, humans never see it -->
-        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true"
-               style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
-        <p class="notify-hint">No spam, no list-selling. One email, then we&rsquo;re done.</p>
-        <p class="notify-status" data-status role="status" aria-live="polite" hidden></p>
-      </form>
+      <a class="btn-primary store-btn" href="https://apps.apple.com/app/tactus/id6770496883" target="_blank" rel="noopener">
+        Download on the App Store
+      </a>
     </div>
   </section>
 
@@ -1564,13 +1456,6 @@
     html.is-scrolling .app-shot,
     html.is-scrolling .tile { pointer-events: none; }
 
-    /* Live indicator on the synced session (the "self" peer). */
-    .peer.self .name::before {
-      content: ""; flex-shrink: 0;
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--accent);
-    }
-
     @media (prefers-reduced-motion: no-preference) {
       /* Scroll reveal: fade + rise, gated on JS so no-JS stays visible. */
       html.js-anim [data-reveal] {
@@ -1590,16 +1475,6 @@
         0%, 100% { translate: 0 0; }
         50%      { translate: 0 -10px; }
       }
-
-      /* Pulsing live ring on the synced session dot. */
-      .peer.self .name::before {
-        animation: live-pulse 2.6s var(--ease-out) infinite;
-      }
-      @keyframes live-pulse {
-        0%   { box-shadow: 0 0 0 0 rgba(131,183,175,0.5); }
-        70%  { box-shadow: 0 0 0 8px rgba(131,183,175,0); }
-        100% { box-shadow: 0 0 0 0 rgba(131,183,175,0); }
-      }
     }
   </style>
 
@@ -1614,12 +1489,12 @@
       document.querySelectorAll(
         '.eyebrow, h1.hero-h, .hero-sub, .cta-row, .trust-line, .hero-video-stage,'
         + 'section .section-label, section h2, section .lede, .app-shot, .shape-panel,'
-        + '.link-card, .price-tag, .price-detail, .pricing-note, .notify,'
+        + '.link-card, .price-tag, .price-detail, .pricing-note, .store-btn,'
         + '.closing h2, .closing p'
       ).forEach(el => el.setAttribute('data-reveal', ''));
 
       // Stagger groups: children cascade in sequence.
-      document.querySelectorAll('.peer-list, .link-tags, .tiles, .caps, .faq').forEach(group => {
+      document.querySelectorAll('.tiles, .caps, .faq').forEach(group => {
         [...group.children].forEach((kid, i) => {
           kid.setAttribute('data-reveal', '');
           kid.style.transitionDelay = (i * 65) + 'ms';
@@ -1745,51 +1620,6 @@
       });
     })();
 
-    // ── Launch signup → Formspree (AJAX, no page reload) ──────────
-    (function () {
-      const form = document.getElementById('notify-form');
-      if (!form) return;
-      const status = form.querySelector('[data-status]');
-      const btn    = form.querySelector('.notify-btn');
-      const input  = form.querySelector('.notify-input');
-
-      function setStatus(msg, kind) {
-        status.hidden = false;
-        status.className = 'notify-status' + (kind ? ' is-' + kind : '');
-        status.innerHTML = msg;
-      }
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!form.checkValidity()) { form.reportValidity(); return; }
-        btn.disabled = true;
-        const label = btn.textContent;
-        btn.textContent = 'Sending…';
-        try {
-          const resp = await fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: { Accept: 'application/json' },
-          });
-          if (resp.ok) {
-            form.classList.add('is-done');
-            setStatus('✓&nbsp; You\u2019re on the list. We\u2019ll be in touch the day Tactus ships.', 'ok');
-          } else {
-            const data = await resp.json().catch(() => ({}));
-            const msg = data && data.errors && data.errors.length
-              ? data.errors.map((x) => x.message).join(', ')
-              : 'Something went wrong. Please try again, or email us directly.';
-            setStatus(msg, 'error');
-            btn.disabled = false;
-            btn.textContent = label;
-          }
-        } catch (err) {
-          setStatus('Network error. Check your connection and try again.', 'error');
-          btn.disabled = false;
-          btn.textContent = label;
-        }
-      });
-    })();
   </script>
 
 </body>
