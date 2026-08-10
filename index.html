@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tactus. Built for the passages that break metronomes.</title>
-  <meta name="description" content="Tactus maps the exact rhythmic shape of any piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote. iPhone and iPad, one-time purchase, $9.99.">
+  <meta name="description" content="Tactus maps the rhythmic shape of a piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote. iPhone and iPad, one-time purchase, $9.99.">
   <link rel="canonical" href="https://tactusrhythm.com/">
   <meta name="theme-color" content="#0F0F10">
 
@@ -13,14 +13,14 @@
   <meta property="og:url" content="https://tactusrhythm.com/">
   <meta property="og:site_name" content="Tactus">
   <meta property="og:title" content="Tactus. Built for the passages that break metronomes.">
-  <meta property="og:description" content="Tactus maps the exact rhythmic shape of any piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote. iPhone and iPad, $9.99 one-time.">
+  <meta property="og:description" content="Tactus maps the rhythmic shape of a piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote. iPhone and iPad, $9.99 one-time.">
   <meta property="og:image" content="https://tactusrhythm.com/assets/images/walkthrough-poster.jpg">
   <meta property="og:image:alt" content="Tactus rhythmic mapping app showing a mixed-meter passage on iPhone">
 
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Tactus. Built for the passages that break metronomes.">
-  <meta name="twitter:description" content="Tactus maps the exact rhythmic shape of any piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote.">
+  <meta name="twitter:description" content="Tactus maps the rhythmic shape of a piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote.">
   <meta name="twitter:image" content="https://tactusrhythm.com/assets/images/walkthrough-poster.jpg">
 
   <!-- Structured data -->
@@ -36,7 +36,7 @@
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "Tactus",
-      "description": "Tactus maps the exact rhythmic shape of any piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote.",
+      "description": "Tactus maps the rhythmic shape of a piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote.",
       "applicationCategory": "MusicApplication",
       "operatingSystem": "iOS",
       "offers": {
@@ -717,19 +717,6 @@
     }
     .play-btn svg { width: 14px; height: 14px; }
 
-    /* ── Link section ────────────────────────────────────────── */
-    .link-card {
-      background: var(--bg-elev-1);
-      border: 0.5px solid var(--hair);
-      border-radius: var(--r-card);
-      padding: 32px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 36px;
-      align-items: center;
-    }
-    @media (max-width: 720px) { .link-card { grid-template-columns: 1fr; } }
-
     /* ── Tempo shape ─────────────────────────────────────────── */
     .shape-panel {
       background: var(--bg-elev-1);
@@ -808,14 +795,24 @@
       text-wrap: pretty;
     }
     .manual-link {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 10px;
       margin-top: 40px;
-      font-family: var(--ui); font-size: 14px; font-weight: 500;
-      color: var(--fg-2);
+      padding: 15px 22px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-key);
+      background: var(--bg-elev-1);
+      font-family: var(--ui); font-size: 15px; font-weight: 500;
+      color: var(--fg);
       letter-spacing: -0.005em;
-      transition: color 200ms var(--ease-out), gap 200ms var(--ease-out);
+      transition: color 200ms var(--ease-out), gap 200ms var(--ease-out),
+                  border-color 200ms var(--ease-out), background 200ms var(--ease-out);
     }
-    .manual-link:hover { color: var(--accent); gap: 12px; }
+    .manual-link:hover {
+      color: var(--accent);
+      gap: 14px;
+      border-color: var(--accent-dim);
+      background: var(--bg-elev-2);
+    }
     .manual-link svg { width: 14px; height: 14px; }
 
     /* ── Pricing block ───────────────────────────────────────── */
@@ -1056,7 +1053,7 @@
         <div class="eyebrow">Rhythmic mapping for iOS</div>
         <h1 class="hero-h">Built for the passages that break metronomes.</h1>
         <p class="hero-sub">
-          Tactus maps the exact rhythmic shape of any piece. Every meter change,
+          Tactus maps the rhythmic shape of a piece. Every meter change,
           every accent, every subdivision, played back as a click track that
           reflects what you actually wrote.
         </p>
@@ -1183,26 +1180,25 @@
         <h2>A passage in seconds, not minutes.</h2>
         <p class="lede">
           Tap the meter keyboard. Each tap adds a bar, 5/8, 7/16, 4/4, 3/8, in any
-          order, landing with musically correct accents already in place. For the
-          bars that need more, every subdivision is one tap away.
+          order, landing with correct accents by default. For the bars that need
+          more, every subdivision is a tap in the editor.
         </p>
       </div>
     </div>
   </section>
 
   <!-- ── Section 02 — Ableton Link ──────────────────────────────────── -->
-  <!-- HEADLINE OPTIONS:
+  <!-- HEADLINE OPTIONS (unused — section now opens straight into the lede):
          A. Start in sync with everyone in the room.
          B. One tap. Every device in the room, in sync.
-         C. Sync with anyone on the network, instantly.   ← current
+         C. Sync with anyone on the network, instantly.
          D. Lock into the session. Every app, every device.
   -->
   <section class="feature" id="link" data-screen-label="03 Ableton Link">
     <div class="wrap">
       <div class="section-label"><span class="dice" data-face="2" aria-label="Section 2"></span>Ableton Link</div>
-      <h2>Every musician on the same tempo, together.</h2>
       <p class="lede" style="margin-bottom: 20px;">
-        Start, stop, and ride the tempo as one ensemble. Every player running Tactus
+        Start, stop, and stay on tempo together. Every player running Tactus
         joins the same session automatically and stays locked to a shared grid, each
         following their own accents and subdivisions.
       </p>
@@ -1213,27 +1209,10 @@
         is all it takes.
       </p>
 
-      <div class="link-card">
-        <div>
-          <!-- Per handoff capture #6: “Settings — Ableton Link section: toggle in
-               active/connected state, showing peer count > 0.” -->
-          <div class="app-shot">
-            <img src="assets/images/ableton-link-connected.png" alt="Tactus Settings with Ableton Link active, showing a green ‘1 Link’ connected banner and Sync Start/Stop enabled." loading="lazy">
-          </div>
-        </div>
-        <div>
-          <h3 style="font-size:18px; font-weight:500; letter-spacing:-0.015em; margin:0 0 14px;">
-            Built for the whole ensemble
-          </h3>
-          <p style="font-size:14px; line-height:1.6; color:var(--fg-2); margin: 0 0 16px;">
-            Every device running Tactus finds the others on the network automatically and
-            shares one tempo and one Start/Stop &mdash; no pairing, no host device.
-          </p>
-          <p style="font-size:13.5px; line-height:1.6; color:var(--fg-4); margin: 0;">
-            Rehearsing alongside a DAW? Tactus also speaks Ableton Link, so the same
-            session syncs with Logic Pro, Ableton Live, and anything else that supports it.
-          </p>
-        </div>
+      <!-- Per handoff capture #6: “Settings — Ableton Link section: toggle in
+           active/connected state, showing peer count > 0.” -->
+      <div class="app-shot">
+        <img src="assets/images/ableton-link-connected.png" alt="Tactus Settings with Ableton Link active, showing a green ‘1 Link’ connected banner and Sync Start/Stop enabled." loading="lazy">
       </div>
     </div>
   </section>
@@ -1242,14 +1221,15 @@
   <!-- HEADLINE OPTIONS:
          A. Shape any ritardando or accelerando the way it should sound.
          B. Draw the ritardando you actually want.
-         C. Sculpt rits and accels the way you hear them.   ← current
+         C. Sculpt rits and accels the way you hear them.
          D. Shape tempo curves by ear.
+         E. Draw rits and accels the way you hear them.   ← current
   -->
   <section class="feature" data-screen-label="04 Tempo Shape">
     <div class="wrap split">
       <div>
         <div class="section-label"><span class="dice" data-face="3" aria-label="Section 3"></span>Tempo shape editor</div>
-        <h2>Sculpt rits and accels the way you hear them.</h2>
+        <h2>Draw rits and accels the way you hear them.</h2>
         <p class="lede">
           Draw a tempo curve across any range of bars, linear, ease-in, or ease-out
           per segment. A ritardando that lands softly. An accelerando that plateaus
@@ -1331,7 +1311,7 @@
         <span>Lifetime updates</span>
       </div>
       <p class="pricing-note">
-        Tactus is live on the App Store. Download it and map your first passage today.
+        Tactus is live on the App Store. Download and map your first passage.
       </p>
       <a class="btn-primary store-btn" href="https://apps.apple.com/app/tactus/id6770496883" target="_blank" rel="noopener">
         Download on the App Store
@@ -1489,7 +1469,7 @@
       document.querySelectorAll(
         '.eyebrow, h1.hero-h, .hero-sub, .cta-row, .trust-line, .hero-video-stage,'
         + 'section .section-label, section h2, section .lede, .app-shot, .shape-panel,'
-        + '.link-card, .price-tag, .price-detail, .pricing-note, .store-btn,'
+        + '.price-tag, .price-detail, .pricing-note, .store-btn,'
         + '.closing h2, .closing p'
       ).forEach(el => el.setAttribute('data-reveal', ''));
 
