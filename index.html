@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tactus. Built for the passages that break metronomes.</title>
+  <title>Tactus. Enter changing meters in seconds, subdivide every beat exactly.</title>
   <meta name="description" content="Tactus maps the rhythmic shape of a piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote. iPhone and iPad, one-time purchase, $9.99.">
   <link rel="canonical" href="https://tactusrhythm.com/">
   <meta name="theme-color" content="#0F0F10">
@@ -12,14 +12,14 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://tactusrhythm.com/">
   <meta property="og:site_name" content="Tactus">
-  <meta property="og:title" content="Tactus. Built for the passages that break metronomes.">
+  <meta property="og:title" content="Tactus. Enter changing meters in seconds, subdivide every beat exactly.">
   <meta property="og:description" content="Tactus maps the rhythmic shape of a piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote. iPhone and iPad, $9.99 one-time.">
   <meta property="og:image" content="https://tactusrhythm.com/assets/images/walkthrough-poster.jpg">
   <meta property="og:image:alt" content="Tactus rhythmic mapping app showing a mixed-meter passage on iPhone">
 
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Tactus. Built for the passages that break metronomes.">
+  <meta name="twitter:title" content="Tactus. Enter changing meters in seconds, subdivide every beat exactly.">
   <meta name="twitter:description" content="Tactus maps the rhythmic shape of a piece: every meter change, every accent, every subdivision, played back as a click track that reflects what you actually wrote.">
   <meta name="twitter:image" content="https://tactusrhythm.com/assets/images/walkthrough-poster.jpg">
 
@@ -55,9 +55,6 @@
   ]
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/tactus-tokens.css">
   <style>
     /* ── Page chrome ─────────────────────────────────────────── */
@@ -887,70 +884,6 @@
     .closing p {
       font-size: 19px; color: var(--fg-2);
       max-width: 540px; margin: 0 auto 48px;
-    }
-
-    /* ── Screenshot placeholder ──────────────────────────────── */
-    .shot {
-      position: relative;
-      border: 0.5px solid var(--hair);
-      border-radius: var(--r-card);
-      background:
-        repeating-linear-gradient(
-          135deg,
-          rgba(255,255,255,0.018) 0 8px,
-          transparent 8px 16px
-        ),
-        var(--bg-elev-1);
-      overflow: hidden;
-      display: flex; flex-direction: column;
-      justify-content: space-between;
-    }
-    .shot::after {
-      /* corner brackets to read as a placeholder, not a card */
-      content: "";
-      position: absolute; inset: 14px;
-      border: 1px dashed rgba(255,255,255,0.06);
-      border-radius: 8px;
-      pointer-events: none;
-    }
-    .shot-meta {
-      position: relative; z-index: 1;
-      padding: 22px 26px;
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: var(--ui); font-size: 12px; font-weight: 500;
-      color: var(--fg-3);
-      letter-spacing: -0.005em;
-      border-bottom: 0.5px solid var(--hair);
-      background: rgba(15,15,16,0.4);
-    }
-    .shot-meta .tag {
-      padding: 4px 8px;
-      background: var(--bg-elev-3);
-      border: 0.5px solid var(--stroke);
-      border-radius: 4px;
-      color: var(--accent);
-      letter-spacing: -0.005em;
-      font-family: var(--ui); font-weight: 500;
-    }
-    .shot-body {
-      position: relative; z-index: 1;
-      flex: 1;
-      padding: 32px 26px;
-      display: flex; flex-direction: column; gap: 14px;
-      justify-content: flex-end;
-    }
-    .shot-label {
-      font-family: var(--ui);
-      font-size: 18px; font-weight: 500;
-      letter-spacing: -0.015em;
-      color: var(--fg-2);
-      max-width: 320px;
-      line-height: 1.3;
-    }
-    .shot-spec {
-      font-family: var(--ui); font-size: 13px; font-weight: 500; color: var(--fg-4);
-      letter-spacing: -0.005em;
-      line-height: 1.55;
     }
 
     /* ── Real app screenshot (portrait device frame) ──────────── */
