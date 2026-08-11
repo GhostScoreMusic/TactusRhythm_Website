@@ -38,12 +38,15 @@
   /* ── Type ──────────────────────────────────────────────────────
      Chrome:  Jost 500 — matches the shipping app's wordmark, labels,
               buttons, titles, and body copy.
-     Data:    SF Mono — reserved strictly for numbers, ratios, BPM, meter,
-              time / bar / beat. Not for category labels.
+     Data:    Menlo — reserved strictly for numbers, ratios, BPM, meter,
+              time / bar / beat. Not for category labels. Menlo over
+              SF Mono/ui-monospace on purpose: SF Mono's default zero is
+              slashed, Menlo's isn't, and Menlo ships on every iPhone/iPad
+              Tactus runs on, so it's still a native Apple system font.
      Meter:   Helvetica Neue Bold — meter/time signatures only, kept off
               Jost on purpose (reads as engraved notation). See .meter. */
   --ui:     "Jost", sans-serif;
-  --mono:   ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --mono:   Menlo, ui-monospace, "SF Mono", Consolas, monospace;
   --meter-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   /* ── Radii / motion ────────────────────────────────────────── */
