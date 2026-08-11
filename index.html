@@ -118,6 +118,8 @@
     .nav-links a:hover { color: var(--fg); }
     @media (max-width: 600px) {
       .nav-links a:not(.nav-cta) { display: none; }
+      .eyebrow { display: none; }
+      .hero-video-stage { order: -1; }
     }
     .nav-cta {
       display: inline-flex; align-items: center; gap: 8px;
@@ -1037,8 +1039,8 @@
       </a>
       <div class="nav-links">
         <a href="#features">Features</a>
-        <a href="manual.html">Manual</a>
         <a href="#faq">FAQ</a>
+        <a class="nav-cta" href="manual.html">Manual</a>
         <a class="nav-cta" href="#download">
           Download
         </a>
@@ -1235,9 +1237,6 @@
           per segment. A ritardando that lands softly. An accelerando that plateaus
           before the downbeat.
         </p>
-        <p class="lede" style="margin-top:18px; color:var(--fg-3); font-size:15px;">
-          The click track follows the curve.
-        </p>
       </div>
 
       <div>
@@ -1349,27 +1348,6 @@
       <div class="faq">
         <details>
           <summary>
-            <span>Is this a metronome?</span>
-            <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
-          </summary>
-          <div class="answer">
-            Not really. A metronome repeats one click at a fixed tempo. Tactus maps the
-            rhythmic shape of a specific passage, changing meters, subdivisions, accents, and plays that back. A rehearsal-prep tool, not a drill tool.
-          </div>
-        </details>
-        <details>
-          <summary>
-            <span>Does it work with a DAW?</span>
-            <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
-          </summary>
-          <div class="answer">
-            Yes, via Ableton Link. Join the same WiFi network and tempos sync
-            bidirectionally with zero setup. Optional Start/Stop Sync controls every
-            connected app at once.
-          </div>
-        </details>
-        <details>
-          <summary>
             <span>Can the tempo change within a passage?</span>
             <svg class="chev" viewBox="0 0 14 14"><line x1="3" y1="7" x2="11" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="7" y1="3" x2="7" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
@@ -1424,7 +1402,7 @@
         <span class="wordmark">Tactus</span>
       </div>
       <div style="color: var(--fg-3); font-size:12px;">
-        © 2026 Alan Molina. Mixed meter. Built for you.
+        © 2026 Alan Molina.
       </div>
       <div class="footer-links">
         <a href="manual.html">Manual</a>

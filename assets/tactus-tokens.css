@@ -43,7 +43,7 @@
      Meter:   Helvetica Neue Bold — meter/time signatures only, kept off
               Jost on purpose (reads as engraved notation). See .meter. */
   --ui:     "Jost", sans-serif;
-  --mono:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --mono:   ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --meter-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   /* ── Radii / motion ────────────────────────────────────────── */

@@ -109,15 +109,6 @@
       margin: 0 0 32px;
       text-wrap: pretty;
     }
-    .meta-line {
-      display: flex; flex-wrap: wrap; gap: 14px 28px;
-      font-size: 13px; color: var(--fg-3);
-      letter-spacing: -0.005em;
-    }
-    .meta-line span { display: inline-flex; gap: 8px; align-items: baseline; }
-    .meta-line .k { color: var(--fg-4); font-weight: 500; }
-    .meta-line .v { color: var(--fg-2); }
-
     /* ── Doc layout: sticky TOC + content ────────────────────── */
     .doc {
       display: grid;
@@ -341,10 +332,9 @@
     .table .td .name { color: var(--fg); font-weight: 500; }
     .table .td .mono { font-family: var(--mono); font-size: 13px; color: var(--accent); font-feature-settings: "tnum"; }
 
-    .accent-table .tr { grid-template-columns: 1.1fr 1.4fr 1.4fr; }
+    .accent-table .tr { grid-template-columns: 1fr; }
     .settings-table .tr { grid-template-columns: 0.9fr 1.6fr; }
     @media (max-width: 640px) {
-      .accent-table .tr { grid-template-columns: 1fr; }
       .settings-table .tr { grid-template-columns: 1fr; }
       .table .td { border-right: 0; border-bottom: 0.5px solid var(--hair); }
       .table .tr .td:last-child { border-bottom: 0; }
@@ -488,7 +478,6 @@
       text-align: center;
       border-top: 0.5px solid var(--hair);
     }
-    .closing h2 { margin: 0 auto 18px; font-size: clamp(30px, 4vw, 46px); max-width: 720px; }
     .closing p { font-size: 17px; color: var(--fg-2); max-width: 520px; margin: 0 auto 30px; }
     .btn-secondary {
       display: inline-flex; align-items: center; gap: 10px;
@@ -557,11 +546,6 @@
         precise map of a passage, bar by bar, beat by beat, and play it back as an
         intelligent click. This is the complete reference.
       </p>
-      <div class="meta-line">
-        <span><span class="k">Applies to</span><span class="v">Tactus for iPhone &amp; iPad</span></span>
-        <span><span class="k">Sections</span><span class="v">14</span></span>
-        <span><span class="k">Formerly</span><span class="v">MeterMap</span></span>
-      </div>
     </div>
   </header>
 
@@ -595,11 +579,6 @@
       <!-- 01 Core concepts -->
       <section class="chapter" id="concepts" data-screen-label="02 Core concepts">
         <div class="chapter-label"><span class="n">01</span>Core concepts</div>
-        <h2>Five words that run through everything.</h2>
-        <p class="lede">
-          Tactus has a small, consistent vocabulary. Learn these five terms and the rest of
-          the app reads like plain language.
-        </p>
         <div class="concepts">
           <div class="concept">
             <div class="ct">Passage</div>
@@ -624,10 +603,6 @@
         </div>
 
         <h3>How to think about Tactus: macro to micro</h3>
-        <p class="body">
-          Work in Tactus runs in one direction, from the widest choice down to the smallest
-          detail. You rarely reach for the fine controls until the coarse ones are in place.
-        </p>
         <div class="flow">
           <div class="flow-head">
             <span>The shape of a session</span>
@@ -828,7 +803,6 @@
       <!-- 07 Accent states -->
       <section class="chapter" id="accents" data-screen-label="08 Accent states">
         <div class="chapter-label"><span class="n">07</span>Accent states</div>
-        <h2>Four states. Four distinct sounds.</h2>
         <p class="lede">
           Every pulse and sub-pulse holds one of four accent states. The state drives both the
           dot&rsquo;s appearance and the click&rsquo;s volume and pitch. Tap a dot to cycle
@@ -838,28 +812,18 @@
         <div class="table accent-table">
           <div class="tr head">
             <div class="td">Accent</div>
-            <div class="td">Dot</div>
-            <div class="td">Sound</div>
           </div>
           <div class="tr">
             <div class="td"><span class="dot-sample strong"></span><span class="name">Strong</span></div>
-            <div class="td">Large, fully opaque</div>
-            <div class="td">Loudest, highest pitch <span class="mono">~4200 Hz</span></div>
           </div>
           <div class="tr">
             <div class="td"><span class="dot-sample"></span><span class="name">Normal</span></div>
-            <div class="td">Medium, ~60% opacity</div>
-            <div class="td">Medium volume <span class="mono">~2800 Hz</span></div>
           </div>
           <div class="tr">
             <div class="td"><span class="dot-sample soft"></span><span class="name">Soft</span></div>
-            <div class="td">Small, ~34% opacity</div>
-            <div class="td">Quiet, lower pitch <span class="mono">~1600 Hz</span></div>
           </div>
           <div class="tr">
             <div class="td"><span class="dot-sample silent"></span><span class="name">Silent</span></div>
-            <div class="td">Outline ring only</div>
-            <div class="td">No sound, visual only</div>
           </div>
         </div>
 
@@ -895,7 +859,6 @@
       <!-- 09 Playback -->
       <section class="chapter" id="playback" data-screen-label="10 Playback">
         <div class="chapter-label"><span class="n">09</span>Playback &amp; count-in</div>
-        <h2>Start, loop, and walk in on the meter.</h2>
         <p class="lede">
           The transport bar holds play/stop, loop, count-in, BPM, and note value. Playback starts
           from the manual start bar if one is set, otherwise from the first bar.
@@ -926,7 +889,6 @@
       <!-- 10 Click sound -->
       <section class="chapter" id="sound" data-screen-label="11 Click sound">
         <div class="chapter-label"><span class="n">10</span>Click sound</div>
-        <h2>Two sound paths.</h2>
         <p class="lede">Switch between them in passage settings. Both respect all four accent levels.</p>
         <div class="concepts" style="grid-template-columns: repeat(2, 1fr);">
           <div class="concept">
@@ -943,7 +905,6 @@
       <!-- 11 Ableton Link -->
       <section class="chapter" id="link" data-screen-label="12 Ableton Link">
         <div class="chapter-label"><span class="n">11</span>Ableton Link</div>
-        <h2>One tempo grid across the room.</h2>
         <p class="lede">
           Ableton Link syncs start and stop with other Tactus users or any Ableton Link&#8209;enabled
           app on the same local network. No password or pairing; devices find each other automatically.
@@ -969,7 +930,6 @@
       <!-- 12 Import & export -->
       <section class="chapter" id="share" data-screen-label="13 Import & export">
         <div class="chapter-label"><span class="n">12</span>Import &amp; export</div>
-        <h2>Share a passage in a single file.</h2>
         <ul class="bullets">
           <li><strong>Export a passage</strong>: long-press it in the Library and tap <strong>Share</strong> to send a <span class="code">.rhythmmap</span> file via Messages, Mail, AirDrop, or Files.</li>
           <li><strong>Export a Work</strong>: open the Work detail view and tap the export button.</li>
@@ -981,7 +941,6 @@
       <!-- 13 Settings reference -->
       <section class="chapter" id="settings" data-screen-label="14 Settings">
         <div class="chapter-label"><span class="n">13</span>Settings reference</div>
-        <h2>Every passage setting at a glance.</h2>
         <div class="table settings-table">
           <div class="tr head">
             <div class="td">Setting</div>
@@ -1021,7 +980,6 @@
       <!-- 14 Glossary -->
       <section class="chapter" id="glossary" data-screen-label="15 Glossary">
         <div class="chapter-label"><span class="n">14</span>Glossary</div>
-        <h2>Terms, defined once.</h2>
         <div class="concepts" style="grid-template-columns: repeat(2, 1fr);">
           <div class="concept"><div class="ct">Passage</div><div class="cd">A rhythmic map of a section or piece, an ordered list of bars.</div></div>
           <div class="concept"><div class="ct">Bar</div><div class="cd">One measure, with its own meter, optional per-bar tempo, and beat elements.</div></div>
@@ -1044,7 +1002,6 @@
   <!-- ── Closing ────────────────────────────────────────────────────── -->
   <section class="closing" data-screen-label="16 Closing">
     <div class="wrap">
-      <h2>That&rsquo;s the whole app.</h2>
       <p>Keep this open on a second screen while you map your first passage.</p>
       <a class="btn-secondary" href="index.html">
         Back to Tactus
@@ -1067,7 +1024,7 @@
         <span class="wordmark">Tactus</span>
       </a>
       <div style="color: var(--fg-3); font-size:12px;">
-        © 2026 Alan Molina. Mixed meter. Built for you.
+        © 2026 Alan Molina.
       </div>
       <div class="footer-links">
         <a class="current" href="manual.html">Manual</a>
