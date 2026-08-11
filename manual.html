@@ -398,20 +398,6 @@
       overflow: hidden;
       max-width: 720px;
     }
-    .flow-head {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 13px 20px; border-bottom: 0.5px solid var(--hair);
-      font-size: 12.5px; font-weight: 500; color: var(--fg-3);
-    }
-    .flow-axis {
-      display: flex; align-items: center; gap: 10px;
-      font-family: var(--mono); font-size: 10.5px; color: var(--fg-4);
-      letter-spacing: 0.06em; text-transform: uppercase;
-    }
-    .flow-axis .bar {
-      width: 56px; height: 3px; border-radius: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--fg-4));
-    }
     .flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
     @media (max-width: 640px) { .flow-grid { grid-template-columns: 1fr; } }
     .flow-step {
@@ -424,7 +410,7 @@
       .flow-step:last-child { border-bottom: 0; }
     }
     .flow-step .scale {
-      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      font-family: var(--ui); font-size: 11px; font-weight: 500; color: var(--accent);
       letter-spacing: 0; margin-bottom: 14px;
       font-feature-settings: "tnum";
     }
@@ -604,10 +590,6 @@
 
         <h3>How to think about Tactus: macro to micro</h3>
         <div class="flow">
-          <div class="flow-head">
-            <span>The shape of a session</span>
-            <span class="flow-axis">Macro <span class="bar"></span> Micro</span>
-          </div>
           <div class="flow-grid">
             <div class="flow-step">
               <div class="scale">01 · Macro</div>

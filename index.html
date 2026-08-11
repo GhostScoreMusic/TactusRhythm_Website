@@ -152,14 +152,6 @@
       .hero-grid { grid-template-columns: 1fr; gap: 56px; }
       .hero { padding: 64px 0; }
     }
-    h1.hero-h {
-      font-size: clamp(40px, 5.6vw, 72px);
-      font-weight: 500;
-      line-height: 1.02;
-      letter-spacing: -0.035em;
-      margin: 0 0 28px;
-      text-wrap: balance;
-    }
     .hero-sub {
       font-size: 19px; line-height: 1.5;
       color: var(--fg-2);
@@ -1044,11 +1036,10 @@
   <header class="hero" data-screen-label="01 Hero">
     <div class="wrap hero-grid">
       <div>
-        <h1 class="hero-h">Built for the passages that break metronomes.</h1>
-        <p class="hero-sub">
+        <h1 class="hero-sub">
           Tactus lets you enter a passage of changing meters in seconds, then
           subdivide every beat exactly as the passage demands.
-        </p>
+        </h1>
         <div class="cta-row">
           <a class="btn-primary" href="https://apps.apple.com/app/tactus/id6770496883" target="_blank" rel="noopener">
             Download on the App Store
@@ -1455,7 +1446,7 @@
 
       // Individually-revealed blocks.
       document.querySelectorAll(
-        'h1.hero-h, .hero-sub, .cta-row, .trust-line, .hero-video-stage,'
+        '.hero-sub, .cta-row, .trust-line, .hero-video-stage,'
         + 'section .section-label, section h2, section .lede, .app-shot, .shape-panel,'
         + '.price-tag, .price-detail, .pricing-note, .store-btn,'
         + '.closing h2, .closing p'
