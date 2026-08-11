@@ -117,8 +117,7 @@
     }
     .nav-links a:hover { color: var(--fg); }
     @media (max-width: 600px) {
-      .nav-links a:not(.nav-cta) { display: none; }
-      .eyebrow { display: none; }
+      .nav-links a:not(.nav-cta):not(.nav-manual) { display: none; }
       .hero-video-stage { order: -1; }
     }
     .nav-cta {
@@ -152,13 +151,6 @@
     @media (max-width: 980px) {
       .hero-grid { grid-template-columns: 1fr; gap: 56px; }
       .hero { padding: 64px 0; }
-    }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-family: var(--ui); font-size: 12px; font-weight: 500;
-      color: var(--fg-3);
-      letter-spacing: -0.005em;
-      margin-bottom: 28px;
     }
     h1.hero-h {
       font-size: clamp(40px, 5.6vw, 72px);
@@ -1040,7 +1032,7 @@
       <div class="nav-links">
         <a href="#features">Features</a>
         <a href="#faq">FAQ</a>
-        <a class="nav-cta" href="manual.html">Manual</a>
+        <a class="nav-manual" href="manual.html">Manual</a>
         <a class="nav-cta" href="#download">
           Download
         </a>
@@ -1052,7 +1044,6 @@
   <header class="hero" data-screen-label="01 Hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="eyebrow">Rhythmic mapping for iOS</div>
         <h1 class="hero-h">Built for the passages that break metronomes.</h1>
         <p class="hero-sub">
           Tactus lets you enter a passage of changing meters in seconds, then
@@ -1199,10 +1190,11 @@
   <section class="feature" id="link" data-screen-label="03 Ableton Link">
     <div class="wrap">
       <div class="section-label"><span class="dice" data-face="2" aria-label="Section 2"></span>Ableton Link</div>
+      <h2>Everyone stays locked to a shared tempo grid.</h2>
       <p class="lede" style="margin-bottom: 20px;">
         Ableton Link starts and stops Tactus in sync with another Tactus user, or any
-        Link-enabled device, on the same network. Everyone stays locked to a shared
-        tempo grid, each following their own accents and subdivisions.
+        Link-enabled device, on the same network, each still following their own
+        accents and subdivisions.
       </p>
       <p class="lede" style="margin-bottom: 56px; color:var(--fg-3); font-size:15px;">
         Starting together is automatic. <em>Staying</em> together through a rit or accel
@@ -1250,7 +1242,6 @@
   <!-- ── Section 07 — Power features grid ───────────────────────────── -->
   <section class="feature" data-screen-label="05 Power features">
     <div class="wrap">
-      <div class="section-label"><span class="dice" data-face="4" aria-label="Section 4"></span>Built deep</div>
       <h2>Everything else, already in the box.</h2>
       <p class="lede" style="margin-bottom: 48px;">
         One app, one purchase. No feature gating, no upsells.
@@ -1464,7 +1455,7 @@
 
       // Individually-revealed blocks.
       document.querySelectorAll(
-        '.eyebrow, h1.hero-h, .hero-sub, .cta-row, .trust-line, .hero-video-stage,'
+        'h1.hero-h, .hero-sub, .cta-row, .trust-line, .hero-video-stage,'
         + 'section .section-label, section h2, section .lede, .app-shot, .shape-panel,'
         + '.price-tag, .price-detail, .pricing-note, .store-btn,'
         + '.closing h2, .closing p'
