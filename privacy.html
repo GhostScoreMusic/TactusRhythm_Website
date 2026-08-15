@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tactus. Privacy policy.</title>
-  <meta name="description" content="Privacy policy for Tactus, the rhythmic mapping app for iOS.">
+  <meta name="description" content="Privacy policy for Tactus, the rhythmic mapping app for iOS and Android.">
   <link rel="canonical" href="https://tactusrhythm.com/privacy.html">
   <meta name="theme-color" content="#0F0F10">
   <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
@@ -67,6 +67,7 @@
       font-size: 14px; color: var(--fg-2);
     }
     .nav-links a:hover { color: var(--fg); }
+    @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
     .nav-cta {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 8px 14px;
@@ -178,7 +179,7 @@
     }
     .tldr-stat:last-child { border-right: 0; }
     .tldr-stat .n {
-      font-family: var(--mono); font-weight: 600;
+      font-family: var(--ui); font-weight: 600;
       font-size: 22px; letter-spacing: -0.02em;
       color: var(--fg);
       line-height: 1;
@@ -218,6 +219,7 @@
     .section-label .dice[data-face="5"] { --dice-mask: var(--dice-5); }
     .section-label .dice[data-face="6"] { --dice-mask: var(--dice-6); }
     .section-label .dice[data-face="7"] { --dice-mask: var(--dice-7); }
+    .section-label .dice[data-face="8"] { --dice-mask: var(--dice-8); }
     :root {
       --dice-1: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='11' cy='11' r='1.7' fill='black'/></svg>");
       --dice-2: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
@@ -226,6 +228,7 @@
       --dice-5: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
       --dice-6: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='11' r='1.7' fill='black'/><circle cx='17' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
       --dice-7: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='11' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='17' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
+      --dice-8: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='11' cy='5' r='1.7' fill='black'/><circle cx='17' cy='5' r='1.7' fill='black'/><circle cx='5' cy='11' r='1.7' fill='black'/><circle cx='17' cy='11' r='1.7' fill='black'/><circle cx='5' cy='17' r='1.7' fill='black'/><circle cx='11' cy='17' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
     }
     h2 {
       font-size: clamp(28px, 3.4vw, 42px);
@@ -470,7 +473,7 @@
     .toc a:last-child { border-bottom: 0; }
     .toc a:hover { background: var(--bg-elev-2); color: var(--fg); }
     .toc a .n {
-      font-family: var(--mono); font-size: 11px;
+      font-family: var(--ui); font-size: 11px;
       color: var(--fg-4);
       letter-spacing: 0;
       font-feature-settings: "tnum";
@@ -553,17 +556,12 @@
   <header class="hero" data-screen-label="01 Hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="eyebrow">Privacy policy</div>
-        <h1 class="hero-h">Your passages stay yours. Nothing leaves this device.</h1>
+        <h1 class="hero-h">Privacy Policy</h1>
         <p class="hero-sub">
-          Tactus has no accounts, no analytics, no advertising, and no server of its own.
-          Everything you make lives on your device and, if you choose, in your iCloud.
+          Tactus has no analytics, no advertising, and no server of its own. On iOS, everything
+          lives on your device and, if you choose, in your iCloud. On Android, you can optionally
+          sign in with Google to back up to your own Drive — nothing is ever required.
         </p>
-        <div class="meta-line">
-          <span><span class="k">Effective</span><span class="v">July 28, 2026</span></span>
-          <span><span class="k">Developer</span><span class="v">Alan Molina</span></span>
-          <span><span class="k">App</span><span class="v">Tactus (formerly MeterMap)</span></span>
-        </div>
       </div>
 
       <aside class="tldr">
@@ -574,14 +572,15 @@
         <div class="tldr-body">
           <h2 class="tldr-h">Tactus does not collect your personal information.</h2>
           <p class="tldr-p">
-            No accounts. No analytics. No advertising. No server of its own.
-            Your passages live on your device and in your iCloud account. That is it.
+            No analytics. No advertising. No server of its own. Your passages live on your device,
+            and in your iCloud (iOS) or your own Google Drive (Android) if you choose to back up.
+            Signing in is always optional.
           </p>
         </div>
         <div class="tldr-stats">
           <div class="tldr-stat">
             <div class="n">0</div>
-            <div class="l">Accounts</div>
+            <div class="l">Required accounts</div>
           </div>
           <div class="tldr-stat">
             <div class="n">0</div>
@@ -603,28 +602,29 @@
         <nav class="toc">
           <div class="toc-h">On this page</div>
           <a href="#storage"><span class="n">01</span><span>Storage</span></a>
-          <a href="#never"><span class="n">02</span><span>What it doesn't collect</span></a>
-          <a href="#link"><span class="n">03</span><span>Ableton Link</span></a>
-          <a href="#audio"><span class="n">04</span><span>Audio synthesis</span></a>
-          <a href="#app-store"><span class="n">05</span><span>App Store &amp; payments</span></a>
-          <a href="#children"><span class="n">06</span><span>Children's privacy</span></a>
-          <a href="#changes"><span class="n">07</span><span>Changes &amp; contact</span></a>
+          <a href="#delete-account"><span class="n">02</span><span>Deleting your data</span></a>
+          <a href="#never"><span class="n">03</span><span>What it doesn't collect</span></a>
+          <a href="#link"><span class="n">04</span><span>Ableton Link</span></a>
+          <a href="#audio"><span class="n">05</span><span>Audio synthesis</span></a>
+          <a href="#app-store"><span class="n">06</span><span>App Store &amp; payments</span></a>
+          <a href="#children"><span class="n">07</span><span>Children's privacy</span></a>
+          <a href="#changes"><span class="n">08</span><span>Changes &amp; contact</span></a>
         </nav>
       </aside>
       <div>
         <div class="section-label"><span class="dice" data-face="1" aria-label="Section 1"></span>Storage</div>
         <h2>What Tactus stores, and where.</h2>
         <p class="lede">
-          Everything you create, passages, bar structures, meters, accent maps, tempo shapes, is stored as files on your device. If you have iCloud Drive enabled, those files sync to your personal iCloud account so they appear on all your devices.
+          Everything you create, passages, bar structures, meters, accent maps, tempo shapes, is stored as files on your device. On iOS, if you have iCloud Drive enabled, those files sync to your personal iCloud account so they appear on all your devices. On Android, you can optionally sign in with Google to back up the same files to a folder Tactus creates in your own Google Drive.
         </p>
         <p class="lede">
-          Apple operates iCloud and is subject to <a class="inline" href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a>. Tactus itself has no visibility into your iCloud files.
+          Apple operates iCloud and Google operates Drive; each is subject to its own privacy policy (<a class="inline" href="https://www.apple.com/legal/privacy/">Apple's</a>, <a class="inline" href="https://policies.google.com/privacy">Google's</a>). Tactus itself has no visibility into your iCloud or Drive files — sync happens directly between your device and Apple or Google, never through a server Tactus operates. On Android, Tactus only ever requests access to the files and folders it creates itself (Google's <span style="font-family: var(--mono); font-size: 13px;">drive.file</span> scope), never your whole Drive.
         </p>
 
         <div class="kv">
           <div class="kv-row">
             <div class="k">Location</div>
-            <div class="v">Your device's local storage, and optionally <span class="code">iCloud.com.alanmolina.tactus</span> in your iCloud Drive.</div>
+            <div class="v">Your device's local storage, always. Optionally, <span class="code">iCloud.com.alanmolina.tactus</span> (iOS) or a Tactus-created folder in your own Google Drive (Android).</div>
           </div>
           <div class="kv-row">
             <div class="k">Format</div>
@@ -632,7 +632,11 @@
           </div>
           <div class="kv-row">
             <div class="k">Who can see them</div>
-            <div class="v">Only you, through your own Apple ID and iCloud account.</div>
+            <div class="v">Only you, through your own Apple ID and iCloud account (iOS), or your own Google account (Android).</div>
+          </div>
+          <div class="kv-row">
+            <div class="k">Google Sign-In (Android)</div>
+            <div class="v">Optional. Used only to authorize Drive backup. Your email address is stored locally on your device to show you're signed in — it is never sent to any server Tactus operates.</div>
           </div>
           <div class="kv-row no">
             <div class="k">Developer access</div>
@@ -648,10 +652,41 @@
     </div>
   </section>
 
+  <!-- ── Section 02 — Delete account & data ─────────────────────────── -->
+  <section class="policy" id="delete-account" data-screen-label="03 Delete account">
+    <div class="wrap split">
+      <aside class="section-head">
+        <div class="section-label"><span class="dice" data-face="2" aria-label="Section 2"></span>Deleting your data</div>
+      </aside>
+      <div>
+        <h2>Deleting your account and data.</h2>
+        <p class="lede">
+          Tactus has no account or server of its own, so there's nothing on our end to delete — everything lives on your device and, if you signed in, your own Google Drive. To fully remove your data:
+        </p>
+        <div class="callout" style="margin-top: 24px;">
+          <div class="callout-head">
+            <span>How to delete everything</span>
+          </div>
+          <div class="callout-body">
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; border-top: 0.5px solid var(--hair);">
+              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Sign out of Google</strong> — in Tactus, go to Settings and tap Sign Out. This immediately removes your signed-in email and any cached access from your device.</li>
+              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Delete your backed-up files</strong> — open Google Drive, find the "Tactus" folder, and delete it. These are your files in your own Drive; Tactus never keeps a copy anywhere else.</li>
+              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Revoke Tactus's access entirely</strong> — visit <a class="inline" href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a> and remove Tactus from the list of connected apps.</li>
+              <li style="padding: 14px 0;"><strong>Delete local passages</strong> — swipe to delete any passage in the app's Library to remove it from your device.</li>
+            </ul>
+          </div>
+        </div>
+        <p class="lede" style="margin-top: 20px;">
+          Once you've done this, no Tactus-related data remains anywhere — there's no developer-held copy to request deletion of, because none has ever existed.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- ── Section 02 — Not collected ─────────────────────────────────── -->
-  <section class="policy" id="never" data-screen-label="03 Not collected">
+  <section class="policy" id="never" data-screen-label="04 Not collected">
     <div class="wrap">
-      <div class="section-label"><span class="dice" data-face="2" aria-label="Section 2"></span>What Tactus does not collect</div>
+      <div class="section-label"><span class="dice" data-face="3" aria-label="Section 3"></span>What Tactus does not collect</div>
       <h2>Nine things that aren't here.</h2>
       <p class="lede">
         The fastest way to describe what an app does with your data is to list what it never asks for. Here is the complete list for Tactus.
@@ -660,7 +695,7 @@
       <div class="not-grid">
         <div class="not-cell">
           <div class="not-h">Account</div>
-          <p class="not-p">No login, no email address, no name. There is no concept of a Tactus account.</p>
+          <p class="not-p">No Tactus account, ever. On Android, an optional Google Sign-In lets you back up to your own Drive — skip it and the app behaves exactly like iOS.</p>
           <div class="not-tag">001 Identity</div>
         </div>
         <div class="not-cell">
@@ -708,13 +743,13 @@
   </section>
 
   <!-- ── Section 03 — Local network / Ableton Link ──────────────────── -->
-  <section class="policy" id="link" data-screen-label="04 Ableton Link">
+  <section class="policy" id="link" data-screen-label="05 Ableton Link">
     <div class="wrap split">
       <aside class="section-head">
-        <div class="section-label"><span class="dice" data-face="3" aria-label="Section 3"></span>Local network</div>
+        <div class="section-label"><span class="dice" data-face="4" aria-label="Section 4"></span>Local network</div>
         <h2 style="font-size: clamp(26px, 3vw, 36px); margin-bottom: 16px;">Ableton Link, in detail.</h2>
         <p class="lede" style="font-size: 15.5px;">
-          If you enable Link in settings, Tactus uses your device's local network to discover and connect to other Link-enabled apps on the same WiFi network, like Ableton Live, Logic Pro, or other iOS apps.
+          <strong>Ableton Link is currently available on iOS only</strong> — it is not yet implemented in the Android version of Tactus. If you enable Link in settings on iOS, Tactus uses your device's local network to discover and connect to other Link-enabled apps on the same WiFi network, like Ableton Live, Logic Pro, or other iOS apps.
         </p>
         <p class="lede" style="font-size: 14px; color: var(--fg-3); margin-top: 14px;">
           The Ableton Link SDK is developed by Ableton AG. When Link is active, it uses Bonjour (mDNS) for peer discovery. No personal data is transmitted.
@@ -744,48 +779,48 @@
   </section>
 
   <!-- ── Section 04 — Audio ─────────────────────────────────────────── -->
-  <section class="policy" id="audio" data-screen-label="05 Audio">
+  <section class="policy" id="audio" data-screen-label="06 Audio">
     <div class="wrap split">
       <aside class="section-head">
-        <div class="section-label"><span class="dice" data-face="4" aria-label="Section 4"></span>Audio synthesis</div>
+        <div class="section-label"><span class="dice" data-face="5" aria-label="Section 5"></span>Audio synthesis</div>
       </aside>
       <div>
         <h2>Clicks are synthesized. Nothing is recorded.</h2>
         <p class="lede">
-          Tactus generates click sounds using your device's audio hardware via <span style="font-family: var(--mono); font-size: 14.5px; color: var(--accent);">AVAudioEngine</span>. It does not record audio. It does not access your microphone. All audio is synthesized locally and plays through your speaker or headphones.
+          Tactus generates click sounds using your device's audio hardware — <span style="font-family: var(--mono); font-size: 14.5px; color: var(--accent);">AVAudioEngine</span> on iOS, the <span style="font-family: var(--mono); font-size: 14.5px; color: var(--accent);">Oboe</span> library on Android. It does not record audio on either platform. It does not access your microphone. All audio is synthesized locally and plays through your speaker or headphones.
         </p>
       </div>
     </div>
   </section>
 
   <!-- ── Section 05 — App Store ─────────────────────────────────────── -->
-  <section class="policy" id="app-store" data-screen-label="06 App Store">
+  <section class="policy" id="app-store" data-screen-label="07 App Store">
     <div class="wrap split">
       <aside class="section-head">
-        <div class="section-label"><span class="dice" data-face="5" aria-label="Section 5"></span>App Store &amp; payments</div>
+        <div class="section-label"><span class="dice" data-face="6" aria-label="Section 6"></span>App Store &amp; payments</div>
       </aside>
       <div>
-        <h2>Apple handles every cent.</h2>
+        <h2>Apple and Google handle every cent.</h2>
         <p class="lede">
-          Tactus is a one-time purchase sold through the Apple App Store. Payment processing, purchase records, and receipt validation are handled entirely by Apple. Tactus does not receive or store your payment information.
+          Tactus is a one-time purchase sold through the Apple App Store (iOS) and Google Play (Android). Payment processing, purchase records, and receipt validation are handled entirely by Apple or Google, whichever store you bought it through. Tactus does not receive or store your payment information.
         </p>
         <p class="lede">
-          See <a class="inline" href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a> for details on how Apple handles App Store transactions.
+          See <a class="inline" href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a> or <a class="inline" href="https://policies.google.com/privacy">Google's Privacy Policy</a> for details on how each store handles transactions.
         </p>
       </div>
     </div>
   </section>
 
   <!-- ── Section 06 — Children ──────────────────────────────────────── -->
-  <section class="policy" id="children" data-screen-label="07 Children">
+  <section class="policy" id="children" data-screen-label="08 Children">
     <div class="wrap split">
       <aside class="section-head">
-        <div class="section-label"><span class="dice" data-face="6" aria-label="Section 6"></span>Children's privacy</div>
+        <div class="section-label"><span class="dice" data-face="7" aria-label="Section 7"></span>Children's privacy</div>
       </aside>
       <div>
         <h2>No data collected, from anyone.</h2>
         <p class="lede">
-          Tactus does not knowingly collect any personal information from anyone, including children under 13 (or the applicable age in your jurisdiction). Because the app collects no personal data at all, it presents no specific risk to younger users.
+          Tactus does not knowingly collect any personal information from anyone, including children under 13 (or the applicable age in your jurisdiction). The only personal data the app ever handles is a Google account email, and only if a user on Android chooses to sign in for backup — a feature aimed at people managing their own cloud storage, not children. Tactus does not knowingly direct this feature at children.
         </p>
         <p class="lede">
           If you have questions, contact us at <a class="inline" href="mailto:tactusrhythm@gmail.com">tactusrhythm@gmail.com</a>.
@@ -795,10 +830,10 @@
   </section>
 
   <!-- ── Section 07 — Changes & contact ─────────────────────────────── -->
-  <section class="policy" id="changes" data-screen-label="08 Changes & contact" style="border-bottom: 0;">
+  <section class="policy" id="changes" data-screen-label="09 Changes & contact" style="border-bottom: 0;">
     <div class="wrap split">
       <aside class="section-head">
-        <div class="section-label"><span class="dice" data-face="7" aria-label="Section 7"></span>Changes &amp; contact</div>
+        <div class="section-label"><span class="dice" data-face="8" aria-label="Section 8"></span>Changes &amp; contact</div>
       </aside>
       <div>
         <h2>If something changes, it gets written here.</h2>
@@ -809,8 +844,8 @@
         <div class="end-grid">
           <div class="end-cell">
             <div class="ix">Effective date</div>
-            <h3>July 28, 2026</h3>
-            <p>The version above governs the current release of Tactus on the App Store.</p>
+            <h3>August 15, 2026</h3>
+            <p>The version above governs the current release of Tactus on the App Store and Google Play.</p>
           </div>
           <div class="end-cell">
             <div class="ix">Contact</div>
@@ -823,7 +858,7 @@
   </section>
 
   <!-- ── Closing ────────────────────────────────────────────────────── -->
-  <section class="closing" data-screen-label="09 Closing">
+  <section class="closing" data-screen-label="10 Closing">
     <div class="wrap">
       <h2>The rhythm is yours. So is the data.</h2>
       <p>That's the whole story. Now go map a passage.</p>
