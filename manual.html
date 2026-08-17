@@ -624,7 +624,7 @@
         <ul class="gestures">
           <li><span class="g">Tap</span><span>Open the passage in the Editor.</span></li>
           <li><span class="g">Swipe left</span><span>Delete the passage.</span></li>
-          <li><span class="g">Swipe right</span><span>Remove a grouped passage from its Work.</span></li>
+          <li><span class="g">Swipe right</span><span>Add to a Work, or remove from one if it's already grouped.</span></li>
           <li><span class="g">Long-press</span><span>Share, Move to Work, Reorder, or Delete.</span></li>
         </ul>
 
@@ -638,7 +638,7 @@
         <h3>Creating &amp; reordering</h3>
         <ul class="bullets">
           <li><strong>New passage</strong>: tap <span class="code">+</span>. A blank passage opens immediately in the Editor.</li>
-          <li><strong>New Work</strong>: tap the folder icon and enter a name.</li>
+          <li><strong>New Work</strong>: tap <span class="code">+</span>, choose New Work, and enter a name.</li>
           <li><strong>Reorder</strong>: tap the reorder icon in the toolbar, then drag rows by their handles.</li>
         </ul>
       </section>
@@ -754,10 +754,6 @@
           <li><strong>Tap the BPM field</strong> to type a value on the digit pad.</li>
           <li><strong>Tap Tempo</strong>: tap the metronome icon repeatedly; the average of recent taps applies. The counter resets after 2 seconds of inactivity.</li>
         </ul>
-        <div class="note">
-          <span class="tag">Note value</span>
-          <p>The note-value button (♩ ♪ ♬ ♩. …) changes only the <em>display</em>. Tempo is always stored as quarter-note BPM, so ♩=120 and ♪=240 are the same internal tempo.</p>
-        </div>
 
         <h3>Per-bar tempo</h3>
         <p class="body">
@@ -847,7 +843,7 @@
           from the manual start bar if one is set, otherwise from the first bar.
         </p>
         <ul class="bullets">
-          <li><strong>Start bar</strong>: tap any bar number to flag it as the start bar (a teal flag marks it). Playback returns here after each loop or stop.</li>
+          <li><strong>Start bar</strong>: long-press a bar and choose Set As Start Bar (a teal flag marks it). Playback returns here after each loop or stop.</li>
           <li><strong>Loop</strong>: tap the repeat icon; playback restarts from the start bar when it reaches the end.</li>
           <li><strong>Focal scroll</strong>: the Editor keeps the currently playing bar centred.</li>
           <li><strong>Beat animation</strong>: active dots scale up on each click, then decay.</li>
@@ -880,7 +876,7 @@
           </div>
           <div class="concept">
             <div class="ct">Samples</div>
-            <div class="cd">Pre-recorded click samples, pitch-shifted per accent level for a more acoustic quality.</div>
+            <div class="cd">Woodblock samples, pitch-shifted per accent level for a more acoustic quality.</div>
           </div>
         </div>
       </section>
@@ -914,7 +910,7 @@
       <section class="chapter" id="share" data-screen-label="13 Import & export">
         <div class="chapter-label"><span class="n">12</span>Import &amp; export</div>
         <ul class="bullets">
-          <li><strong>Export a passage</strong>: long-press it in the Library and tap <strong>Share</strong> to send a <span class="code">.rhythmmap</span> file via Messages, Mail, AirDrop, or Files.</li>
+          <li><strong>Export a passage</strong>: long-press it in the Library and tap <strong>Share</strong> to send a <span class="code">.rhythmmap</span> file through whichever apps are on your device.</li>
           <li><strong>Export a Work</strong>: open the Work detail view and tap the export button.</li>
           <li><strong>Import</strong>: open a <span class="code">.rhythmmap</span> file from anywhere; Tactus adds it to the Library automatically.</li>
           <li><strong>Import a tempo map</strong>: in passage settings, tap <strong>Import Tempo Map</strong> and pick another passage. Its bar structure (meters and tempos) is copied in while your current beat content is kept; extra bars pad with defaults, fewer bars truncate to match.</li>
@@ -1011,7 +1007,6 @@
   <!-- ── Closing ────────────────────────────────────────────────────── -->
   <section class="closing" data-screen-label="17 Closing">
     <div class="wrap">
-      <p>Keep this open on a second screen while you map your first passage.</p>
       <a class="btn-secondary" href="index.html">
         Back to Tactus
         <svg viewBox="0 0 14 14" width="12" height="12" fill="none" aria-hidden="true">
