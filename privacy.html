@@ -560,7 +560,7 @@
         <p class="hero-sub">
           Tactus has no analytics, no advertising, and no server of its own. On iOS, everything
           lives on your device and, if you choose, in your iCloud. On Android, you can optionally
-          sign in with Google to back up to your own Drive — nothing is ever required.
+          sign in with Google to back up to your own Drive. Nothing is ever required.
         </p>
       </div>
 
@@ -618,7 +618,7 @@
           Everything you create, passages, bar structures, meters, accent maps, tempo shapes, is stored as files on your device. On iOS, if you have iCloud Drive enabled, those files sync to your personal iCloud account so they appear on all your devices. On Android, you can optionally sign in with Google to back up the same files to a folder Tactus creates in your own Google Drive.
         </p>
         <p class="lede">
-          Apple operates iCloud and Google operates Drive; each is subject to its own privacy policy (<a class="inline" href="https://www.apple.com/legal/privacy/">Apple's</a>, <a class="inline" href="https://policies.google.com/privacy">Google's</a>). Tactus itself has no visibility into your iCloud or Drive files — sync happens directly between your device and Apple or Google, never through a server Tactus operates. On Android, Tactus only ever requests access to the files and folders it creates itself (Google's <span style="font-family: var(--mono); font-size: 13px;">drive.file</span> scope), never your whole Drive.
+          Apple operates iCloud and Google operates Drive; each is subject to its own privacy policy (<a class="inline" href="https://www.apple.com/legal/privacy/">Apple's</a>, <a class="inline" href="https://policies.google.com/privacy">Google's</a>). Tactus itself has no visibility into your iCloud or Drive files: sync happens directly between your device and Apple or Google, never through a server Tactus operates. On Android, Tactus only ever requests access to the files and folders it creates itself (Google's <span style="font-family: var(--mono); font-size: 13px;">drive.file</span> scope), never your whole Drive.
         </p>
 
         <div class="kv">
@@ -636,7 +636,7 @@
           </div>
           <div class="kv-row">
             <div class="k">Google Sign-In (Android)</div>
-            <div class="v">Optional. Used only to authorize Drive backup. Your email address is stored locally on your device to show you're signed in — it is never sent to any server Tactus operates.</div>
+            <div class="v">Optional. Used only to authorize Drive backup. Your email address is stored locally on your device to show you're signed in. It is never sent to any server Tactus operates.</div>
           </div>
           <div class="kv-row no">
             <div class="k">Developer access</div>
@@ -661,7 +661,7 @@
       <div>
         <h2>Deleting your account and data.</h2>
         <p class="lede">
-          Tactus has no account or server of its own, so there's nothing on our end to delete — everything lives on your device and, if you signed in, your own Google Drive. To fully remove your data:
+          Tactus has no account or server of its own, so there's nothing on our end to delete. Everything lives on your device and, if you signed in, your own Google Drive. To fully remove your data:
         </p>
         <div class="callout" style="margin-top: 24px;">
           <div class="callout-head">
@@ -669,15 +669,15 @@
           </div>
           <div class="callout-body">
             <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; border-top: 0.5px solid var(--hair);">
-              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Sign out of Google</strong> — in Tactus, go to Settings and tap Sign Out. This immediately removes your signed-in email and any cached access from your device.</li>
-              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Delete your backed-up files</strong> — open Google Drive, find the "Tactus" folder, and delete it. These are your files in your own Drive; Tactus never keeps a copy anywhere else.</li>
-              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Revoke Tactus's access entirely</strong> — visit <a class="inline" href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a> and remove Tactus from the list of connected apps.</li>
-              <li style="padding: 14px 0;"><strong>Delete local passages</strong> — swipe to delete any passage in the app's Library to remove it from your device.</li>
+              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Sign out of Google</strong>: in Tactus, go to Settings and tap Sign Out. This immediately removes your signed-in email and any cached access from your device.</li>
+              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Delete your backed-up files</strong>: open Google Drive, find the "Tactus" folder, and delete it. These are your files in your own Drive; Tactus never keeps a copy anywhere else.</li>
+              <li style="padding: 14px 0; border-bottom: 0.5px solid var(--hair);"><strong>Revoke Tactus's access entirely</strong>: visit <a class="inline" href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a> and remove Tactus from the list of connected apps.</li>
+              <li style="padding: 14px 0;"><strong>Delete local passages</strong>: swipe to delete any passage in the app's Library to remove it from your device.</li>
             </ul>
           </div>
         </div>
         <p class="lede" style="margin-top: 20px;">
-          Once you've done this, no Tactus-related data remains anywhere — there's no developer-held copy to request deletion of, because none has ever existed.
+          Once you've done this, no Tactus-related data remains anywhere. There's no developer-held copy to request deletion of, because none has ever existed.
         </p>
       </div>
     </div>
@@ -695,7 +695,7 @@
       <div class="not-grid">
         <div class="not-cell">
           <div class="not-h">Account</div>
-          <p class="not-p">No Tactus account, ever. On Android, an optional Google Sign-In lets you back up to your own Drive — skip it and the app behaves exactly like iOS.</p>
+          <p class="not-p">No Tactus account, ever. On Android, an optional Google Sign-In lets you back up to your own Drive. Skip it and the app behaves exactly like iOS.</p>
           <div class="not-tag">001 Identity</div>
         </div>
         <div class="not-cell">
@@ -749,10 +749,10 @@
         <div class="section-label"><span class="dice" data-face="4" aria-label="Section 4"></span>Local network</div>
         <h2 style="font-size: clamp(26px, 3vw, 36px); margin-bottom: 16px;">Ableton Link, in detail.</h2>
         <p class="lede" style="font-size: 15.5px;">
-          <strong>Ableton Link is currently available on iOS only</strong> — it is not yet implemented in the Android version of Tactus. If you enable Link in settings on iOS, Tactus uses your device's local network to discover and connect to other Link-enabled apps on the same WiFi network, like Ableton Live, Logic Pro, or other iOS apps.
+          <strong>Ableton Link is available on iOS and Android.</strong> If you enable Link in settings, Tactus uses your device's local network to discover and connect to other Link-enabled apps on the same WiFi network or hotspot, like Ableton Live, or another copy of Tactus.
         </p>
         <p class="lede" style="font-size: 14px; color: var(--fg-3); margin-top: 14px;">
-          The Ableton Link SDK is developed by Ableton AG. When Link is active, it uses Bonjour (mDNS) for peer discovery. No personal data is transmitted.
+          The Ableton Link SDK is developed by Ableton AG. Link finds peers using its own local UDP multicast protocol, the same one on every platform, not a third-party discovery service. No personal data is transmitted.
         </p>
       </aside>
 
@@ -787,7 +787,7 @@
       <div>
         <h2>Clicks are synthesized. Nothing is recorded.</h2>
         <p class="lede">
-          Tactus generates click sounds using your device's audio hardware — <span style="font-family: var(--mono); font-size: 14.5px; color: var(--accent);">AVAudioEngine</span> on iOS, the <span style="font-family: var(--mono); font-size: 14.5px; color: var(--accent);">Oboe</span> library on Android. It does not record audio on either platform. It does not access your microphone. All audio is synthesized locally and plays through your speaker or headphones.
+          Tactus generates click sounds using your device's audio hardware: <span style="font-family: var(--mono); font-size: 14.5px; color: var(--accent);">AVAudioEngine</span> on iOS, the <span style="font-family: var(--mono); font-size: 14.5px; color: var(--accent);">Oboe</span> library on Android. It does not record audio on either platform. It does not access your microphone. All audio is synthesized locally and plays through your speaker or headphones.
         </p>
       </div>
     </div>
@@ -820,7 +820,7 @@
       <div>
         <h2>No data collected, from anyone.</h2>
         <p class="lede">
-          Tactus does not knowingly collect any personal information from anyone, including children under 13 (or the applicable age in your jurisdiction). The only personal data the app ever handles is a Google account email, and only if a user on Android chooses to sign in for backup — a feature aimed at people managing their own cloud storage, not children. Tactus does not knowingly direct this feature at children.
+          Tactus does not knowingly collect any personal information from anyone, including children under 13 (or the applicable age in your jurisdiction). The only personal data the app ever handles is a Google account email, and only if a user on Android chooses to sign in for backup (a feature aimed at people managing their own cloud storage, not children). Tactus does not knowingly direct this feature at children.
         </p>
         <p class="lede">
           If you have questions, contact us at <a class="inline" href="mailto:tactusrhythm@gmail.com">tactusrhythm@gmail.com</a>.
@@ -844,7 +844,7 @@
         <div class="end-grid">
           <div class="end-cell">
             <div class="ix">Effective date</div>
-            <h3>August 15, 2026</h3>
+            <h3>August 17, 2026</h3>
             <p>The version above governs the current release of Tactus on the App Store and Google Play.</p>
           </div>
           <div class="end-cell">
