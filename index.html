@@ -338,6 +338,108 @@
     /* die-face positional helpers — cells go 1..9 row-major */
     .cluster .d { grid-area: auto; }
 
+    /* ── Live meter-keyboard demo (Speed of entry section) ──────
+       Reuses .bar / .meter / .clusters / .cluster / .d verbatim from the
+       hero passage above — same classes, same die-face logic, so a bar
+       built here looks pixel-identical to the hero and the real app. */
+    .tactus-demo {
+      display: flex; flex-direction: column;
+      height: 100%;
+      background: var(--bg);
+    }
+    .td-bars {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      min-height: 132px;
+    }
+    .td-bars .bar { padding: 14px 16px 16px; grid-template-columns: 30px 1fr; gap: 12px; }
+    .td-bars .meter { font-size: 18px; }
+    .td-bars .cluster { width: 34px; height: 34px; }
+    .td-bars .cluster .d { width: 6px; height: 6px; }
+    .td-bars .clusters { gap: 8px; }
+    .td-empty {
+      display: flex; align-items: center; justify-content: center;
+      height: 100%; min-height: 132px;
+      padding: 20px; text-align: center;
+      font-family: var(--ui); font-size: 12.5px; color: var(--fg-4);
+      letter-spacing: -0.005em;
+    }
+    .td-keyboard {
+      border-top: 0.5px solid var(--hair);
+      padding: 12px 14px 6px;
+    }
+    .td-key-row {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 6px;
+    }
+    .td-key-label {
+      font-family: var(--mono); font-size: 10px; color: var(--fg-4);
+      width: 22px; flex-shrink: 0;
+    }
+    .td-keys { display: flex; gap: 6px; flex: 1 1 auto; }
+    .td-key {
+      flex: 1 1 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 40px;
+      background: var(--bg-elev-3);
+      border-radius: var(--r-key);
+      border: none;
+      font-family: var(--meter-font); font-weight: 700;
+      font-size: 12px; line-height: 1.05;
+      color: var(--fg-2);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: background 120ms var(--ease-out), transform 120ms var(--ease-pop);
+    }
+    .td-key:active { background: var(--accent-dim); color: var(--fg); transform: scale(0.94); }
+    .td-key-spacer { flex: 1 1 0; }
+    .td-hint {
+      font-family: var(--ui); font-size: 10.5px; color: var(--fg-4);
+      letter-spacing: -0.005em;
+      padding: 2px 2px 8px;
+    }
+    .td-transport {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px 14px;
+      border-top: 0.5px solid var(--hair);
+    }
+    .td-tempo {
+      font-family: var(--mono); font-size: 12px; color: var(--fg-3);
+      letter-spacing: 0.01em;
+    }
+    .td-clear {
+      font-family: var(--ui); font-size: 11.5px; font-weight: 500; color: var(--fg-4);
+      background: none; border: none; padding: 8px 4px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .td-clear:active { color: var(--fg-2); }
+    .td-clear[disabled] { opacity: 0; pointer-events: none; }
+    .td-play {
+      width: 44px; height: 44px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      color: #0F0F10;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: transform 120ms var(--ease-pop), background 120ms var(--ease-out);
+    }
+    .td-play:active { transform: scale(0.92); }
+    .td-play svg { width: 15px; height: 15px; margin-left: 2px; }
+    .td-play.playing { background: rgba(255,255,255,0.10); color: var(--fg); }
+    .td-play.playing svg { margin-left: 0; }
+
+    /* Bigger + more tappable on real phones — this is the one screenshot on
+       the page meant to be used, not just looked at. */
+    @media (max-width: 640px) {
+      .tactus-demo-shot { max-width: 340px; }
+      .td-key { min-height: 46px; font-size: 13px; }
+      .td-play { width: 50px; height: 50px; }
+      .td-bars .cluster { width: 38px; height: 38px; }
+    }
+
     /* ── Hero video (iPhone-framed portrait) ──────────────────── */
     .hero-video-stage {
       position: relative;
@@ -1137,12 +1239,49 @@
   <!-- ── Section 01 — Speed of entry ─────────────────────────────────── -->
   <section class="feature" id="features" data-screen-label="02 Speed of entry">
     <div class="wrap split reverse">
-      <!-- visual: meter keyboard screenshot placeholder.
-           Per handoff capture #5: “Meter Keyboard — entry sheet open, preview
-           strip with 5-bar mixed-meter sequence being built.” -->
+      <!-- Live demo: a real, tappable meter keyboard, not a screenshot.
+           Same markup/CSS as the hero passage (.bar/.meter/.clusters/.cluster/.d)
+           so a bar built here renders identically to the real app. -->
       <div>
-        <div class="app-shot">
-          <img src="assets/images/meter-keyboard.png" alt="Tactus meter keyboard: Add Bars sheet mid-build with a 3-bar 4/8, 5/4, 4/16 preview strip and the cursor on the next slot." loading="lazy" width="1206" height="2622">
+        <div class="app-shot tactus-demo-shot">
+          <div class="tactus tactus-demo" id="tactusDemo" role="group" aria-label="Interactive Tactus demo: tap a meter to build a passage">
+            <div class="td-bars" id="tdBars">
+              <div class="td-empty">Tap a meter below to begin</div>
+            </div>
+            <div class="td-keyboard">
+              <div class="td-key-row">
+                <span class="td-key-label">/ 4</span>
+                <div class="td-keys">
+                  <button class="td-key" type="button" data-num="4" data-den="4"><span>4</span><span>4</span></button>
+                  <button class="td-key" type="button" data-num="5" data-den="4"><span>5</span><span>4</span></button>
+                </div>
+              </div>
+              <div class="td-key-row">
+                <span class="td-key-label">/ 8</span>
+                <div class="td-keys">
+                  <button class="td-key" type="button" data-num="3" data-den="8"><span>3</span><span>8</span></button>
+                  <button class="td-key" type="button" data-num="5" data-den="8"><span>5</span><span>8</span></button>
+                  <button class="td-key" type="button" data-num="6" data-den="8"><span>6</span><span>8</span></button>
+                </div>
+              </div>
+              <div class="td-key-row">
+                <span class="td-key-label">/ 16</span>
+                <div class="td-keys">
+                  <button class="td-key" type="button" data-num="7" data-den="16"><span>7</span><span>16</span></button>
+                  <div class="td-key-spacer" aria-hidden="true"></div>
+                  <div class="td-key-spacer" aria-hidden="true"></div>
+                </div>
+              </div>
+              <div class="td-hint">Tap a cluster in a bar above to subdivide it</div>
+            </div>
+            <div class="td-transport">
+              <button class="td-clear" id="tdClear" type="button" disabled>Clear</button>
+              <span class="td-tempo">♩ = 100</span>
+              <button class="td-play" id="tdPlay" type="button" aria-label="Play">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1586,6 +1725,253 @@
       });
     })();
 
+  </script>
+
+  <script>
+    // Live meter-keyboard demo (Speed of entry section). Renders real
+    // .bar/.meter/.clusters/.cluster/.d markup, so it's visually identical
+    // to the hero passage above and the real app, not an approximation.
+    //
+    // Die-face fill positions are the app's own canonical table
+    // (ClusterLayout.canonical in the Swift source) — same 3x3 grid,
+    // row-major 0-8, transcribed exactly, not re-derived by eye.
+    (function () {
+      const root = document.getElementById('tactusDemo');
+      if (!root) return;
+      const barsEl   = document.getElementById('tdBars');
+      const clearBtn = document.getElementById('tdClear');
+      const playBtn  = document.getElementById('tdPlay');
+
+      const BPM = 100;
+      const MAX_BARS = 4;
+
+      const DIE_FACE = {
+        1: [4],
+        2: [0, 8],
+        3: [0, 4, 8],
+        4: [0, 2, 6, 8],
+        5: [0, 2, 4, 6, 8],
+        6: [0, 2, 3, 5, 6, 8],
+        7: [0, 2, 3, 4, 5, 6, 8],
+        8: [0, 1, 2, 3, 5, 6, 7, 8],
+        9: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      };
+      const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/></svg>';
+      const STOP_ICON = '<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>';
+
+      // state: array of { num, den, beats: [subCount, ...] }, one subCount per beat
+      let bars = [];
+      let playing = false;
+      let playToken = 0;
+      let audioCtx = null;
+
+      // First sub-pulse of beat 0 is strong, first sub-pulse of any other
+      // beat is normal, every later sub-pulse in a beat is soft — matches
+      // AccentResolver.defaultAccent's isDownbeat/isFirstPulseOfABeat rules
+      // for an unsubdivided-by-default bar with strongDownbeats on.
+      function accentFor(beatIdx, subIdx) {
+        if (subIdx > 0) return 'soft';
+        return beatIdx === 0 ? 'strong' : 'normal';
+      }
+
+      function renderCluster(beatIdx, subCount) {
+        const cluster = document.createElement('div');
+        cluster.className = 'cluster';
+        const filled = DIE_FACE[subCount] || DIE_FACE[1];
+        for (let i = 0; i < 9; i++) {
+          const d = document.createElement('span');
+          const subIdx = filled.indexOf(i);
+          d.className = subIdx === -1 ? 'd empty' : ('d ' + accentFor(beatIdx, subIdx));
+          cluster.appendChild(d);
+        }
+        return cluster;
+      }
+
+      function render() {
+        barsEl.innerHTML = '';
+        if (bars.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'td-empty';
+          empty.textContent = 'Tap a meter below to begin';
+          barsEl.appendChild(empty);
+          clearBtn.disabled = true;
+          return;
+        }
+        clearBtn.disabled = false;
+        bars.forEach((bar, barIdx) => {
+          const barEl = document.createElement('div');
+          barEl.className = 'bar';
+          barEl.dataset.barIndex = String(barIdx);
+
+          const meter = document.createElement('div');
+          meter.className = 'meter';
+          meter.innerHTML = '<span>' + bar.num + '</span><span>' + bar.den + '</span>';
+          barEl.appendChild(meter);
+
+          const clusters = document.createElement('div');
+          clusters.className = 'clusters';
+          bar.beats.forEach((subCount, beatIdx) => {
+            const c = renderCluster(beatIdx, subCount);
+            c.addEventListener('click', () => {
+              if (playing) return;
+              bar.beats[beatIdx] = (subCount % 9) + 1;
+              render();
+            });
+            clusters.appendChild(c);
+          });
+          barEl.appendChild(clusters);
+          barsEl.appendChild(barEl);
+        });
+        barsEl.scrollTop = barsEl.scrollHeight;
+      }
+
+      root.querySelectorAll('.td-key').forEach(key => {
+        key.addEventListener('click', () => {
+          if (playing || bars.length >= MAX_BARS) return;
+          const num = parseInt(key.dataset.num, 10);
+          const den = parseInt(key.dataset.den, 10);
+          bars.push({ num, den, beats: new Array(num).fill(1) });
+          render();
+        });
+      });
+
+      clearBtn.addEventListener('click', () => {
+        if (playing) return;
+        bars = [];
+        render();
+      });
+
+      // ── Playback ────────────────────────────────────────────────
+      // Synth clicks via Web Audio (noise burst + bandpass, pitched and
+      // gained per accent) rather than sample playback — mirrors the real
+      // app's own .synth click path (band-limited clicks, pitch-shifted
+      // per accent) conceptually, without shipping audio assets for a demo.
+      const ACCENT_PARAMS = {
+        strong: { freq: 1900, gain: 0.55 },
+        normal: { freq: 1400, gain: 0.34 },
+        soft:   { freq: 1000, gain: 0.18 },
+      };
+
+      function ensureAudio() {
+        if (!audioCtx) {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new Ctx();
+        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        return audioCtx;
+      }
+
+      function scheduleClick(ctx, time, accent) {
+        const params = ACCENT_PARAMS[accent] || ACCENT_PARAMS.soft;
+        const dur = 0.05;
+        const bufferSize = Math.ceil(ctx.sampleRate * dur);
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 6);
+        }
+        const src = ctx.createBufferSource();
+        src.buffer = buffer;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = params.freq;
+        filter.Q.value = 1.1;
+        const gain = ctx.createGain();
+        gain.gain.value = params.gain;
+        src.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        src.start(time);
+        src.stop(time + dur);
+      }
+
+      function setPlayingUI(isPlaying) {
+        playing = isPlaying;
+        playBtn.classList.toggle('playing', isPlaying);
+        playBtn.innerHTML = isPlaying ? STOP_ICON : PLAY_ICON;
+      }
+
+      function clearHighlight() {
+        barsEl.querySelectorAll('.bar.active').forEach(b => b.classList.remove('active'));
+      }
+
+      function pulse(barIdx, beatIdx, subIdx, subCount) {
+        clearHighlight();
+        const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
+        if (!barEl) return;
+        barEl.classList.add('active');
+        const cluster = barEl.querySelectorAll('.cluster')[beatIdx];
+        if (!cluster) return;
+        const filled = DIE_FACE[subCount] || DIE_FACE[1];
+        const dot = cluster.children[filled[subIdx]];
+        if (!dot) return;
+        dot.classList.remove('hit');
+        void dot.offsetWidth; // restart the animation
+        dot.classList.add('hit');
+      }
+
+      function stopPlayback() {
+        playToken++;
+        setPlayingUI(false);
+        clearHighlight();
+      }
+
+      playBtn.addEventListener('click', () => {
+        if (playing) { stopPlayback(); return; }
+        if (bars.length === 0) return;
+        const ctx = ensureAudio();
+        const token = ++playToken;
+        setPlayingUI(true);
+
+        const secPerBeat = den => (60 / BPM) * (4 / den);
+        const startAt = ctx.currentTime + 0.08;
+        let t = startAt;
+        const events = [];
+        bars.forEach((bar, barIdx) => {
+          const beatDur = secPerBeat(bar.den);
+          bar.beats.forEach((subCount, beatIdx) => {
+            const subDur = beatDur / subCount;
+            for (let s = 0; s < subCount; s++) {
+              events.push({ time: t + s * subDur, barIdx, beatIdx, subIdx: s, subCount, accent: accentFor(beatIdx, s) });
+            }
+            t += beatDur;
+          });
+        });
+        const endAt = t;
+        events.forEach(ev => scheduleClick(ctx, ev.time, ev.accent));
+
+        // Definitive end-of-passage stop via setTimeout, not the rAF loop
+        // below — rAF throttles or fully pauses in a backgrounded tab, so a
+        // user who switches tabs mid-playback would otherwise leave the UI
+        // stuck showing "playing" forever. setTimeout still fires (if late)
+        // when the tab is hidden, which is all this needs.
+        setTimeout(() => { if (token === playToken) stopPlayback(); }, (endAt - ctx.currentTime) * 1000 + 80);
+
+        // Visual sync polls ctx.currentTime via rAF — not sample-accurate,
+        // but close enough for a marketing demo; the audio itself already
+        // has real Web Audio scheduling precision regardless of frame rate.
+        // Naturally stops updating in a hidden tab, which is fine since
+        // there's nothing to look at there anyway.
+        let last = null;
+        function frame() {
+          if (token !== playToken) return;
+          const now = ctx.currentTime;
+          if (now >= endAt + 0.05) return;
+          let cur = null;
+          for (const ev of events) {
+            if (ev.time <= now) cur = ev; else break;
+          }
+          if (cur && cur !== last) {
+            pulse(cur.barIdx, cur.beatIdx, cur.subIdx, cur.subCount);
+            last = cur;
+          }
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      });
+
+      render();
+    })();
   </script>
 
 </body>
