@@ -1,6 +1,6 @@
 # Tactus
 
-> Tactus is a rhythmic mapping app for iOS (iPhone and iPad) built for musicians working with complex music: mixed meters, changing time signatures, ritardandos, accelerandos, and non-standard accents.
+> Tactus is a rhythmic mapping app for iPhone, iPad, and Android (Android coming soon) built for musicians working with complex music: mixed meters, changing time signatures, ritardandos, accelerandos, and non-standard accents.
 
 Tactus is not a metronome. A metronome repeats one click at a fixed tempo. Tactus maps the exact rhythmic shape of a specific musical passage and plays it back as a custom click track. It is a rehearsal and practice tool for performers, composers, and conductors.
 
@@ -14,14 +14,14 @@ Tactus is not a metronome. A metronome repeats one click at a fixed tempo. Tactu
 - **Tempo Shape editor**: Draw ritardando and accelerando curves across any range of bars, with linear, ease-in, and ease-out options per segment.
 - **Conducted feel**: Overlay a conductor's beat pattern on any bar.
 - **Practice speed**: Slow the entire passage 50 to 125% in one tap.
-- **Count-in**: Mirrors the coming meter before playback begins.
+- **Count-in**: Plays the previous bar's meter as a lead-in.
 - **iCloud sync**: Passages sync automatically across all your Apple devices.
 - **.rhythmmap export**: Share any passage as a single portable file.
-- **iPad and iPhone native**: Both supported, one purchase.
+- **iPad, iPhone, and Android**: iOS available now; Android coming soon.
 
 ## Pricing
 
-$9.99, one-time purchase. No subscription. Lifetime updates included for the major version. iPhone and iPad both included.
+$9.99 USD, one-time purchase. No subscription. iPhone and iPad now; Android coming soon.
 
 ## Status
 
