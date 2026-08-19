@@ -396,9 +396,9 @@
     }
     #tactusDemo .td-addbar-row { display: flex; justify-content: center; padding: 14px; flex-shrink: 0; }
     #tactusDemo .td-addbar {
-      font-family: var(--ui); font-size: 13px; font-weight: 500; color: var(--fg-3);
+      font-family: var(--ui); font-size: 13px; font-weight: 500; color: var(--fg-2);
       background: none;
-      border: 1px dashed var(--stroke);
+      border: 1px dashed var(--stroke-strong);
       border-radius: 20px;
       padding: 9px 18px;
       -webkit-tap-highlight-color: transparent;
@@ -453,6 +453,8 @@
        passage's .bar/.meter/.cluster, distinct rules so neither leaks) ── */
     #tactusDemo .bar {
       display: flex; flex-direction: column;
+      align-items: stretch;
+      gap: 0;
       padding: 10px 16px;
       background: var(--bg-elev-1);
       border-bottom: 0.5px solid var(--hair);
@@ -506,13 +508,14 @@
     #tactusDemo .bar.active .meter span:last-child { color: var(--fg-2); }
     #tactusDemo .meter span { display: block; }
     #tactusDemo .clusters {
-      display: flex; align-items: center; gap: 9px;
+      display: flex; align-items: center; flex-wrap: nowrap; gap: 9px;
       min-width: 0; overflow-x: auto;
       scrollbar-width: none; -ms-overflow-style: none;
       -webkit-overflow-scrolling: touch;
     }
     #tactusDemo .clusters::-webkit-scrollbar { display: none; }
     #tactusDemo .cluster {
+      display: block;
       width: 30px; height: 30px;
       position: relative;
       flex-shrink: 0;
