@@ -2164,6 +2164,7 @@
       let bars = [];           // { num, den, beats: [subCount,...], overrides: [ [accent,...] | null, ...] }
       let queue = [];          // meters queued in the keyboard sheet before Done
       let inspecting = null;   // { barIdx, beatIdx }
+      let activeBarIdx = 0;    // the bar shown highlighted — at rest, and mid-playback
       let playing = false;
       let playToken = 0;
       let audioCtx = null;
@@ -2309,6 +2310,7 @@
         bottomSpacer.style.height = Math.max(0, containerHeight - 2 * rowH) + 'px';
         barsEl.appendChild(bottomSpacer);
         positionFocalTick();
+        applyActiveBar();
       }
 
       function positionFocalTick() {
@@ -2362,6 +2364,7 @@
           tempo: null,
         }));
         closeKeyboard();
+        activeBarIdx = 0;
         renderBars();
         restToBar(0); // ready at the beginning, bar 1 sitting on the second line
       });
@@ -2455,7 +2458,7 @@
         queue = [];
         bpm = 120;
         tempoVal.textContent = bpm;
-        focusedBarIdx = null;
+        activeBarIdx = 0;
         renderBars();
       });
 
@@ -2506,13 +2509,11 @@
         playBtn.classList.toggle('playing', isPlaying);
         playBtn.innerHTML = isPlaying ? STOP_ICON : PLAY_ICON;
       }
-      function clearHighlight() {
-        barsEl.querySelectorAll('.bar.active').forEach(b => b.classList.remove('active'));
+      function clearDotHit() {
         barsEl.querySelectorAll('.d.hit').forEach(d => d.classList.remove('hit'));
       }
       const FOCAL_OPACITY = [1.00, 0.78, 0.52, 0.30]; // dist 0,1,2,3 — matches Tactus.opacity(dist:)
-      let focusedBarIdx = null;
-      // The focused bar always sits as the *second* visible line — exactly one
+      // The active bar always sits as the *second* visible line — exactly one
       // row down from the top — so the row before it stays visible as "the bar
       // that's past," and even bar 1 shows the same way with blank space above.
       // Scroll-snap (see .td-bars CSS) owns the actual snap points; this just
@@ -2539,27 +2540,50 @@
           el.style.opacity = dist < FOCAL_OPACITY.length ? FOCAL_OPACITY[dist] : 0.12;
         });
       }
-      function resetFocalOpacity() {
-        barsEl.querySelectorAll('.bar').forEach(el => { el.style.opacity = ''; });
+      // Keeps the active-bar highlight and focal dimming showing at rest, not
+      // just mid-playback — matches the app, which always has a "current" bar.
+      function applyActiveBar() {
+        barsEl.querySelectorAll('.bar').forEach(el => {
+          el.classList.toggle('active', parseInt(el.dataset.barIndex, 10) === activeBarIdx);
+        });
+        applyFocalOpacity(activeBarIdx);
+      }
+      // Scrolls a beat's cluster into view within its own bar's horizontal
+      // strip only — scrollIntoView() would also walk up to #tdBars and fight
+      // the vertical focal-scroll above, so this stays scoped to .clusters.
+      function scrollClusterIntoView(clustersEl, clusterEl) {
+        const containerRect = clustersEl.getBoundingClientRect();
+        const itemRect = clusterEl.getBoundingClientRect();
+        const margin = 8;
+        if (itemRect.left < containerRect.left + margin) {
+          clustersEl.scrollBy({ left: itemRect.left - containerRect.left - margin, behavior: 'smooth' });
+        } else if (itemRect.right > containerRect.right - margin) {
+          clustersEl.scrollBy({ left: itemRect.right - containerRect.right + margin, behavior: 'smooth' });
+        }
       }
       function pulse(barIdx, beatIdx, subIdx, subCount) {
-        clearHighlight();
+        clearDotHit();
+        if (barIdx !== activeBarIdx) {
+          activeBarIdx = barIdx;
+          applyActiveBar();
+          const newBarEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
+          if (newBarEl) focusBar(newBarEl);
+        }
         const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
         if (!barEl) return;
-        barEl.classList.add('active');
-        if (barIdx !== focusedBarIdx) { focusedBarIdx = barIdx; focusBar(barEl); applyFocalOpacity(barIdx); }
         const cluster = barEl.querySelectorAll('.cluster')[beatIdx];
         if (!cluster) return;
         const filled = DIE_FACE[subCount] || DIE_FACE[1];
         const dot = cluster.children[filled[subIdx]];
         if (!dot) return;
         dot.classList.remove('hit'); void dot.offsetWidth; dot.classList.add('hit');
+        scrollClusterIntoView(cluster.parentElement, cluster);
       }
       function stopPlayback() {
         playToken++;
         audioNodes.forEach(src => { try { src.stop(); } catch (e) {} });
         audioNodes = [];
-        setPlayingUI(false); clearHighlight(); resetFocalOpacity(); focusedBarIdx = null;
+        setPlayingUI(false); clearDotHit();
       }
 
       playBtn.addEventListener('click', () => {
