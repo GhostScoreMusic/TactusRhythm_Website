@@ -615,6 +615,9 @@
       border-bottom: 0.5px solid var(--hair);
     }
     @media (max-width: 720px) { section.feature { padding: 80px 0; } }
+    section.feature.try-it {
+      padding: 100px 0;
+    }
     .section-label {
       font-family: var(--ui); font-size: 15px; font-weight: 500;
       color: var(--fg-2);
@@ -632,6 +635,7 @@
               mask: var(--dice-mask) center/contain no-repeat;
       filter: drop-shadow(0 0 4px var(--accent-glow));
     }
+    .section-label .dice[data-face="0"] { --dice-mask: var(--dice-0); }
     .section-label .dice[data-face="1"] { --dice-mask: var(--dice-1); }
     .section-label .dice[data-face="2"] { --dice-mask: var(--dice-2); }
     .section-label .dice[data-face="3"] { --dice-mask: var(--dice-3); }
@@ -640,6 +644,7 @@
     .section-label .dice[data-face="6"] { --dice-mask: var(--dice-6); }
     .section-label .dice[data-face="7"] { --dice-mask: var(--dice-7); }
     :root {
+      --dice-0: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'></svg>");
       --dice-1: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='11' cy='11' r='1.7' fill='black'/></svg>");
       --dice-2: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
       --dice-3: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><circle cx='5' cy='5' r='1.7' fill='black'/><circle cx='11' cy='11' r='1.7' fill='black'/><circle cx='17' cy='17' r='1.7' fill='black'/></svg>");
@@ -1236,65 +1241,68 @@
     </div>
   </header>
 
-  <!-- ── Section 01 — Speed of entry ─────────────────────────────────── -->
-  <section class="feature" id="features" data-screen-label="02 Speed of entry">
-    <div class="wrap split reverse">
-      <!-- Live demo: a real, tappable meter keyboard, not a screenshot.
-           Same markup/CSS as the hero passage (.bar/.meter/.clusters/.cluster/.d)
-           so a bar built here renders identically to the real app. -->
-      <div>
-        <div class="app-shot tactus-demo-shot">
-          <div class="tactus tactus-demo" id="tactusDemo" role="group" aria-label="Interactive Tactus demo: tap a meter to build a passage">
-            <div class="td-bars" id="tdBars">
-              <div class="td-empty">Tap a meter below to begin</div>
-            </div>
-            <div class="td-keyboard">
-              <div class="td-key-row">
-                <span class="td-key-label">/ 4</span>
-                <div class="td-keys">
-                  <button class="td-key" type="button" data-num="4" data-den="4"><span>4</span><span>4</span></button>
-                  <button class="td-key" type="button" data-num="5" data-den="4"><span>5</span><span>4</span></button>
-                </div>
+  <!-- ── Try it — Interactive meter keyboard demo ──────────────────────── -->
+  <section class="feature try-it" data-screen-label="01 Try it">
+    <div class="wrap">
+      <h2 style="margin-bottom: 12px;">Try the meter keyboard.</h2>
+      <p class="lede" style="margin-bottom: 40px;">
+        Tap a meter to add a bar. Tap a dot cluster to subdivide. Then play.
+      </p>
+
+      <div class="app-shot tactus-demo-shot">
+        <div class="tactus tactus-demo" id="tactusDemo" role="group" aria-label="Interactive Tactus demo: tap a meter to build a passage">
+          <div class="td-bars" id="tdBars">
+            <div class="td-empty">Tap a meter below to begin</div>
+          </div>
+          <div class="td-keyboard">
+            <div class="td-key-row">
+              <span class="td-key-label">/ 4</span>
+              <div class="td-keys">
+                <button class="td-key" type="button" data-num="4" data-den="4"><span>4</span><span>4</span></button>
+                <button class="td-key" type="button" data-num="5" data-den="4"><span>5</span><span>4</span></button>
               </div>
-              <div class="td-key-row">
-                <span class="td-key-label">/ 8</span>
-                <div class="td-keys">
-                  <button class="td-key" type="button" data-num="3" data-den="8"><span>3</span><span>8</span></button>
-                  <button class="td-key" type="button" data-num="5" data-den="8"><span>5</span><span>8</span></button>
-                  <button class="td-key" type="button" data-num="6" data-den="8"><span>6</span><span>8</span></button>
-                </div>
-              </div>
-              <div class="td-key-row">
-                <span class="td-key-label">/ 16</span>
-                <div class="td-keys">
-                  <button class="td-key" type="button" data-num="7" data-den="16"><span>7</span><span>16</span></button>
-                  <div class="td-key-spacer" aria-hidden="true"></div>
-                  <div class="td-key-spacer" aria-hidden="true"></div>
-                </div>
-              </div>
-              <div class="td-hint">Tap a cluster in a bar above to subdivide it</div>
             </div>
-            <div class="td-transport">
-              <button class="td-clear" id="tdClear" type="button" disabled>Clear</button>
-              <span class="td-tempo">♩ = 100</span>
-              <button class="td-play" id="tdPlay" type="button" aria-label="Play">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/></svg>
-              </button>
+            <div class="td-key-row">
+              <span class="td-key-label">/ 8</span>
+              <div class="td-keys">
+                <button class="td-key" type="button" data-num="3" data-den="8"><span>3</span><span>8</span></button>
+                <button class="td-key" type="button" data-num="5" data-den="8"><span>5</span><span>8</span></button>
+                <button class="td-key" type="button" data-num="6" data-den="8"><span>6</span><span>8</span></button>
+              </div>
             </div>
+            <div class="td-key-row">
+              <span class="td-key-label">/ 16</span>
+              <div class="td-keys">
+                <button class="td-key" type="button" data-num="7" data-den="16"><span>7</span><span>16</span></button>
+                <div class="td-key-spacer" aria-hidden="true"></div>
+                <div class="td-key-spacer" aria-hidden="true"></div>
+              </div>
+            </div>
+            <div class="td-hint">Tap a cluster in a bar above to subdivide it</div>
+          </div>
+          <div class="td-transport">
+            <button class="td-clear" id="tdClear" type="button" disabled>Clear</button>
+            <span class="td-tempo">♩ = 100</span>
+            <button class="td-play" id="tdPlay" type="button" aria-label="Play">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/></svg>
+            </button>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div>
-        <div class="section-label"><span class="dice" data-face="1" aria-label="Section 1"></span>Speed of entry</div>
-        <h2>A passage in seconds, not minutes.</h2>
-        <p class="lede">
-          Tap the meter keyboard. Each tap adds a bar, 5/8, 7/16, 4/4, 3/8, in any
-          order, landing with correct accents by default. Enter any custom meter
-          too, any numerator from 1 to 32 over 2, 4, 8, or 16. For the bars
-          that need more, every subdivision is a tap in the editor.
-        </p>
-      </div>
+  <!-- ── Section 01 — Speed of entry ─────────────────────────────────── -->
+  <section class="feature" id="features" data-screen-label="02 Speed of entry">
+    <div class="wrap">
+      <div class="section-label"><span class="dice" data-face="1" aria-label="Section 1"></span>Speed of entry</div>
+      <h2>A passage in seconds, not minutes.</h2>
+      <p class="lede">
+        Tap the meter keyboard. Each tap adds a bar, 5/8, 7/16, 4/4, 3/8, in any
+        order, landing with correct accents by default. Enter any custom meter
+        too, any numerator from 1 to 32 over 2, 4, 8, or 16. For the bars
+        that need more, every subdivision is a tap in the editor.
+      </p>
     </div>
   </section>
 
