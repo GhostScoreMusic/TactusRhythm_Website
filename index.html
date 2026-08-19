@@ -338,106 +338,360 @@
     /* die-face positional helpers — cells go 1..9 row-major */
     .cluster .d { grid-area: auto; }
 
-    /* ── Live meter-keyboard demo (Speed of entry section) ──────
-       Reuses .bar / .meter / .clusters / .cluster / .d verbatim from the
-       hero passage above — same classes, same die-face logic, so a bar
-       built here looks pixel-identical to the hero and the real app. */
-    .tactus-demo {
+    /* ── Live meter-keyboard demo (Try it section) ──────────────
+       Full sheet-based interaction: Add Bars sheet, Beat Inspector
+       (accent cycling + notes-per-beat), Bar Tempo sheet, focal scroll.
+       Everything is scoped under #tactusDemo so its .bar/.meter/.cluster/
+       .clusters/.d rules can't leak onto the hero passage or the iPad/
+       iPhone screenshots elsewhere on the page, which use the same class
+       names at different sizes. */
+    #tactusDemo {
+      position: relative;
       display: flex; flex-direction: column;
-      height: 100%;
+      height: 460px;
       background: var(--bg);
+      border-radius: 36px;
+      overflow: hidden;
+      font-size: 15px;
+      isolation: isolate;
     }
-    .td-bars {
-      flex: 1 1 auto;
-      overflow-y: auto;
-      min-height: 132px;
+    #tactusDemo .td-screen-main { display: flex; flex-direction: column; height: 100%; }
+    #tactusDemo .td-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 16px 12px;
+      flex-shrink: 0;
     }
-    .td-bars .bar { padding: 14px 16px 16px; grid-template-columns: 30px 1fr; gap: 12px; }
-    .td-bars .meter { font-size: 18px; }
-    .td-bars .cluster { width: 34px; height: 34px; }
-    .td-bars .cluster .d { width: 6px; height: 6px; }
-    .td-bars .clusters { gap: 8px; }
-    .td-empty {
+    #tactusDemo .td-topbar-back {
+      width: 32px; height: 32px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      height: 100%; min-height: 132px;
-      padding: 20px; text-align: center;
-      font-family: var(--ui); font-size: 12.5px; color: var(--fg-4);
-      letter-spacing: -0.005em;
+      border: 0.5px solid var(--stroke);
+      color: var(--fg-2); font-size: 16px; flex-shrink: 0;
     }
-    .td-keyboard {
-      border-top: 0.5px solid var(--hair);
-      padding: 12px 14px 6px;
+    #tactusDemo .td-topbar-title { font-size: 16px; font-weight: 500; color: var(--fg); }
+    #tactusDemo .td-topbar-reset {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 0.5px solid var(--stroke);
+      background: none; color: var(--fg-2); flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
     }
-    .td-key-row {
-      display: flex; align-items: center; gap: 6px;
-      margin-bottom: 6px;
+    #tactusDemo .td-topbar-reset svg { width: 15px; height: 15px; }
+    #tactusDemo .td-topbar-reset:active { color: var(--fg); border-color: var(--accent-dim); }
+
+    #tactusDemo .td-bars-wrap { position: relative; flex: 1 1 auto; min-height: 0; display: flex; }
+    #tactusDemo .td-bars-wrap::before, #tactusDemo .td-bars-wrap::after {
+      content: ""; position: absolute; left: 0; right: 0; z-index: 2; pointer-events: none;
     }
-    .td-key-label {
-      font-family: var(--mono); font-size: 10px; color: var(--fg-4);
-      width: 22px; flex-shrink: 0;
+    #tactusDemo .td-bars-wrap::before { top: 0; height: 10px; background: linear-gradient(var(--bg-elev-1), transparent); }
+    #tactusDemo .td-bars-wrap::after  { bottom: 0; height: 24px; background: linear-gradient(transparent, var(--bg)); }
+    #tactusDemo .td-focal-tick {
+      position: absolute; right: 8px; top: 4px; z-index: 3;
+      width: 18px; height: 1px; background: var(--accent); opacity: 0.6; pointer-events: none;
     }
-    .td-keys { display: flex; gap: 6px; flex: 1 1 auto; }
-    .td-key {
-      flex: 1 1 0;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 40px;
-      background: var(--bg-elev-3);
-      border-radius: var(--r-key);
-      border: none;
-      font-family: var(--meter-font); font-weight: 700;
-      font-size: 12px; line-height: 1.05;
-      color: var(--fg-2);
+    #tactusDemo .td-bars { flex: 1 1 auto; overflow-y: auto; scroll-snap-type: y mandatory; }
+    #tactusDemo .td-empty {
+      display: flex; align-items: center; justify-content: center;
+      height: 100%; padding: 20px; text-align: center;
+      font-size: 13px; color: var(--fg-4);
+    }
+    #tactusDemo .td-addbar-row { display: flex; justify-content: center; padding: 14px; flex-shrink: 0; }
+    #tactusDemo .td-addbar {
+      font-family: var(--ui); font-size: 13px; font-weight: 500; color: var(--fg-3);
+      background: none;
+      border: 1px dashed var(--stroke);
+      border-radius: 20px;
+      padding: 9px 18px;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
-      transition: background 120ms var(--ease-out), transform 120ms var(--ease-pop);
+      transition: border-color 120ms var(--ease-out), color 120ms var(--ease-out);
     }
-    .td-key:active { background: var(--accent-dim); color: var(--fg); transform: scale(0.94); }
-    .td-key-spacer { flex: 1 1 0; }
-    .td-hint {
-      font-family: var(--ui); font-size: 10.5px; color: var(--fg-4);
-      letter-spacing: -0.005em;
-      padding: 2px 2px 8px;
-    }
-    .td-transport {
+    #tactusDemo .td-addbar:active { border-color: var(--accent-dim); color: var(--fg); }
+    #tactusDemo .td-transport {
       display: flex; align-items: center; justify-content: space-between;
-      gap: 10px;
-      padding: 10px 14px 14px;
+      gap: 10px; padding: 12px 16px 18px;
       border-top: 0.5px solid var(--hair);
+      flex-shrink: 0;
     }
-    .td-tempo {
-      font-family: var(--mono); font-size: 12px; color: var(--fg-3);
-      letter-spacing: 0.01em;
+    #tactusDemo .td-tempo-group {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-elev-2);
+      border-radius: 20px;
+      padding: 5px 8px;
     }
-    .td-clear {
-      font-family: var(--ui); font-size: 11.5px; font-weight: 500; color: var(--fg-4);
-      background: none; border: none; padding: 8px 4px;
+    #tactusDemo .td-tempo-btn {
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: var(--bg-elev-3); border: none; color: var(--fg-2);
+      font-size: 15px; line-height: 1;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
-    .td-clear:active { color: var(--fg-2); }
-    .td-clear[disabled] { opacity: 0; pointer-events: none; }
-    .td-play {
-      width: 44px; height: 44px; flex-shrink: 0;
+    #tactusDemo .td-tempo-btn:active { background: var(--accent-dim); color: var(--fg); }
+    #tactusDemo .td-tempo {
+      font-family: var(--mono); font-variant-numeric: tabular-nums;
+      font-size: 14px; font-weight: 700; color: var(--fg);
+      min-width: 60px; text-align: center; letter-spacing: normal;
+    }
+    #tactusDemo .td-play {
+      width: 50px; height: 50px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       border-radius: 50%;
       background: var(--accent);
-      border: none;
-      color: #0F0F10;
+      border: none; color: #0F0F10;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       transition: transform 120ms var(--ease-pop), background 120ms var(--ease-out);
     }
-    .td-play:active { transform: scale(0.92); }
-    .td-play svg { width: 15px; height: 15px; margin-left: 2px; }
-    .td-play.playing { background: rgba(255,255,255,0.10); color: var(--fg); }
-    .td-play.playing svg { margin-left: 0; }
+    #tactusDemo .td-play:active { transform: scale(0.92); }
+    #tactusDemo .td-play svg { width: 16px; height: 16px; margin-left: 2px; }
+    #tactusDemo .td-play.playing { background: rgba(255,255,255,0.10); color: var(--fg); }
+    #tactusDemo .td-play.playing svg { margin-left: 0; }
+    #tactusDemo .td-play[disabled] { opacity: 0.3; pointer-events: none; }
 
-    /* Bigger + more tappable on real phones — this is the one screenshot on
-       the page meant to be used, not just looked at. */
+    /* ── die-face dot cluster (scoped: same visual language as the hero
+       passage's .bar/.meter/.cluster, distinct rules so neither leaks) ── */
+    #tactusDemo .bar {
+      display: flex; flex-direction: column;
+      padding: 10px 16px;
+      background: var(--bg-elev-1);
+      border-bottom: 0.5px solid var(--hair);
+      position: relative;
+      scroll-snap-align: start;
+      transition: background 320ms var(--ease-out), opacity 320ms var(--ease-out);
+    }
+    #tactusDemo .bar:last-child { border-bottom: 0; }
+    #tactusDemo .bar-tempo-row {
+      padding-left: 28px; margin-bottom: 5px;
+      display: flex; align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #tactusDemo .bar-tempo-label {
+      font-family: var(--mono); font-variant-numeric: tabular-nums;
+      font-size: 10px; color: var(--fg-4);
+    }
+    #tactusDemo .bar-tempo-label.explicit { color: var(--accent); }
+    #tactusDemo .bar-tempo-dash {
+      width: 22px; height: 1px; margin-top: 1px;
+      background-image: repeating-linear-gradient(to right, var(--fg-4) 0 3px, transparent 3px 6px);
+    }
+    #tactusDemo .bar-content {
+      display: grid;
+      grid-template-columns: 18px 26px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+    #tactusDemo .bar-num {
+      font-family: var(--mono); font-variant-numeric: tabular-nums;
+      font-size: 12px; font-weight: 500; color: var(--fg-4);
+      text-align: right;
+    }
+    #tactusDemo .bar.active { background: var(--bg-elev-2); }
+    #tactusDemo .bar.active::before {
+      content: ""; position: absolute;
+      left: 0; top: 6%; bottom: 6%; width: 3px;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+      border-radius: 2px;
+    }
+    #tactusDemo .meter {
+      display: flex; flex-direction: column; align-items: center;
+      font-family: var(--meter-font); font-weight: 700;
+      font-size: 16px; line-height: 0.98;
+      letter-spacing: normal;
+    }
+    #tactusDemo .meter span:first-child { color: var(--fg-2); }
+    #tactusDemo .meter span:last-child { color: var(--fg-3); }
+    #tactusDemo .bar.active .meter span:first-child { color: var(--fg); }
+    #tactusDemo .bar.active .meter span:last-child { color: var(--fg-2); }
+    #tactusDemo .meter span { display: block; }
+    #tactusDemo .clusters {
+      display: flex; align-items: center; gap: 9px;
+      min-width: 0; overflow-x: auto;
+      scrollbar-width: none; -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    #tactusDemo .clusters::-webkit-scrollbar { display: none; }
+    #tactusDemo .cluster {
+      width: 30px; height: 30px;
+      position: relative;
+      flex-shrink: 0;
+      border-radius: 6px;
+      transition: background 120ms var(--ease-out);
+    }
+    #tactusDemo .cluster:active { background: rgba(255,255,255,0.06); }
+    #tactusDemo .clusters .cluster:not(:first-child)::before {
+      content: ""; position: absolute; left: -5px; top: 15%; bottom: 15%;
+      width: 0.5px; background: var(--hair);
+    }
+    #tactusDemo .cluster.lg { width: 120px; height: 120px; }
+    #tactusDemo .cluster .d {
+      position: absolute;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--dot-normal);
+      transform: translate(-50%, -50%) scale(var(--dot-scale, 1));
+      transition: background 100ms var(--ease-out), transform 100ms var(--ease-out);
+    }
+    #tactusDemo .cluster.lg .d { width: 19px; height: 19px; }
+    #tactusDemo .cluster .d.strong { background: var(--dot-strong); --dot-scale: 1.22; }
+    #tactusDemo .cluster .d.soft   { background: var(--dot-soft); --dot-scale: 0.78; }
+    #tactusDemo .cluster .d.silent {
+      background: transparent;
+      border: 1px solid var(--dot-silent);
+      --dot-scale: 0.78;
+    }
+    #tactusDemo .cluster .d.empty  { visibility: hidden; }
+    #tactusDemo .cluster .d.hit    { background: var(--accent); animation: td2Pulse 150ms var(--ease-out); }
+    #tactusDemo .cluster.lg .d { cursor: pointer; }
+    #tactusDemo .cluster.lg .d.empty { cursor: default; }
+    @keyframes td2Pulse {
+      0%   { transform: translate(-50%, -50%) scale(1); }
+      13%  { transform: translate(-50%, -50%) scale(1.22); }
+      47%  { transform: translate(-50%, -50%) scale(1.22); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* ── sheets (Add Bars / Beat Inspector / Bar Tempo) ──────────
+       Real modal-sheet behavior: slides up over the main screen with a
+       dimming scrim behind it, matching how the app presents "Add Bars"
+       and the Beat Inspector. */
+    #tactusDemo .td-sheet-scrim {
+      position: absolute; inset: 0;
+      background: var(--scrim);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 280ms var(--ease-sheet);
+      z-index: 5;
+    }
+    #tactusDemo .td-sheet-scrim.is-open { opacity: 1; pointer-events: auto; }
+    #tactusDemo .td-sheet {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 88%;
+      background: var(--bg);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -20px 50px -12px rgba(0,0,0,0.6);
+      transform: translateY(102%);
+      transition: transform 320ms var(--ease-sheet);
+      display: flex; flex-direction: column;
+      z-index: 6;
+    }
+    #tactusDemo .td-sheet.is-open { transform: translateY(0); }
+    #tactusDemo .td-sheet-handle {
+      width: 36px; height: 4px; border-radius: 2px;
+      background: var(--stroke);
+      margin: 10px auto 2px;
+      flex-shrink: 0;
+    }
+    #tactusDemo .td-sheet-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px 14px;
+      flex-shrink: 0;
+    }
+    #tactusDemo .td-sheet-cancel, #tactusDemo .td-sheet-done {
+      font-family: var(--ui); font-size: 14px; font-weight: 500;
+      background: none; color: var(--fg-2);
+      border: 0.5px solid var(--stroke); border-radius: 16px;
+      padding: 6px 14px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #tactusDemo .td-sheet-done { color: var(--accent); border-color: var(--accent-dim); font-weight: 500; }
+    #tactusDemo .td-sheet-done[disabled] { color: var(--fg-4); border-color: var(--stroke); }
+    #tactusDemo .td-sheet-title-group { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+    #tactusDemo .td-sheet-title { font-size: 15px; font-weight: 500; color: var(--fg); }
+    #tactusDemo .td-sheet-subtitle { font-size: 11px; color: var(--fg-3); }
+    #tactusDemo .td-sheet-toolbar-spacer { min-width: 68px; }
+
+    #tactusDemo .td-build-preview {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 16px 14px;
+      min-height: 32px;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+    #tactusDemo .td-build-empty { font-size: 12px; color: var(--fg-4); }
+    #tactusDemo .td-build-chip {
+      display: flex; flex-direction: column; align-items: center;
+      font-family: var(--meter-font); font-weight: 700; font-size: 11px; line-height: 0.95;
+      letter-spacing: normal;
+      color: var(--fg-2);
+      background: var(--bg-elev-2);
+      border-radius: 8px;
+      padding: 5px 8px;
+      flex-shrink: 0;
+    }
+    #tactusDemo .td-sheet-body { flex: 1 1 auto; overflow-y: auto; padding: 0 0 16px; }
+    #tactusDemo .td-section-label {
+      font-family: var(--ui); font-size: 12px; font-weight: 500; color: var(--fg-3);
+      padding: 14px 16px 8px;
+    }
+    #tactusDemo .td-key-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 0 16px;
+    }
+    #tactusDemo .td-key {
+      aspect-ratio: 1 / 0.82;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--bg-elev-1);
+      border-radius: var(--r-key);
+      border: 0.5px solid var(--hair);
+      font-family: var(--meter-font); font-weight: 700;
+      font-size: 15px; line-height: 1.05;
+      letter-spacing: normal;
+      color: var(--fg);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: background 120ms var(--ease-out), transform 120ms var(--ease-pop);
+    }
+    #tactusDemo .td-key span:last-child { color: var(--fg-3); }
+    #tactusDemo .td-key:active { background: var(--accent-dim); transform: scale(0.94); }
+
+    #tactusDemo .td-inspector-cluster-wrap {
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px 16px 4px;
+    }
+    #tactusDemo .td-inspector-hint {
+      text-align: center;
+      font-size: 11px; color: var(--fg-4);
+      padding: 0 16px 20px;
+    }
+    #tactusDemo .td-inspector-label {
+      text-align: center;
+      font-size: 11px; font-weight: 500; color: var(--fg-4);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    #tactusDemo .td-notes-row {
+      display: flex; gap: 6px; justify-content: center;
+      padding: 0 16px;
+    }
+    #tactusDemo .td-note-btn {
+      width: 30px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-variant-numeric: tabular-nums;
+      font-size: 13px; color: var(--fg-2);
+      letter-spacing: normal;
+      background: var(--bg-elev-3);
+      border: none; border-radius: 8px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tactusDemo .td-note-btn.selected { background: var(--accent); color: #0F0F10; font-weight: 700; }
+
+    #tactusDemo .td-bartempo-body { padding: 28px 16px 16px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    #tactusDemo .td-bartempo-group { padding: 8px 14px; }
+    #tactusDemo .td-bartempo-group .td-tempo-btn { width: 36px; height: 36px; font-size: 18px; }
+    #tactusDemo .td-bartempo-group .td-tempo { font-size: 20px; min-width: 84px; }
+    #tactusDemo .td-bartempo-remove {
+      font-family: var(--ui); font-size: 13px; font-weight: 500; color: #E5484D;
+      background: none; border: none; padding: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #tactusDemo .td-bartempo-remove[disabled] { opacity: 0; pointer-events: none; }
+
     @media (max-width: 640px) {
       .tactus-demo-shot { max-width: 340px; }
-      .td-key { min-height: 46px; font-size: 13px; }
-      .td-play { width: 50px; height: 50px; }
-      .td-bars .cluster { width: 38px; height: 38px; }
     }
 
     /* ── Hero video (iPhone-framed portrait) ──────────────────── */
@@ -1246,47 +1500,136 @@
     <div class="wrap">
       <h2 style="margin-bottom: 12px;">Try the meter keyboard.</h2>
       <p class="lede" style="margin-bottom: 40px;">
-        Tap a meter to add a bar. Tap a dot cluster to subdivide. Then play.
+        Add bars, tap a beat to cycle its accent, set a tempo change, then play it back.
       </p>
 
       <div class="app-shot tactus-demo-shot">
-        <div class="tactus tactus-demo" id="tactusDemo" role="group" aria-label="Interactive Tactus demo: tap a meter to build a passage">
-          <div class="td-bars" id="tdBars">
-            <div class="td-empty">Tap a meter below to begin</div>
+        <div class="tactus-demo" id="tactusDemo" role="group" aria-label="Interactive Tactus demo: build and play a passage">
+
+          <div class="td-screen-main">
+            <div class="td-topbar">
+              <span class="td-topbar-back">&lsaquo;</span>
+              <span class="td-topbar-title">Untitled</span>
+              <button class="td-topbar-reset" id="tdResetBtn" type="button" aria-label="Reset">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0 1 13.66-5.66M20 12a8 8 0 0 1-13.66 5.66M4 4v5h5M20 20v-5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <div class="td-bars-wrap">
+              <div class="td-bars" id="tdBars">
+                <div class="td-empty">Tap + Add bar to begin</div>
+              </div>
+              <div class="td-focal-tick" id="tdFocalTick" aria-hidden="true"></div>
+            </div>
+            <div class="td-addbar-row">
+              <button class="td-addbar" id="tdAddBarBtn" type="button">+ Add bar</button>
+            </div>
+            <div class="td-transport">
+              <div class="td-tempo-group">
+                <button class="td-tempo-btn" id="tdTempoDown" type="button">&minus;</button>
+                <span class="td-tempo">&#9833; = <span id="tdTempoVal">120</span></span>
+                <button class="td-tempo-btn" id="tdTempoUp" type="button">+</button>
+              </div>
+              <button class="td-play" id="tdPlay" type="button" aria-label="Play" disabled>
+                <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/></svg>
+              </button>
+            </div>
           </div>
-          <div class="td-keyboard">
-            <div class="td-key-row">
-              <span class="td-key-label">/ 4</span>
-              <div class="td-keys">
+
+          <div class="td-sheet-scrim" id="tdKeyboardScrim"></div>
+          <div class="td-sheet" id="tdKeyboardSheet">
+            <div class="td-sheet-handle"></div>
+            <div class="td-sheet-toolbar">
+              <button class="td-sheet-cancel" id="tdKeyboardCancel" type="button">Cancel</button>
+              <div class="td-sheet-title-group">
+                <span class="td-sheet-title">Add Bars</span>
+                <span class="td-sheet-subtitle">Meter Keyboard</span>
+              </div>
+              <button class="td-sheet-done" id="tdKeyboardDone" type="button" disabled>Done</button>
+            </div>
+            <div class="td-build-preview" id="tdBuildPreview">
+              <span class="td-build-empty">Tap a meter to begin</span>
+            </div>
+            <div class="td-sheet-body">
+              <div class="td-section-label">/ 2</div>
+              <div class="td-key-grid">
+                <button class="td-key" type="button" data-num="1" data-den="2"><span>1</span><span>2</span></button>
+                <button class="td-key" type="button" data-num="2" data-den="2"><span>2</span><span>2</span></button>
+                <button class="td-key" type="button" data-num="3" data-den="2"><span>3</span><span>2</span></button>
+                <button class="td-key" type="button" data-num="4" data-den="2"><span>4</span><span>2</span></button>
+              </div>
+              <div class="td-section-label">/ 4</div>
+              <div class="td-key-grid">
+                <button class="td-key" type="button" data-num="1" data-den="4"><span>1</span><span>4</span></button>
+                <button class="td-key" type="button" data-num="2" data-den="4"><span>2</span><span>4</span></button>
+                <button class="td-key" type="button" data-num="3" data-den="4"><span>3</span><span>4</span></button>
                 <button class="td-key" type="button" data-num="4" data-den="4"><span>4</span><span>4</span></button>
                 <button class="td-key" type="button" data-num="5" data-den="4"><span>5</span><span>4</span></button>
+                <button class="td-key" type="button" data-num="6" data-den="4"><span>6</span><span>4</span></button>
+                <button class="td-key" type="button" data-num="7" data-den="4"><span>7</span><span>4</span></button>
               </div>
-            </div>
-            <div class="td-key-row">
-              <span class="td-key-label">/ 8</span>
-              <div class="td-keys">
+              <div class="td-section-label">/ 8</div>
+              <div class="td-key-grid">
+                <button class="td-key" type="button" data-num="2" data-den="8"><span>2</span><span>8</span></button>
                 <button class="td-key" type="button" data-num="3" data-den="8"><span>3</span><span>8</span></button>
+                <button class="td-key" type="button" data-num="4" data-den="8"><span>4</span><span>8</span></button>
                 <button class="td-key" type="button" data-num="5" data-den="8"><span>5</span><span>8</span></button>
                 <button class="td-key" type="button" data-num="6" data-den="8"><span>6</span><span>8</span></button>
+                <button class="td-key" type="button" data-num="7" data-den="8"><span>7</span><span>8</span></button>
+                <button class="td-key" type="button" data-num="9" data-den="8"><span>9</span><span>8</span></button>
+                <button class="td-key" type="button" data-num="12" data-den="8"><span>12</span><span>8</span></button>
               </div>
-            </div>
-            <div class="td-key-row">
-              <span class="td-key-label">/ 16</span>
-              <div class="td-keys">
+              <div class="td-section-label">/ 16</div>
+              <div class="td-key-grid">
+                <button class="td-key" type="button" data-num="3" data-den="16"><span>3</span><span>16</span></button>
+                <button class="td-key" type="button" data-num="4" data-den="16"><span>4</span><span>16</span></button>
+                <button class="td-key" type="button" data-num="5" data-den="16"><span>5</span><span>16</span></button>
+                <button class="td-key" type="button" data-num="6" data-den="16"><span>6</span><span>16</span></button>
                 <button class="td-key" type="button" data-num="7" data-den="16"><span>7</span><span>16</span></button>
-                <div class="td-key-spacer" aria-hidden="true"></div>
-                <div class="td-key-spacer" aria-hidden="true"></div>
+                <button class="td-key" type="button" data-num="9" data-den="16"><span>9</span><span>16</span></button>
               </div>
             </div>
-            <div class="td-hint">Tap a cluster in a bar above to subdivide it</div>
           </div>
-          <div class="td-transport">
-            <button class="td-clear" id="tdClear" type="button" disabled>Clear</button>
-            <span class="td-tempo">♩ = 100</span>
-            <button class="td-play" id="tdPlay" type="button" aria-label="Play">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/></svg>
-            </button>
+
+          <div class="td-sheet-scrim" id="tdInspectorScrim"></div>
+          <div class="td-sheet" id="tdInspectorSheet">
+            <div class="td-sheet-handle"></div>
+            <div class="td-sheet-toolbar">
+              <span class="td-sheet-toolbar-spacer"></span>
+              <div class="td-sheet-title-group">
+                <span class="td-sheet-title" id="tdInspectorTitle">Bar 1 &middot; Beat 1</span>
+                <span class="td-sheet-subtitle" id="tdInspectorMeter">4/4</span>
+              </div>
+              <button class="td-sheet-done" id="tdInspectorDone" type="button">Done</button>
+            </div>
+            <div class="td-inspector-cluster-wrap">
+              <div class="cluster lg" id="tdInspectorCluster"></div>
+            </div>
+            <div class="td-inspector-hint">Tap a dot to cycle: loud &middot; medium &middot; soft &middot; silent</div>
+            <div class="td-inspector-label">Notes Per Beat</div>
+            <div class="td-notes-row" id="tdNotesRow"></div>
           </div>
+
+          <div class="td-sheet-scrim" id="tdBarTempoScrim"></div>
+          <div class="td-sheet" id="tdBarTempoSheet">
+            <div class="td-sheet-handle"></div>
+            <div class="td-sheet-toolbar">
+              <button class="td-sheet-cancel" id="tdBarTempoCancel" type="button">Cancel</button>
+              <div class="td-sheet-title-group">
+                <span class="td-sheet-title" id="tdBarTempoTitle">Bar 1</span>
+                <span class="td-sheet-subtitle">Tempo Change</span>
+              </div>
+              <button class="td-sheet-done" id="tdBarTempoDone" type="button">Done</button>
+            </div>
+            <div class="td-bartempo-body">
+              <div class="td-tempo-group td-bartempo-group">
+                <button class="td-tempo-btn" id="tdBarTempoDown" type="button">&minus;</button>
+                <span class="td-tempo" id="tdBarTempoVal">120</span>
+                <button class="td-tempo-btn" id="tdBarTempoUp" type="button">+</button>
+              </div>
+              <button class="td-bartempo-remove" id="tdBarTempoRemove" type="button">Remove Tempo Change</button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -1736,130 +2079,373 @@
   </script>
 
   <script>
-    // Live meter-keyboard demo (Speed of entry section). Renders real
-    // .bar/.meter/.clusters/.cluster/.d markup, so it's visually identical
-    // to the hero passage above and the real app, not an approximation.
+    // Live meter-keyboard demo (Try it section). Full sheet-based
+    // interaction ported from the app: Add Bars sheet, Beat Inspector
+    // (accent cycling + notes-per-beat), Bar Tempo sheet, focal scroll,
+    // and the same sine-click synth spec as ClickEngine's default sound.
     //
-    // Die-face fill positions are the app's own canonical table
-    // (ClusterLayout.canonical in the Swift source) — same 3x3 grid,
-    // row-major 0-8, transcribed exactly, not re-derived by eye.
+    // Die-face fill positions and ClusterLayout fractions are the app's
+    // own canonical tables, transcribed exactly, not re-derived by eye.
     (function () {
       const root = document.getElementById('tactusDemo');
       if (!root) return;
-      const barsEl   = document.getElementById('tdBars');
-      const clearBtn = document.getElementById('tdClear');
-      const playBtn  = document.getElementById('tdPlay');
 
-      const BPM = 100;
-      const MAX_BARS = 4;
+      const barsEl        = document.getElementById('tdBars');
+      const addBarBtn      = document.getElementById('tdAddBarBtn');
+      const playBtn        = document.getElementById('tdPlay');
+      const resetBtn        = document.getElementById('tdResetBtn');
+      const tempoVal        = document.getElementById('tdTempoVal');
+      const tempoDown       = document.getElementById('tdTempoDown');
+      const tempoUp         = document.getElementById('tdTempoUp');
+
+      const kbScrim   = document.getElementById('tdKeyboardScrim');
+      const kbSheet   = document.getElementById('tdKeyboardSheet');
+      const kbCancel  = document.getElementById('tdKeyboardCancel');
+      const kbDone    = document.getElementById('tdKeyboardDone');
+      const kbPreview = document.getElementById('tdBuildPreview');
+
+      const inScrim = document.getElementById('tdInspectorScrim');
+      const inSheet = document.getElementById('tdInspectorSheet');
+      const inDone  = document.getElementById('tdInspectorDone');
+      const inTitle = document.getElementById('tdInspectorTitle');
+      const inMeter = document.getElementById('tdInspectorMeter');
+      const inCluster = document.getElementById('tdInspectorCluster');
+      const notesRow = document.getElementById('tdNotesRow');
+
+      const btScrim = document.getElementById('tdBarTempoScrim');
+      const btSheet = document.getElementById('tdBarTempoSheet');
+      const btCancel = document.getElementById('tdBarTempoCancel');
+      const btDone = document.getElementById('tdBarTempoDone');
+      const btTitle = document.getElementById('tdBarTempoTitle');
+      const btDown = document.getElementById('tdBarTempoDown');
+      const btUp = document.getElementById('tdBarTempoUp');
+      const btVal = document.getElementById('tdBarTempoVal');
+      const btRemove = document.getElementById('tdBarTempoRemove');
+
+      const MAX_BARS = 6;
+      let bpm = 120;
 
       const DIE_FACE = {
-        1: [4],
-        2: [0, 8],
-        3: [0, 4, 8],
-        4: [0, 2, 6, 8],
-        5: [0, 2, 4, 6, 8],
-        6: [0, 2, 3, 5, 6, 8],
-        7: [0, 2, 3, 4, 5, 6, 8],
-        8: [0, 1, 2, 3, 5, 6, 7, 8],
+        1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8],
+        5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8],
+        7: [0, 2, 3, 4, 5, 6, 8], 8: [0, 1, 2, 3, 5, 6, 7, 8],
         9: [0, 1, 2, 3, 4, 5, 6, 7, 8],
       };
+      // Die-face grid positions, ported from ClusterLayout's c0/c1/c2 fractions —
+      // corners are pulled in from the true 1/6·3/6·5/6 grid-third centers, which
+      // is why this reads noticeably tighter than a plain 3x3 CSS grid would.
+      const FRAC = [0.225, 0.5, 0.775];
       const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/></svg>';
       const STOP_ICON = '<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>';
 
-      // state: array of { num, den, beats: [subCount, ...] }, one subCount per beat
-      let bars = [];
+      let bars = [];           // { num, den, beats: [subCount,...], overrides: [ [accent,...] | null, ...] }
+      let queue = [];          // meters queued in the keyboard sheet before Done
+      let inspecting = null;   // { barIdx, beatIdx }
       let playing = false;
       let playToken = 0;
       let audioCtx = null;
+      let audioNodes = [];     // track all scheduled sources so Stop can silence them
 
-      // First sub-pulse of beat 0 is strong, first sub-pulse of any other
-      // beat is normal, every later sub-pulse in a beat is soft — matches
-      // AccentResolver.defaultAccent's isDownbeat/isFirstPulseOfABeat rules
-      // for an unsubdivided-by-default bar with strongDownbeats on.
-      function accentFor(beatIdx, subIdx) {
+      const ACCENT_NEXT = { strong: 'normal', normal: 'soft', soft: 'silent', silent: 'strong' };
+
+      function computedAccent(bar, beatIdx, subIdx) {
+        // 16th-note meters and faster: only the bar's true downbeat carries
+        // a non-soft accent — every other beat's lead pulse is soft too.
+        if (bar.den >= 16) return (beatIdx === 0 && subIdx === 0) ? 'strong' : 'soft';
         if (subIdx > 0) return 'soft';
         return beatIdx === 0 ? 'strong' : 'normal';
       }
 
-      function renderCluster(beatIdx, subCount) {
-        const cluster = document.createElement('div');
-        cluster.className = 'cluster';
+      function accentFor(bar, beatIdx, subIdx) {
+        const ov = bar.overrides[beatIdx];
+        if (ov && ov[subIdx] != null) return ov[subIdx];
+        return computedAccent(bar, beatIdx, subIdx);
+      }
+
+      function cycleAccent(bar, beatIdx, subIdx) {
+        const current = accentFor(bar, beatIdx, subIdx);
+        if (!bar.overrides[beatIdx]) bar.overrides[beatIdx] = new Array(bar.beats[beatIdx]).fill(null);
+        bar.overrides[beatIdx][subIdx] = ACCENT_NEXT[current];
+      }
+
+      // Growing/shrinking notes-per-beat preserves existing overrides — only
+      // new sub-pulses fall back to the computed default, matching the app.
+      function resizeOverrides(bar, beatIdx, n) {
+        const ov = bar.overrides[beatIdx];
+        if (!ov) return;
+        while (ov.length < n) ov.push(null);
+        ov.length = n;
+      }
+
+      function fillCluster(el, bar, beatIdx, subCount, interactive) {
+        el.innerHTML = '';
         const filled = DIE_FACE[subCount] || DIE_FACE[1];
         for (let i = 0; i < 9; i++) {
           const d = document.createElement('span');
+          const row = Math.floor(i / 3), col = i % 3;
+          d.style.left = (FRAC[col] * 100) + '%';
+          d.style.top = (FRAC[row] * 100) + '%';
           const subIdx = filled.indexOf(i);
-          d.className = subIdx === -1 ? 'd empty' : ('d ' + accentFor(beatIdx, subIdx));
-          cluster.appendChild(d);
+          if (subIdx === -1) { d.className = 'd empty'; el.appendChild(d); continue; }
+          d.className = 'd ' + accentFor(bar, beatIdx, subIdx);
+          if (interactive) {
+            d.addEventListener('click', (e) => {
+              e.stopPropagation();
+              cycleAccent(bar, beatIdx, subIdx);
+              fillCluster(el, bar, beatIdx, subCount, true);
+              renderBars();
+            });
+          }
+          el.appendChild(d);
         }
+      }
+
+      function renderCluster(barIdx, beatIdx, subCount, bar) {
+        const cluster = document.createElement('div');
+        cluster.className = 'cluster';
+        fillCluster(cluster, bar, beatIdx, subCount, false);
+        cluster.addEventListener('click', () => {
+          if (playing) return;
+          openInspector(barIdx, beatIdx);
+        });
         return cluster;
       }
 
-      function render() {
+      // Walk back from barIdx to the nearest bar with an explicit tempo; falls
+      // through to the global/default tempo, which is effectively bar 0's tempo.
+      function effectiveTempoAt(barIdx) {
+        for (let i = barIdx; i >= 0; i--) {
+          if (bars[i].tempo != null) return bars[i].tempo;
+        }
+        return bpm;
+      }
+
+      function renderBars() {
         barsEl.innerHTML = '';
         if (bars.length === 0) {
           const empty = document.createElement('div');
           empty.className = 'td-empty';
-          empty.textContent = 'Tap a meter below to begin';
+          empty.textContent = 'Tap + Add bar to begin';
           barsEl.appendChild(empty);
-          clearBtn.disabled = true;
+          playBtn.disabled = true;
           return;
         }
-        clearBtn.disabled = false;
+        playBtn.disabled = false;
         bars.forEach((bar, barIdx) => {
+          const tempoRow = document.createElement('div');
+          tempoRow.className = 'bar-tempo-row';
+          if (bar.tempo != null || barIdx === 0) {
+            const label = document.createElement('span');
+            label.className = 'bar-tempo-label explicit';
+            label.textContent = '♩ = ' + effectiveTempoAt(barIdx);
+            tempoRow.appendChild(label);
+          } else {
+            const dash = document.createElement('span');
+            dash.className = 'bar-tempo-dash';
+            tempoRow.appendChild(dash);
+          }
+          tempoRow.addEventListener('click', (e) => { e.stopPropagation(); if (!playing) openBarTempo(barIdx); });
+
           const barEl = document.createElement('div');
           barEl.className = 'bar';
           barEl.dataset.barIndex = String(barIdx);
-
+          barEl.appendChild(tempoRow);
+          const content = document.createElement('div');
+          content.className = 'bar-content';
+          const num = document.createElement('div');
+          num.className = 'bar-num';
+          num.textContent = String(barIdx + 1);
+          content.appendChild(num);
           const meter = document.createElement('div');
           meter.className = 'meter';
           meter.innerHTML = '<span>' + bar.num + '</span><span>' + bar.den + '</span>';
-          barEl.appendChild(meter);
-
+          content.appendChild(meter);
           const clusters = document.createElement('div');
           clusters.className = 'clusters';
-          bar.beats.forEach((subCount, beatIdx) => {
-            const c = renderCluster(beatIdx, subCount);
-            c.addEventListener('click', () => {
-              if (playing) return;
-              bar.beats[beatIdx] = (subCount % 9) + 1;
-              render();
-            });
-            clusters.appendChild(c);
-          });
-          barEl.appendChild(clusters);
+          bar.beats.forEach((subCount, beatIdx) => clusters.appendChild(renderCluster(barIdx, beatIdx, subCount, bar)));
+          content.appendChild(clusters);
+          barEl.appendChild(content);
           barsEl.appendChild(barEl);
         });
-        barsEl.scrollTop = barsEl.scrollHeight;
+        // Top and bottom spacers — without room to scroll "past" both ends, the
+        // browser clamps scrollTop at the natural content edges, so bar 1 could
+        // never rest on the second line (nothing to scroll into above it) and
+        // the last couple of bars could never be pulled up to it either (nothing
+        // below). Both spacers fake that room; the top one is what makes bar 1
+        // sit on line 2 with blank space above it, same as every other bar.
+        const containerHeight = barsEl.getBoundingClientRect().height;
+        const firstBar = barsEl.querySelector('.bar');
+        const rowH = firstBar.getBoundingClientRect().height;
+        barsEl.style.scrollPaddingTop = rowH + 'px';
+        const topSpacer = document.createElement('div');
+        topSpacer.setAttribute('aria-hidden', 'true');
+        topSpacer.style.height = rowH + 'px';
+        barsEl.insertBefore(topSpacer, firstBar);
+        const bottomSpacer = document.createElement('div');
+        bottomSpacer.setAttribute('aria-hidden', 'true');
+        bottomSpacer.style.height = Math.max(0, containerHeight - 2 * rowH) + 'px';
+        barsEl.appendChild(bottomSpacer);
+        positionFocalTick();
       }
 
+      function positionFocalTick() {
+        const tick = document.getElementById('tdFocalTick');
+        const sampleBar = barsEl.querySelector('.bar');
+        const rowH = sampleBar ? sampleBar.getBoundingClientRect().height : 58;
+        tick.style.top = rowH + 'px';
+      }
+
+      // ── Add Bars sheet ─────────────────────────────────────────────
+      function openKeyboard() {
+        queue = [];
+        renderQueue();
+        kbScrim.classList.add('is-open');
+        kbSheet.classList.add('is-open');
+      }
+      function closeKeyboard() {
+        kbScrim.classList.remove('is-open');
+        kbSheet.classList.remove('is-open');
+      }
+      function renderQueue() {
+        kbPreview.innerHTML = '';
+        if (queue.length === 0) {
+          const span = document.createElement('span');
+          span.className = 'td-build-empty';
+          span.textContent = 'Tap a meter to begin';
+          kbPreview.appendChild(span);
+        } else {
+          queue.forEach(m => {
+            const chip = document.createElement('div');
+            chip.className = 'td-build-chip';
+            chip.innerHTML = '<span>' + m.num + '</span><span>' + m.den + '</span>';
+            kbPreview.appendChild(chip);
+          });
+        }
+        kbDone.disabled = queue.length === 0;
+      }
       root.querySelectorAll('.td-key').forEach(key => {
         key.addEventListener('click', () => {
-          if (playing || bars.length >= MAX_BARS) return;
-          const num = parseInt(key.dataset.num, 10);
-          const den = parseInt(key.dataset.den, 10);
-          bars.push({ num, den, beats: new Array(num).fill(1) });
-          render();
+          if (bars.length + queue.length >= MAX_BARS) return;
+          queue.push({ num: parseInt(key.dataset.num, 10), den: parseInt(key.dataset.den, 10) });
+          renderQueue();
         });
       });
-
-      clearBtn.addEventListener('click', () => {
-        if (playing) return;
-        bars = [];
-        render();
+      addBarBtn.addEventListener('click', () => { if (bars.length < MAX_BARS) openKeyboard(); });
+      kbCancel.addEventListener('click', closeKeyboard);
+      kbScrim.addEventListener('click', closeKeyboard);
+      kbDone.addEventListener('click', () => {
+        queue.forEach(m => bars.push({
+          num: m.num, den: m.den, beats: new Array(m.num).fill(1), overrides: new Array(m.num).fill(null),
+          tempo: null,
+        }));
+        closeKeyboard();
+        renderBars();
+        restToBar(0); // ready at the beginning, bar 1 sitting on the second line
       });
 
-      // ── Playback ────────────────────────────────────────────────
-      // Synth clicks via Web Audio (noise burst + bandpass, pitched and
-      // gained per accent) rather than sample playback — mirrors the real
-      // app's own .synth click path (band-limited clicks, pitch-shifted
-      // per accent) conceptually, without shipping audio assets for a demo.
-      const ACCENT_PARAMS = {
-        strong: { freq: 1900, gain: 0.55 },
-        normal: { freq: 1400, gain: 0.34 },
-        soft:   { freq: 1000, gain: 0.18 },
-      };
+      // ── Beat Inspector sheet ────────────────────────────────────────
+      function openInspector(barIdx, beatIdx) {
+        inspecting = { barIdx, beatIdx };
+        const bar = bars[barIdx];
+        inTitle.textContent = 'Bar ' + (barIdx + 1) + ' · Beat ' + (beatIdx + 1);
+        inMeter.textContent = bar.num + '/' + bar.den;
+        fillCluster(inCluster, bar, beatIdx, bar.beats[beatIdx], true);
+        renderNotes();
+        inScrim.classList.add('is-open');
+        inSheet.classList.add('is-open');
+      }
+      function closeInspector() {
+        inScrim.classList.remove('is-open');
+        inSheet.classList.remove('is-open');
+        inspecting = null;
+      }
+      function renderNotes() {
+        notesRow.innerHTML = '';
+        if (!inspecting) return;
+        const bar = bars[inspecting.barIdx];
+        const current = bar.beats[inspecting.beatIdx];
+        for (let n = 1; n <= 9; n++) {
+          const btn = document.createElement('button');
+          btn.className = 'td-note-btn' + (n === current ? ' selected' : '');
+          btn.type = 'button';
+          btn.textContent = String(n);
+          btn.addEventListener('click', () => {
+            if (!inspecting) return;
+            resizeOverrides(bar, inspecting.beatIdx, n);
+            bars[inspecting.barIdx].beats[inspecting.beatIdx] = n;
+            fillCluster(inCluster, bar, inspecting.beatIdx, n, true);
+            renderNotes();
+            renderBars();
+          });
+          notesRow.appendChild(btn);
+        }
+      }
+      inDone.addEventListener('click', closeInspector);
+      inScrim.addEventListener('click', closeInspector);
 
+      // ── Bar Tempo sheet ──────────────────────────────────────────────
+      let editingBarIdx = null;
+      let editingTempo = 120;
+      function openBarTempo(barIdx) {
+        editingBarIdx = barIdx;
+        const bar = bars[barIdx];
+        editingTempo = bar.tempo != null ? bar.tempo : effectiveTempoAt(barIdx);
+        btTitle.textContent = 'Bar ' + (barIdx + 1);
+        btVal.textContent = editingTempo;
+        btRemove.disabled = bar.tempo == null;
+        btScrim.classList.add('is-open');
+        btSheet.classList.add('is-open');
+      }
+      function closeBarTempo() {
+        btScrim.classList.remove('is-open');
+        btSheet.classList.remove('is-open');
+        editingBarIdx = null;
+      }
+      btDown.addEventListener('click', () => { editingTempo = Math.max(40, editingTempo - 4); btVal.textContent = editingTempo; });
+      btUp.addEventListener('click', () => { editingTempo = Math.min(240, editingTempo + 4); btVal.textContent = editingTempo; });
+      btCancel.addEventListener('click', closeBarTempo);
+      btScrim.addEventListener('click', closeBarTempo);
+      btDone.addEventListener('click', () => {
+        if (editingBarIdx == null) return;
+        bars[editingBarIdx].tempo = editingTempo;
+        closeBarTempo();
+        renderBars();
+      });
+      btRemove.addEventListener('click', () => {
+        if (editingBarIdx == null) return;
+        bars[editingBarIdx].tempo = null;
+        closeBarTempo();
+        renderBars();
+      });
+
+      // ── Tempo ────────────────────────────────────────────────────
+      tempoDown.addEventListener('click', () => { bpm = Math.max(40, bpm - 4); tempoVal.textContent = bpm; renderBars(); });
+      tempoUp.addEventListener('click', () => { bpm = Math.min(240, bpm + 4); tempoVal.textContent = bpm; renderBars(); });
+
+      // ── Reset ────────────────────────────────────────────────────
+      resetBtn.addEventListener('click', () => {
+        if (playing) stopPlayback();
+        closeKeyboard();
+        closeInspector();
+        closeBarTempo();
+        bars = [];
+        queue = [];
+        bpm = 120;
+        tempoVal.textContent = bpm;
+        focusedBarIdx = null;
+        renderBars();
+      });
+
+      // ── Playback ─────────────────────────────────────────────────
+      // Same synth click as the app's default ClickEngine sound path: a pure
+      // sine tone per accent with an exponential decay envelope (-60dB over
+      // decayMs), not a filtered noise burst.
+      const ACCENT_PARAMS = {
+        strong: { freq: 4200, gainDb: 0,  decayMs: 45 },
+        normal: { freq: 2800, gainDb: -4, decayMs: 35 },
+        soft:   { freq: 1600, gainDb: -9, decayMs: 28 },
+      };
+      const clickBufferCache = {};
       function ensureAudio() {
         if (!audioCtx) {
           const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -1868,60 +2454,89 @@
         if (audioCtx.state === 'suspended') audioCtx.resume();
         return audioCtx;
       }
-
-      function scheduleClick(ctx, time, accent) {
-        const params = ACCENT_PARAMS[accent] || ACCENT_PARAMS.soft;
-        const dur = 0.05;
-        const bufferSize = Math.ceil(ctx.sampleRate * dur);
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      function buildClickBuffer(ctx, accent) {
+        if (clickBufferCache[accent]) return clickBufferCache[accent];
+        const params = ACCENT_PARAMS[accent];
+        const sr = ctx.sampleRate;
+        const totalSamples = Math.ceil((params.decayMs / 1000) * sr);
+        const buffer = ctx.createBuffer(1, totalSamples, sr);
         const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 6);
+        const gain = Math.pow(10, params.gainDb / 20);
+        const omega = 2 * Math.PI * params.freq / sr;
+        const decayRate = -6.908 / totalSamples;
+        for (let i = 0; i < totalSamples; i++) {
+          data[i] = gain * Math.exp(decayRate * i) * Math.sin(omega * i);
         }
-        const src = ctx.createBufferSource();
-        src.buffer = buffer;
-        const filter = ctx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.value = params.freq;
-        filter.Q.value = 1.1;
-        const gain = ctx.createGain();
-        gain.gain.value = params.gain;
-        src.connect(filter);
-        filter.connect(gain);
-        gain.connect(ctx.destination);
-        src.start(time);
-        src.stop(time + dur);
+        clickBufferCache[accent] = buffer;
+        return buffer;
       }
-
+      function scheduleClick(ctx, time, accent) {
+        if (accent === 'silent') return;
+        const src = ctx.createBufferSource();
+        src.buffer = buildClickBuffer(ctx, accent);
+        src.connect(ctx.destination);
+        src.start(time);
+        audioNodes.push(src);
+      }
       function setPlayingUI(isPlaying) {
         playing = isPlaying;
         playBtn.classList.toggle('playing', isPlaying);
         playBtn.innerHTML = isPlaying ? STOP_ICON : PLAY_ICON;
       }
-
       function clearHighlight() {
         barsEl.querySelectorAll('.bar.active').forEach(b => b.classList.remove('active'));
+        barsEl.querySelectorAll('.d.hit').forEach(d => d.classList.remove('hit'));
       }
-
+      const FOCAL_OPACITY = [1.00, 0.78, 0.52, 0.30]; // dist 0,1,2,3 — matches Tactus.opacity(dist:)
+      let focusedBarIdx = null;
+      // The focused bar always sits as the *second* visible line — exactly one
+      // row down from the top — so the row before it stays visible as "the bar
+      // that's past," and even bar 1 shows the same way with blank space above.
+      // Scroll-snap (see .td-bars CSS) owns the actual snap points; this just
+      // computes the target and lets native smooth scrolling get there.
+      function calcFocalScrollTop(barEl) {
+        const containerRect = barsEl.getBoundingClientRect();
+        const barRect = barEl.getBoundingClientRect();
+        const barAbsoluteTop = (barRect.top - containerRect.top) + barsEl.scrollTop;
+        const targetScrollTop = barAbsoluteTop - barRect.height;
+        const maxScrollTop = barsEl.scrollHeight - containerRect.height;
+        return Math.max(0, Math.min(targetScrollTop, maxScrollTop));
+      }
+      function focusBar(barEl) {
+        barsEl.scrollTo({ top: calcFocalScrollTop(barEl), behavior: 'smooth' });
+      }
+      function restToBar(barIdx) {
+        const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
+        if (!barEl) return;
+        barsEl.scrollTop = calcFocalScrollTop(barEl);
+      }
+      function applyFocalOpacity(centerIdx) {
+        barsEl.querySelectorAll('.bar').forEach(el => {
+          const dist = Math.abs(parseInt(el.dataset.barIndex, 10) - centerIdx);
+          el.style.opacity = dist < FOCAL_OPACITY.length ? FOCAL_OPACITY[dist] : 0.12;
+        });
+      }
+      function resetFocalOpacity() {
+        barsEl.querySelectorAll('.bar').forEach(el => { el.style.opacity = ''; });
+      }
       function pulse(barIdx, beatIdx, subIdx, subCount) {
         clearHighlight();
         const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
         if (!barEl) return;
         barEl.classList.add('active');
+        if (barIdx !== focusedBarIdx) { focusedBarIdx = barIdx; focusBar(barEl); applyFocalOpacity(barIdx); }
         const cluster = barEl.querySelectorAll('.cluster')[beatIdx];
         if (!cluster) return;
         const filled = DIE_FACE[subCount] || DIE_FACE[1];
         const dot = cluster.children[filled[subIdx]];
         if (!dot) return;
-        dot.classList.remove('hit');
-        void dot.offsetWidth; // restart the animation
-        dot.classList.add('hit');
+        dot.classList.remove('hit'); void dot.offsetWidth; dot.classList.add('hit');
       }
-
       function stopPlayback() {
         playToken++;
-        setPlayingUI(false);
-        clearHighlight();
+        audioNodes.forEach(src => { try { src.stop(); } catch (e) {} });
+        audioNodes = [];
+        setPlayingUI(false); clearHighlight(); resetFocalOpacity(); focusedBarIdx = null;
       }
 
       playBtn.addEventListener('click', () => {
@@ -1929,56 +2544,38 @@
         if (bars.length === 0) return;
         const ctx = ensureAudio();
         const token = ++playToken;
+        audioNodes = [];
         setPlayingUI(true);
-
-        const secPerBeat = den => (60 / BPM) * (4 / den);
+        const secPerBeat = (tempo, den) => (60 / tempo) * (4 / den);
         const startAt = ctx.currentTime + 0.08;
         let t = startAt;
         const events = [];
         bars.forEach((bar, barIdx) => {
-          const beatDur = secPerBeat(bar.den);
+          const tempo = effectiveTempoAt(barIdx);
+          const beatDur = secPerBeat(tempo, bar.den);
           bar.beats.forEach((subCount, beatIdx) => {
             const subDur = beatDur / subCount;
-            for (let s = 0; s < subCount; s++) {
-              events.push({ time: t + s * subDur, barIdx, beatIdx, subIdx: s, subCount, accent: accentFor(beatIdx, s) });
-            }
+            for (let s = 0; s < subCount; s++) events.push({ time: t + s * subDur, barIdx, beatIdx, subIdx: s, subCount, accent: accentFor(bar, beatIdx, s) });
             t += beatDur;
           });
         });
         const endAt = t;
         events.forEach(ev => scheduleClick(ctx, ev.time, ev.accent));
-
-        // Definitive end-of-passage stop via setTimeout, not the rAF loop
-        // below — rAF throttles or fully pauses in a backgrounded tab, so a
-        // user who switches tabs mid-playback would otherwise leave the UI
-        // stuck showing "playing" forever. setTimeout still fires (if late)
-        // when the tab is hidden, which is all this needs.
+        // Each pulse (and the focal-scroll it triggers) is its own timer rather
+        // than a rAF poll — rAF throttles to a crawl in a backgrounded tab, but
+        // a real user can easily switch tabs mid-playback, so the highlight and
+        // scroll need to stay on schedule regardless of tab visibility.
+        events.forEach(ev => {
+          const delayMs = Math.max(0, (ev.time - ctx.currentTime) * 1000);
+          setTimeout(() => {
+            if (token !== playToken) return;
+            pulse(ev.barIdx, ev.beatIdx, ev.subIdx, ev.subCount);
+          }, delayMs);
+        });
         setTimeout(() => { if (token === playToken) stopPlayback(); }, (endAt - ctx.currentTime) * 1000 + 80);
-
-        // Visual sync polls ctx.currentTime via rAF — not sample-accurate,
-        // but close enough for a marketing demo; the audio itself already
-        // has real Web Audio scheduling precision regardless of frame rate.
-        // Naturally stops updating in a hidden tab, which is fine since
-        // there's nothing to look at there anyway.
-        let last = null;
-        function frame() {
-          if (token !== playToken) return;
-          const now = ctx.currentTime;
-          if (now >= endAt + 0.05) return;
-          let cur = null;
-          for (const ev of events) {
-            if (ev.time <= now) cur = ev; else break;
-          }
-          if (cur && cur !== last) {
-            pulse(cur.barIdx, cur.beatIdx, cur.subIdx, cur.subCount);
-            last = cur;
-          }
-          requestAnimationFrame(frame);
-        }
-        requestAnimationFrame(frame);
       });
 
-      render();
+      renderBars();
     })();
   </script>
 
