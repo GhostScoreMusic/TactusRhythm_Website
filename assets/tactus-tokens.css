@@ -22,6 +22,38 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Self-hosted DroidSansMono + Roboto -- same reasoning as Jost above, but
+   also the fix for a real bug: the mono/meter stacks used to lead with Menlo
+   and Helvetica Neue, both Apple-only. On any non-Apple device that fell
+   straight through to the browser's generic fallback, which (confirmed by
+   rendering it) commonly substitutes a monospace whose zero glyph is slashed
+   -- visibly the wrong font, not just a stylistic mismatch. These aren't a
+   compromise pick: they're literally what the real Android app renders
+   (FontFamily.Monospace and FontFamily.SansSerif -- see Type.kt's
+   numericTextStyle and MeterSignatureView.kt), confirmed against
+   /system/etc/fonts.xml on a real device, not assumed from the family name --
+   "monospace" resolves to DroidSansMono.ttf, not the Roboto Mono webfont
+   those names might suggest; "sans-serif" does resolve to real Roboto.
+   DroidSansMono ships as part of AOSP under the Apache 2.0 license, so
+   redistributing it here is fine. Self-hosting both makes every visitor's
+   browser match a real shipping app exactly, the same guarantee self-hosting
+   already gives Jost. */
+@font-face {
+  font-family: 'Droid Sans Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/droid-sans-mono.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/roboto-v51-latin-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   /* ── Surfaces ──────────────────────────────────────────────── */
   --bg:           #0F0F10;
@@ -58,16 +90,28 @@
   /* ── Type ──────────────────────────────────────────────────────
      Chrome:  Jost 500 — matches the shipping app's wordmark, labels,
               buttons, titles, and body copy.
-     Data:    Menlo — reserved strictly for numbers, ratios, BPM, meter,
-              time / bar / beat. Not for category labels. Menlo over
-              SF Mono/ui-monospace on purpose: SF Mono's default zero is
-              slashed, Menlo's isn't, and Menlo ships on every iPhone/iPad
-              Tactus runs on, so it's still a native Apple system font.
-     Meter:   Helvetica Neue Bold — meter/time signatures only, kept off
-              Jost on purpose (reads as engraved notation). See .meter. */
+     Data:    Self-hosted Droid Sans Mono (400) — reserved strictly for
+              numbers, ratios, BPM, meter, time / bar / beat. Not for
+              category labels. This is the actual file the real Android app
+              renders, confirmed against /system/etc/fonts.xml on a real
+              device (the "monospace" generic family resolves to
+              DroidSansMono.ttf, not the Roboto Mono webfont its
+              FontFamily.Monospace name might suggest -- those are different
+              fonts). Self-hosting it guarantees every visitor sees that,
+              rather than whatever their browser substitutes for the
+              previous Menlo-first stack once it falls off Apple-only fonts.
+              That fallback path was a real, confirmed bug: the eventual
+              generic "monospace" a non-Apple browser lands on commonly
+              renders a slashed zero, which reads as a wrong font, not a
+              close-enough one.
+     Meter:   Self-hosted Roboto (700) — meter/time signatures only, kept off
+              Jost on purpose (reads as engraved notation, see .meter). Also
+              the real Android app's own choice (FontFamily.SansSerif Bold,
+              MeterSignatureView.kt, confirmed against fonts.xml too) —
+              matches for the same reason as above. */
   --ui:     "Jost", sans-serif;
-  --mono:   Menlo, ui-monospace, "SF Mono", Consolas, monospace;
-  --meter-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono:   "Droid Sans Mono", Menlo, ui-monospace, "SF Mono", Consolas, monospace;
+  --meter-font: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   /* ── Radii / motion ────────────────────────────────────────── */
   --r-card: 14px;
