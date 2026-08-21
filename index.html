@@ -749,6 +749,87 @@
     }
     #tactusDemo .td-note-btn.selected { background: var(--accent); color: #0F0F10; font-weight: 700; }
 
+    /* Bar-level nav chevrons (top toolbar, leading side) -- moves by BAR, always landing on
+       that bar's first element, matching the real app's stepBar exactly (EditorView.swift
+       stepBar/BeatInspectorScreen.kt's chevron IconButtons) -- no wrap past bar 0/the last bar. */
+    #tactusDemo .td-inspector-barnav { display: flex; gap: 2px; }
+    #tactusDemo .td-inspector-navbtn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; border-radius: 50%;
+      font-size: 18px; color: var(--fg-2);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tactusDemo .td-inspector-navbtn:disabled { color: var(--fg-4); }
+    #tactusDemo .td-inspector-navbtn:not(:disabled):active { background: rgba(255,255,255,0.06); }
+
+    /* Play Bar N / beat nav footer -- its own bgElev1 strip below the scrollable body, matching
+       the real app's transport-adjacent placement (EditorView.swift's playBarButton +
+       beatNavFooter). Beat nav moves within the CURRENT bar only -- it never rolls into an
+       adjacent bar (matches stepBeat's simple bounds guard, no wraparound). */
+    #tactusDemo .td-inspector-footer {
+      flex-shrink: 0;
+      background: var(--bg-elev-1);
+      border-top: 0.5px solid var(--hair);
+      padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    }
+    #tactusDemo .td-inspector-playbar {
+      width: 100%; height: 48px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--accent); color: #0F0F10;
+      border: none; border-radius: 12px;
+      font-family: var(--ui); font-size: 15px; font-weight: 600;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tactusDemo .td-inspector-playbar.playing { background: var(--fg-3); }
+    #tactusDemo .td-inspector-playbar svg { width: 13px; height: 13px; }
+    #tactusDemo .td-inspector-beatnav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 12px;
+    }
+    #tactusDemo .td-inspector-beatnav-btn {
+      background: none; border: none;
+      font-family: var(--ui); font-size: 13px; font-weight: 500; color: var(--accent);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tactusDemo .td-inspector-beatnav-btn:disabled { color: var(--fg-4); }
+    #tactusDemo .td-inspector-beatnav-count { font-family: var(--mono); font-size: 11px; color: var(--fg-4); }
+
+    /* Tuplet ratio label + bracket above a grouped cluster in the main bar view -- matches the
+       real app's TupletRatioLabel (EditorView.swift): text above a square bracket. */
+    #tactusDemo .tuplet-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0; }
+    #tactusDemo .tuplet-label {
+      font-family: var(--ui); font-size: 9px; color: var(--fg-3);
+      letter-spacing: normal;
+    }
+    #tactusDemo .tuplet-bracket {
+      width: 30px; height: 4px;
+      border-left: 1px solid var(--fg-3); border-right: 1px solid var(--fg-3); border-top: 1px solid var(--fg-3);
+      opacity: 0.6;
+    }
+
+    /* "Group As Tuplet" body (Spans/Pulses pickers + commit) and "Ungroup" -- reuses
+       .td-notes-row/.td-note-btn styling for the Spans/Pulses grids (already matches the real
+       app's accent-fill selected state exactly). Commit is a transparent accent-outlined box;
+       Ungroup a transparent destructive-outlined box -- both matching iOS's exact styling
+       (EditorView.swift's tuplet commit button / Ungroup button). */
+    #tactusDemo .td-tuplet-section { margin-top: 20px; }
+    #tactusDemo .td-tuplet-commit, #tactusDemo .td-tuplet-ungroup {
+      display: flex; align-items: center; justify-content: center;
+      width: calc(100% - 32px);
+      margin: 16px 16px 0;
+      height: 44px;
+      background: none; border-radius: 10px;
+      font-family: var(--ui); font-size: 14px; font-weight: 600;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tactusDemo .td-tuplet-commit { color: var(--accent); border: 1px solid var(--accent-dim); }
+    #tactusDemo .td-tuplet-ungroup { color: var(--destructive); border: 1px solid rgba(199,82,56,0.4); margin-top: 24px; }
+
     #tactusDemo .td-bartempo-body { padding: 28px 16px 16px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
     #tactusDemo .td-bartempo-group { padding: 8px 14px; }
     #tactusDemo .td-bartempo-group .td-tempo-btn { width: 36px; height: 36px; font-size: 18px; }
@@ -1691,19 +1772,31 @@
           <div class="td-sheet" id="tdInspectorSheet">
             <div class="td-sheet-handle"></div>
             <div class="td-sheet-toolbar">
-              <span class="td-sheet-toolbar-spacer"></span>
+              <div class="td-inspector-barnav">
+                <button class="td-inspector-navbtn" id="tdInPrevBar" type="button" aria-label="Previous bar">&lsaquo;</button>
+                <button class="td-inspector-navbtn" id="tdInNextBar" type="button" aria-label="Next bar">&rsaquo;</button>
+              </div>
               <div class="td-sheet-title-group">
                 <span class="td-sheet-title" id="tdInspectorTitle">Bar 1 &middot; Beat 1</span>
                 <span class="td-sheet-subtitle" id="tdInspectorMeter">4/4</span>
               </div>
               <button class="td-sheet-done" id="tdInspectorDone" type="button">Done</button>
             </div>
-            <div class="td-inspector-cluster-wrap">
-              <div class="cluster lg" id="tdInspectorCluster"></div>
+            <div class="td-sheet-body">
+              <div class="td-inspector-cluster-wrap">
+                <div class="cluster lg" id="tdInspectorCluster"></div>
+              </div>
+              <div class="td-inspector-hint">Tap a dot to cycle: loud &middot; medium &middot; soft &middot; silent</div>
+              <div id="tdInspectorBody"></div>
             </div>
-            <div class="td-inspector-hint">Tap a dot to cycle: loud &middot; medium &middot; soft &middot; silent</div>
-            <div class="td-inspector-label">Notes Per Beat</div>
-            <div class="td-notes-row" id="tdNotesRow"></div>
+            <div class="td-inspector-footer">
+              <button class="td-inspector-playbar" id="tdInPlayBar" type="button"></button>
+              <div class="td-inspector-beatnav">
+                <button class="td-inspector-beatnav-btn" id="tdInPrevBeat" type="button">&lsaquo; Prev Beat</button>
+                <span class="td-inspector-beatnav-count" id="tdInBeatCount">1 / 3</span>
+                <button class="td-inspector-beatnav-btn" id="tdInNextBeat" type="button">Next Beat &rsaquo;</button>
+              </div>
+            </div>
           </div>
 
           <div class="td-sheet-scrim" id="tdBarTempoScrim"></div>
@@ -2215,7 +2308,13 @@
       const inTitle = document.getElementById('tdInspectorTitle');
       const inMeter = document.getElementById('tdInspectorMeter');
       const inCluster = document.getElementById('tdInspectorCluster');
-      const notesRow = document.getElementById('tdNotesRow');
+      const inBody = document.getElementById('tdInspectorBody');
+      const inPrevBar = document.getElementById('tdInPrevBar');
+      const inNextBar = document.getElementById('tdInNextBar');
+      const inPrevBeat = document.getElementById('tdInPrevBeat');
+      const inNextBeat = document.getElementById('tdInNextBeat');
+      const inBeatCount = document.getElementById('tdInBeatCount');
+      const inPlayBarBtn = document.getElementById('tdInPlayBar');
 
       const btScrim = document.getElementById('tdBarTempoScrim');
       const btSheet = document.getElementById('tdBarTempoSheet');
@@ -2339,9 +2438,16 @@
       const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5L8 5.5z" fill="currentColor"/></svg>';
       const STOP_ICON = '<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>';
 
-      let bars = [];           // { num, den, beats: [subCount,...], overrides: [ [accent,...] | null, ...] }
+      // bar.beats[i] is either a plain beat (a number = its pulse/note count) or a tuplet
+      // (an object { pulseCount, spannedBeats }) occupying that one array slot in place of the
+      // spannedBeats plain beats it replaced -- matches the real app's BarElement.tuplet exactly
+      // (Tuplet(pulses, spannedBeats), grouped/ungrouped via performGroup/convertTupletToBeats in
+      // BeatInspectorLogic.kt), just without a separate elements-array type since a tagged union
+      // in the same array needs far less churn across the existing per-beat call sites here.
+      // bar.overrides stays parallel and per-slot: null | array of accents, length pulseCount.
+      let bars = [];           // { num, den, beats: [subCount | {pulseCount,spannedBeats}, ...], overrides: [...] }
       let queue = [];          // meters queued in the keyboard sheet before Done
-      let inspecting = null;   // { barIdx, beatIdx }
+      let inspecting = null;   // { barIdx, beatIdx } -- beatIdx addresses a slot in bar.beats (a plain beat or a tuplet)
       let activeBarIdx = 0;    // the bar shown highlighted — at rest, and mid-playback
       // Matches the real app's manualStartBarIndex: separate from activeBarIdx, which also
       // moves with live playback progress. Only updated when a scroll actually settles (not on
@@ -2354,6 +2460,9 @@
       let audioNodes = [];     // track all scheduled sources so Stop can silence them
 
       const ACCENT_NEXT = { strong: 'normal', normal: 'soft', soft: 'silent', silent: 'strong' };
+
+      function isTuplet(slot) { return slot != null && typeof slot === 'object'; }
+      function pulseCountOf(slot) { return isTuplet(slot) ? slot.pulseCount : slot; }
 
       function computedAccent(bar, beatIdx, subIdx) {
         // 16th-note meters and faster: only the bar's true downbeat carries
@@ -2371,7 +2480,7 @@
 
       function cycleAccent(bar, beatIdx, subIdx) {
         const current = accentFor(bar, beatIdx, subIdx);
-        if (!bar.overrides[beatIdx]) bar.overrides[beatIdx] = new Array(bar.beats[beatIdx]).fill(null);
+        if (!bar.overrides[beatIdx]) bar.overrides[beatIdx] = new Array(pulseCountOf(bar.beats[beatIdx])).fill(null);
         bar.overrides[beatIdx][subIdx] = ACCENT_NEXT[current];
       }
 
@@ -2398,6 +2507,7 @@
           if (interactive) {
             d.addEventListener('click', (e) => {
               e.stopPropagation();
+              if (playing) return;
               cycleAccent(bar, beatIdx, subIdx);
               fillCluster(el, bar, beatIdx, subCount, true);
               renderBars();
@@ -2407,15 +2517,28 @@
         }
       }
 
-      function renderCluster(barIdx, beatIdx, subCount, bar) {
+      function renderCluster(barIdx, beatIdx, slot, bar) {
         const cluster = document.createElement('div');
         cluster.className = 'cluster';
-        fillCluster(cluster, bar, beatIdx, subCount, false);
+        fillCluster(cluster, bar, beatIdx, pulseCountOf(slot), false);
         cluster.addEventListener('click', () => {
           if (playing) return;
           openInspector(barIdx, beatIdx);
         });
-        return cluster;
+        if (!isTuplet(slot)) return cluster;
+        // Matches the real app's TupletRatioLabel (EditorView.swift): a ratio ("3:2") with a
+        // square bracket underneath, sitting above the cluster it groups.
+        const wrap = document.createElement('div');
+        wrap.className = 'tuplet-wrap';
+        const label = document.createElement('div');
+        label.className = 'tuplet-label';
+        label.textContent = slot.pulseCount + ':' + slot.spannedBeats;
+        const bracket = document.createElement('div');
+        bracket.className = 'tuplet-bracket';
+        wrap.appendChild(label);
+        wrap.appendChild(bracket);
+        wrap.appendChild(cluster);
+        return wrap;
       }
 
       // Walk back from barIdx to the nearest bar with an explicit tempo; falls
@@ -2555,13 +2678,11 @@
       });
 
       // ── Beat Inspector sheet ────────────────────────────────────────
+      function elementCount(bar) { return bar.beats.length; }
+
       function openInspector(barIdx, beatIdx) {
         inspecting = { barIdx, beatIdx };
-        const bar = bars[barIdx];
-        inTitle.textContent = 'Bar ' + (barIdx + 1) + ' · Beat ' + (beatIdx + 1);
-        inMeter.textContent = bar.num + '/' + bar.den;
-        fillCluster(inCluster, bar, beatIdx, bar.beats[beatIdx], true);
-        renderNotes();
+        refreshInspector();
         inScrim.classList.add('is-open');
         inSheet.classList.add('is-open');
       }
@@ -2570,27 +2691,234 @@
         inSheet.classList.remove('is-open');
         inspecting = null;
       }
-      function renderNotes() {
-        notesRow.innerHTML = '';
+      // Redraws everything the current { barIdx, beatIdx } selection drives -- called after
+      // every nav/edit action instead of each one patching its own slice, since so much of the
+      // sheet (title, cluster, body, both nav rows, the Play Bar label) depends on it.
+      function refreshInspector() {
         if (!inspecting) return;
-        const bar = bars[inspecting.barIdx];
-        const current = bar.beats[inspecting.beatIdx];
+        const { barIdx, beatIdx } = inspecting;
+        const bar = bars[barIdx];
+        inTitle.textContent = 'Bar ' + (barIdx + 1) + ' · Beat ' + (beatIdx + 1);
+        inMeter.textContent = bar.num + '/' + bar.den;
+        fillCluster(inCluster, bar, beatIdx, pulseCountOf(bar.beats[beatIdx]), true);
+        renderInspectorBody();
+        inPrevBar.disabled = barIdx === 0;
+        inNextBar.disabled = barIdx >= bars.length - 1;
+        inPrevBeat.disabled = beatIdx === 0;
+        inNextBeat.disabled = beatIdx >= elementCount(bar) - 1;
+        inBeatCount.textContent = (beatIdx + 1) + ' / ' + elementCount(bar);
+        refreshPlayBarButton();
+      }
+      function renderInspectorBody() {
+        inBody.innerHTML = '';
+        if (!inspecting) return;
+        const { barIdx, beatIdx } = inspecting;
+        const bar = bars[barIdx];
+        const slot = bar.beats[beatIdx];
+        if (isTuplet(slot)) {
+          renderTupletBody(bar, beatIdx, slot);
+        } else {
+          renderNotesPerBeat(bar, beatIdx, slot);
+          const available = consecutiveBeatsAvailable(bar, beatIdx);
+          if (available >= 2) renderGroupControls(bar, beatIdx, available);
+        }
+      }
+      function renderNotesPerBeat(bar, beatIdx, current) {
+        const label = document.createElement('div');
+        label.className = 'td-inspector-label';
+        label.textContent = 'Notes Per Beat';
+        inBody.appendChild(label);
+        const row = document.createElement('div');
+        row.className = 'td-notes-row';
         for (let n = 1; n <= 9; n++) {
           const btn = document.createElement('button');
           btn.className = 'td-note-btn' + (n === current ? ' selected' : '');
           btn.type = 'button';
           btn.textContent = String(n);
           btn.addEventListener('click', () => {
-            if (!inspecting) return;
-            resizeOverrides(bar, inspecting.beatIdx, n);
-            bars[inspecting.barIdx].beats[inspecting.beatIdx] = n;
-            fillCluster(inCluster, bar, inspecting.beatIdx, n, true);
-            renderNotes();
+            if (playing || !inspecting) return;
+            resizeOverrides(bar, beatIdx, n);
+            bar.beats[beatIdx] = n;
+            refreshInspector();
             renderBars();
           });
-          notesRow.appendChild(btn);
+          row.appendChild(btn);
         }
+        inBody.appendChild(row);
       }
+      // Counts contiguous plain-beat slots starting at beatIdx, stopping at the first tuplet or
+      // bar end -- matches the real app's consecutiveBeatsAvailable exactly
+      // (BeatInspectorLogic.kt/EditorView.swift), which is what gates whether "Group As Tuplet"
+      // shows at all (needs at least 2).
+      function consecutiveBeatsAvailable(bar, beatIdx) {
+        let count = 0;
+        for (let i = beatIdx; i < bar.beats.length; i++) {
+          if (isTuplet(bar.beats[i])) break;
+          count++;
+        }
+        return count;
+      }
+      function renderGroupControls(bar, beatIdx, maxSpan) {
+        let groupSpan = Math.min(2, maxSpan);
+        let groupPulses = 3;
+        const section = document.createElement('div');
+        section.className = 'td-tuplet-section';
+        const label = document.createElement('div');
+        label.className = 'td-inspector-label';
+        label.textContent = 'Group As Tuplet';
+        section.appendChild(label);
+        const spansLabel = document.createElement('div');
+        spansLabel.className = 'td-inspector-label';
+        spansLabel.textContent = 'Spans';
+        section.appendChild(spansLabel);
+        const spansRow = document.createElement('div');
+        spansRow.className = 'td-notes-row';
+        section.appendChild(spansRow);
+        const pulsesLabel = document.createElement('div');
+        pulsesLabel.className = 'td-inspector-label';
+        pulsesLabel.textContent = 'Pulses';
+        section.appendChild(pulsesLabel);
+        const pulsesRow = document.createElement('div');
+        pulsesRow.className = 'td-notes-row';
+        section.appendChild(pulsesRow);
+        const commit = document.createElement('button');
+        commit.type = 'button';
+        commit.className = 'td-tuplet-commit';
+        section.appendChild(commit);
+        function refreshRows() {
+          spansRow.innerHTML = '';
+          for (let n = 2; n <= maxSpan; n++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'td-note-btn' + (n === groupSpan ? ' selected' : '');
+            btn.textContent = String(n);
+            btn.addEventListener('click', () => { if (playing) return; groupSpan = n; refreshRows(); });
+            spansRow.appendChild(btn);
+          }
+          pulsesRow.innerHTML = '';
+          for (let n = 2; n <= 9; n++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'td-note-btn' + (n === groupPulses ? ' selected' : '');
+            btn.textContent = String(n);
+            btn.addEventListener('click', () => { if (playing) return; groupPulses = n; refreshRows(); });
+            pulsesRow.appendChild(btn);
+          }
+          commit.textContent = groupPulses + ' notes over ' + groupSpan + ' beat(s)';
+        }
+        refreshRows();
+        commit.addEventListener('click', () => {
+          if (playing) return;
+          performGroup(bar, beatIdx, groupSpan, groupPulses);
+          renderBars();
+          refreshInspector();
+        });
+        inBody.appendChild(section);
+      }
+      function renderTupletBody(bar, beatIdx, slot) {
+        const section = document.createElement('div');
+        section.className = 'td-tuplet-section';
+        const label = document.createElement('div');
+        label.className = 'td-inspector-label';
+        label.textContent = slot.pulseCount + ' notes over ' + slot.spannedBeats + ' beat(s)';
+        section.appendChild(label);
+        const ungroup = document.createElement('button');
+        ungroup.type = 'button';
+        ungroup.className = 'td-tuplet-ungroup';
+        ungroup.textContent = 'Ungroup';
+        ungroup.addEventListener('click', () => {
+          if (playing) return;
+          ungroupTuplet(bar, beatIdx);
+          renderBars();
+          refreshInspector();
+        });
+        section.appendChild(ungroup);
+        inBody.appendChild(section);
+      }
+      // Grouping/ungrouping resets accents to computed defaults -- matches the real app exactly
+      // (performGroup/convertTupletToBeats both rebuild from Beat.defaultBeat(), discarding
+      // whatever per-beat accent overrides existed; it's not an accent-preserving transform in
+      // the real app either, confirmed against both BeatInspectorLogic.kt and EditorView.swift).
+      function performGroup(bar, beatIdx, span, pulseCount) {
+        bar.beats.splice(beatIdx, span, { pulseCount, spannedBeats: span });
+        bar.overrides.splice(beatIdx, span, null);
+      }
+      function ungroupTuplet(bar, beatIdx) {
+        const slot = bar.beats[beatIdx];
+        bar.beats.splice(beatIdx, 1, ...new Array(slot.spannedBeats).fill(1));
+        bar.overrides.splice(beatIdx, 1, ...new Array(slot.spannedBeats).fill(null));
+      }
+
+      // Bar-level nav (toolbar chevrons) -- always lands on that bar's first element, never
+      // wraps past bar 0 or the last bar. Beat-level nav (footer) moves within the current bar
+      // only and never rolls into an adjacent bar. Matches the real app's stepBar/stepBeat
+      // exactly (EditorView.swift) -- confirmed via research, not guessed: stepBeat's guard is a
+      // plain bounds check that just no-ops past either end, it does not cross into a
+      // neighboring bar.
+      inPrevBar.addEventListener('click', () => {
+        if (!inspecting || inspecting.barIdx <= 0) return;
+        openInspector(inspecting.barIdx - 1, 0);
+      });
+      inNextBar.addEventListener('click', () => {
+        if (!inspecting || inspecting.barIdx >= bars.length - 1) return;
+        openInspector(inspecting.barIdx + 1, 0);
+      });
+      inPrevBeat.addEventListener('click', () => {
+        if (!inspecting || inspecting.beatIdx <= 0) return;
+        inspecting.beatIdx -= 1;
+        refreshInspector();
+      });
+      inNextBeat.addEventListener('click', () => {
+        if (!inspecting) return;
+        if (inspecting.beatIdx >= elementCount(bars[inspecting.barIdx]) - 1) return;
+        inspecting.beatIdx += 1;
+        refreshInspector();
+      });
+
+      // ── Play Bar N (Inspector-only single-bar preview) ────────────────
+      function refreshPlayBarButton() {
+        if (!inspecting) return;
+        inPlayBarBtn.classList.toggle('playing', playing);
+        inPlayBarBtn.innerHTML = playing
+          ? STOP_ICON + '<span>Stop</span>'
+          : PLAY_ICON + '<span>Play Bar ' + (inspecting.barIdx + 1) + '</span>';
+      }
+      async function playInspectorBar(barIdx) {
+        const token = ++playToken;
+        const ctx = await ensureAudio();
+        if (token !== playToken) return;
+        audioNodes = [];
+        setPlayingUI(true);
+        const bar = bars[barIdx];
+        const tempo = effectiveTempoAt(barIdx);
+        const beatDur = (60 / tempo) * (4 / bar.den);
+        let t = ctx.currentTime + 0.08;
+        const events = [];
+        bar.beats.forEach((slot, beatIdx) => {
+          const pulseCount = pulseCountOf(slot);
+          const spannedBeats = isTuplet(slot) ? slot.spannedBeats : 1;
+          const elementDur = beatDur * spannedBeats;
+          const subDur = elementDur / pulseCount;
+          for (let s = 0; s < pulseCount; s++) events.push({ time: t + s * subDur, barIdx, beatIdx, subIdx: s, subCount: pulseCount, accent: accentFor(bar, beatIdx, s) });
+          t += elementDur;
+        });
+        const endAt = t;
+        events.forEach(ev => scheduleClick(ctx, ev.time, ev.accent));
+        events.forEach(ev => {
+          const delayMs = Math.max(0, (ev.time - ctx.currentTime) * 1000);
+          setTimeout(() => {
+            if (token !== playToken) return;
+            pulse(ev.barIdx, ev.beatIdx, ev.subIdx, ev.subCount);
+          }, delayMs);
+        });
+        setTimeout(() => { if (token === playToken) stopPlayback(); }, (endAt - ctx.currentTime) * 1000 + 80);
+      }
+      inPlayBarBtn.addEventListener('click', () => {
+        if (playing) { stopPlayback(); return; }
+        if (!inspecting) return;
+        playInspectorBar(inspecting.barIdx);
+      });
+
       inDone.addEventListener('click', closeInspector);
       inScrim.addEventListener('click', closeInspector);
 
@@ -2719,6 +3047,7 @@
         playing = isPlaying;
         playBtn.classList.toggle('playing', isPlaying);
         playBtn.innerHTML = isPlaying ? STOP_ICON : PLAY_ICON;
+        refreshPlayBarButton();
       }
       function clearDotHit() {
         barsEl.querySelectorAll('.d.hit').forEach(d => d.classList.remove('hit'));
@@ -2974,10 +3303,16 @@
           barStarts.push({ barIdx, time: t });
           const tempo = effectiveTempoAt(barIdx);
           const beatDur = secPerBeat(tempo, bar.den);
-          bar.beats.forEach((subCount, beatIdx) => {
-            const subDur = beatDur / subCount;
-            for (let s = 0; s < subCount; s++) events.push({ time: t + s * subDur, barIdx, beatIdx, subIdx: s, subCount, accent: accentFor(bar, beatIdx, s) });
-            t += beatDur;
+          bar.beats.forEach((slot, beatIdx) => {
+            // A tuplet spans spannedBeats worth of real time, its pulseCount notes evenly
+            // spaced across that whole span (not one beatDur each) -- a plain beat is just the
+            // spannedBeats=1 case of the same formula.
+            const pulseCount = pulseCountOf(slot);
+            const spannedBeats = isTuplet(slot) ? slot.spannedBeats : 1;
+            const elementDur = beatDur * spannedBeats;
+            const subDur = elementDur / pulseCount;
+            for (let s = 0; s < pulseCount; s++) events.push({ time: t + s * subDur, barIdx, beatIdx, subIdx: s, subCount: pulseCount, accent: accentFor(bar, beatIdx, s) });
+            t += elementDur;
           });
         });
         const endAt = t;
