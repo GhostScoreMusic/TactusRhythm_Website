@@ -428,11 +428,15 @@
       flex-shrink: 0;
     }
     #tactusDemo .td-tempo-group {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; gap: 4px;
       background: var(--bg-elev-2);
       border-radius: 24px;
       padding: 7px 10px;
     }
+    /* The −/+ buttons need more breathing room from the glyph/=/value cluster than that
+       cluster needs internally -- "♩ = 120" should read as one tight unit. */
+    #tactusDemo .td-tempo-group > .td-tempo-btn:first-child { margin-right: 6px; }
+    #tactusDemo .td-tempo-group > .td-tempo-btn:last-child { margin-left: 6px; }
     #tactusDemo .td-tempo-btn {
       width: 34px; height: 34px;
       display: flex; align-items: center; justify-content: center;
