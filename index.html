@@ -2756,8 +2756,19 @@
           return bezierY(Math.max(0, Math.min(1, t)));
         };
       }
-      const focalEase = cubicBezier(0.16, 1, 0.3, 1);
-      const FOCAL_SNAP_MS = 170;
+      // Two distinct motions in the real app, not one shared curve:
+      //  - Drag-release / manual-scroll-settle: a fast, snappy spring (FocalBarList.kt's
+      //    snapSpring, stiffness 500 dampingRatio-1 -- approximated here since a raw scroll
+      //    container can't run an actual physics spring).
+      //  - Playback's bar-to-bar auto-scroll: SwiftUI's plain `.easeOut`, i.e. Android's
+      //    TactusMotion.easingOut (Motion.kt) -- CubicBezierEasing(0, 0, 0.58, 1), fitted directly
+      //    against real footage of the app, at BAR_FOCUS_LEAD_TIME_MS (300ms) -- deliberately
+      //    gentler/slower than the drag-snap curve. Reusing the snappy drag-snap curve for
+      //    playback too read as abrupt next to the real app's own noticeably smoother glide.
+      const dragSnapEase = cubicBezier(0.16, 1, 0.3, 1);
+      const DRAG_SNAP_MS = 170;
+      const playbackFocusEase = cubicBezier(0, 0, 0.58, 1);
+      const PLAYBACK_FOCUS_MS = 300;
       let focalSnapRaf = null;
       // Set for the duration of the snap animation below so the scroll handler can tell "my own
       // programmatic scrollTop writes" apart from real user scrolling -- every frame of the
@@ -2768,7 +2779,9 @@
       // a second, competing snap to that wrong bar -- which is what let the resting bar drift to
       // the wrong place over the few seconds after playback actually stopped.
       let isProgrammaticScroll = false;
-      function focusBar(barEl) {
+      function focusBar(barEl, durationMs, easeFn) {
+        if (durationMs == null) durationMs = DRAG_SNAP_MS;
+        if (easeFn == null) easeFn = dragSnapEase;
         if (focalSnapRaf) { cancelAnimationFrame(focalSnapRaf); focalSnapRaf = null; }
         isProgrammaticScroll = false;
         const from = barsEl.scrollTop;
@@ -2778,8 +2791,8 @@
         isProgrammaticScroll = true;
         const start = performance.now();
         const step = now => {
-          const p = Math.min(1, (now - start) / FOCAL_SNAP_MS);
-          barsEl.scrollTop = from + delta * focalEase(p);
+          const p = Math.min(1, (now - start) / durationMs);
+          barsEl.scrollTop = from + delta * easeFn(p);
           if (p < 1) {
             focalSnapRaf = requestAnimationFrame(step);
           } else {
@@ -2895,14 +2908,16 @@
       // Matches the real app's BAR_FOCUS_LEAD_TIME_MS (FocalBarList.kt) exactly: the auto-scroll
       // to a bar during playback is scheduled to *arrive* at its downbeat, not start there --
       // scrolling only once the beat has already landed reads as the highlight lagging behind
-      // the click, since the focal-snap animation itself still takes ~170ms on top of that.
-      const BAR_FOCUS_LEAD_SEC = 0.3;
+      // the click. Same constant as the animation's own duration (PLAYBACK_FOCUS_MS above) is
+      // deliberate, same as the real app: scrolling ahead by exactly the animation's length means
+      // it finishes right as the beat lands, not before or after.
+      const BAR_FOCUS_LEAD_SEC = PLAYBACK_FOCUS_MS / 1000;
       function focusOnBar(barIdx) {
         if (barIdx === activeBarIdx) return;
         activeBarIdx = barIdx;
         applyActiveBar();
         const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
-        if (barEl) focusBar(barEl);
+        if (barEl) focusBar(barEl, PLAYBACK_FOCUS_MS, playbackFocusEase);
       }
       function pulse(barIdx, beatIdx, subIdx, subCount) {
         clearDotHit();
