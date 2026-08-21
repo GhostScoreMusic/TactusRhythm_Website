@@ -443,13 +443,19 @@
       touch-action: manipulation;
     }
     #tactusDemo .td-tempo-btn:active { background: var(--accent-dim); color: var(--fg); }
-    /* Tappable note-value glyph -- cycles ♩/♪/♬/etc, same idea as the real
-       apps' note-value picker, just a tap-to-cycle instead of a full sheet
-       to match this pill's compact scale. */
+    /* Native <select> for note value -- a real menu (tap opens the OS picker)
+       rather than a cycling button, and plain text options sidestep musical
+       Unicode glyphs that don't reliably render on every device/font (the
+       half-note symbol in particular came back as a missing-glyph box on a
+       real phone). The closed control shows the selected option truncated
+       with an ellipsis so it stays pill-width; the open list isn't clipped
+       by that width and shows the full label. */
     #tactusDemo .td-tempo-note {
-      font-family: var(--meter-font); font-size: 16px; color: var(--fg-3);
+      font-family: var(--ui); font-size: 13px; font-weight: 500; color: var(--fg-3);
       background: none; border: none; line-height: 1;
       padding: 4px 2px;
+      width: 64px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
@@ -711,6 +717,7 @@
     #tactusDemo .td-bartempo-group { padding: 8px 14px; }
     #tactusDemo .td-bartempo-group .td-tempo-btn { width: 36px; height: 36px; font-size: 18px; }
     #tactusDemo .td-bartempo-group .td-tempo { font-size: 20px; min-width: 84px; }
+    #tactusDemo .td-bartempo-group .td-tempo-note { font-size: 15px; width: 88px; }
     #tactusDemo .td-bartempo-remove {
       font-family: var(--ui); font-size: 13px; font-weight: 500; color: #E5484D;
       background: none; border: none; padding: 8px;
@@ -1574,7 +1581,7 @@
             <div class="td-transport">
               <div class="td-tempo-group">
                 <button class="td-tempo-btn" id="tdTempoDown" type="button">&minus;</button>
-                <button class="td-tempo-note" id="tdTempoNoteBtn" type="button" aria-label="Change note value"><span id="tdTempoNoteGlyph">&#9833;</span> =</button>
+                <select class="td-tempo-note" id="tdTempoNoteSelect" aria-label="Note value"></select>
                 <span class="td-tempo" id="tdTempoVal">120</span>
                 <button class="td-tempo-btn" id="tdTempoUp" type="button">+</button>
               </div>
@@ -1672,7 +1679,7 @@
             <div class="td-bartempo-body">
               <div class="td-tempo-group td-bartempo-group">
                 <button class="td-tempo-btn" id="tdBarTempoDown" type="button">&minus;</button>
-                <button class="td-tempo-note" id="tdBarTempoNoteBtn" type="button" aria-label="Change note value"><span id="tdBarTempoNoteGlyph">&#9833;</span> =</button>
+                <select class="td-tempo-note" id="tdBarTempoNoteSelect" aria-label="Note value"></select>
                 <span class="td-tempo" id="tdBarTempoVal">120</span>
                 <button class="td-tempo-btn" id="tdBarTempoUp" type="button">+</button>
               </div>
@@ -2147,8 +2154,7 @@
       const tempoVal        = document.getElementById('tdTempoVal');
       const tempoDown       = document.getElementById('tdTempoDown');
       const tempoUp         = document.getElementById('tdTempoUp');
-      const tempoNoteBtn    = document.getElementById('tdTempoNoteBtn');
-      const tempoNoteGlyph  = document.getElementById('tdTempoNoteGlyph');
+      const tempoNoteSelect = document.getElementById('tdTempoNoteSelect');
 
       const kbScrim   = document.getElementById('tdKeyboardScrim');
       const kbSheet   = document.getElementById('tdKeyboardSheet');
@@ -2172,8 +2178,7 @@
       const btDown = document.getElementById('tdBarTempoDown');
       const btUp = document.getElementById('tdBarTempoUp');
       const btVal = document.getElementById('tdBarTempoVal');
-      const btNoteBtn = document.getElementById('tdBarTempoNoteBtn');
-      const btNoteGlyph = document.getElementById('tdBarTempoNoteGlyph');
+      const btNoteSelect = document.getElementById('tdBarTempoNoteSelect');
       const btRemove = document.getElementById('tdBarTempoRemove');
 
       const MAX_BARS = 6;
@@ -2182,14 +2187,20 @@
 
       // Tempo is always stored (bpm, bar.tempo) as quarter-note-equivalent BPM --
       // matches real iOS/Android exactly, including which codes are valid (no
-      // 3/9/etc). The note-value glyph is purely a display/input convenience:
-      // cycling it keeps the *displayed* number the same and recomputes the
-      // underlying raw tempo, same as the real apps' cycleTempoNote(), so "same
-      // numeral, different implied pulse speed" -- not "same actual speed,
-      // different label". Playback (secPerBeat below) only ever reads the raw
-      // number, so none of this touches actual audio timing.
+      // 3/9/etc). The note-value select is purely a display/input convenience:
+      // choosing a new value keeps the *displayed* number the same and
+      // recomputes the underlying raw tempo, same as the real apps'
+      // cycleTempoNote(), so "same numeral, different implied pulse speed" --
+      // not "same actual speed, different label". Playback (secPerBeat below)
+      // only ever reads the raw number, so none of this touches actual audio
+      // timing. Plain text labels, not musical Unicode glyphs -- the half-note
+      // symbol in particular doesn't reliably render on every device/font (came
+      // back as a missing-glyph box on a real phone), and glyphs alone weren't
+      // readable as a note value at a glance anyway.
       const NOTE_CYCLE = [2, 6, 4, 12, 8, 16];
-      const NOTE_GLYPH = { 2: '\u{1D157}', 6: '♩.', 4: '♩', 12: '♪.', 8: '♪', 16: '♬' };
+      const NOTE_LABELS = { 2: '1/2 note', 6: '1/4 note (dotted)', 4: '1/4 note', 12: '1/8 note (dotted)', 8: '1/8 note', 16: '1/16 note' };
+      // Compact plain-text form for the small in-passage tempo badge below.
+      const NOTE_SHORT = { 2: '1/2', 6: '1/4.', 4: '1/4', 12: '1/8.', 8: '1/8', 16: '1/16' };
       function quartersPerBeat(code) {
         return { 2: 2.0, 4: 1.0, 6: 1.5, 8: 0.5, 12: 0.75, 16: 0.25 }[code] ?? 1.0;
       }
@@ -2199,10 +2210,16 @@
         const displayed = displayedTempo(raw, denom) + deltaDisplayed;
         return Math.max(40, Math.min(240, rawFromDisplayed(displayed, denom)));
       }
-      function cycleNote(denom) {
-        const idx = NOTE_CYCLE.indexOf(denom);
-        return NOTE_CYCLE[(idx + 1) % NOTE_CYCLE.length];
+      function populateNoteSelect(selectEl) {
+        NOTE_CYCLE.forEach(code => {
+          const opt = document.createElement('option');
+          opt.value = String(code);
+          opt.textContent = NOTE_LABELS[code];
+          selectEl.appendChild(opt);
+        });
       }
+      populateNoteSelect(tempoNoteSelect);
+      populateNoteSelect(btNoteSelect);
       function effectiveNoteDenomAt(barIdx) {
         for (let i = barIdx; i >= 0; i--) {
           if (bars[i].tempo != null) return bars[i].noteDenom || 4;
@@ -2210,11 +2227,11 @@
         return tempoNoteDenom;
       }
       function refreshMainTempo() {
-        tempoNoteGlyph.textContent = NOTE_GLYPH[tempoNoteDenom];
+        tempoNoteSelect.value = String(tempoNoteDenom);
         tempoVal.textContent = displayedTempo(bpm, tempoNoteDenom);
       }
       function refreshBarTempo() {
-        btNoteGlyph.textContent = NOTE_GLYPH[editingNoteDenom];
+        btNoteSelect.value = String(editingNoteDenom);
         btVal.textContent = displayedTempo(editingTempo, editingNoteDenom);
       }
 
@@ -2337,7 +2354,7 @@
             const label = document.createElement('span');
             label.className = 'bar-tempo-label explicit';
             const denom = effectiveNoteDenomAt(barIdx);
-            label.textContent = NOTE_GLYPH[denom] + ' = ' + displayedTempo(effectiveTempoAt(barIdx), denom);
+            label.textContent = NOTE_SHORT[denom] + ' = ' + displayedTempo(effectiveTempoAt(barIdx), denom);
             tempoRow.appendChild(label);
           } else {
             const dash = document.createElement('span');
@@ -2508,9 +2525,9 @@
       }
       btDown.addEventListener('click', () => { editingTempo = stepTempo(editingTempo, editingNoteDenom, -4); refreshBarTempo(); });
       btUp.addEventListener('click', () => { editingTempo = stepTempo(editingTempo, editingNoteDenom, 4); refreshBarTempo(); });
-      btNoteBtn.addEventListener('click', () => {
+      btNoteSelect.addEventListener('change', () => {
         const displayed = displayedTempo(editingTempo, editingNoteDenom);
-        editingNoteDenom = cycleNote(editingNoteDenom);
+        editingNoteDenom = parseInt(btNoteSelect.value, 10);
         editingTempo = Math.max(40, Math.min(240, rawFromDisplayed(displayed, editingNoteDenom)));
         refreshBarTempo();
       });
@@ -2534,9 +2551,9 @@
       // ── Tempo ────────────────────────────────────────────────────
       tempoDown.addEventListener('click', () => { bpm = stepTempo(bpm, tempoNoteDenom, -4); refreshMainTempo(); renderBars(); });
       tempoUp.addEventListener('click', () => { bpm = stepTempo(bpm, tempoNoteDenom, 4); refreshMainTempo(); renderBars(); });
-      tempoNoteBtn.addEventListener('click', () => {
+      tempoNoteSelect.addEventListener('change', () => {
         const displayed = displayedTempo(bpm, tempoNoteDenom);
-        tempoNoteDenom = cycleNote(tempoNoteDenom);
+        tempoNoteDenom = parseInt(tempoNoteSelect.value, 10);
         bpm = Math.max(40, Math.min(240, rawFromDisplayed(displayed, tempoNoteDenom)));
         refreshMainTempo();
         renderBars();
@@ -2835,6 +2852,10 @@
         setTimeout(() => { if (token === playToken) stopPlayback(); }, (endAt - ctx.currentTime) * 1000 + 80);
       });
 
+      // A <select>'s initial selection defaults to its first <option> unless set
+      // explicitly -- without this, the note picker showed "1/2 note" selected
+      // on load regardless of tempoNoteDenom's real default (4, quarter note).
+      refreshMainTempo();
       renderBars();
     })();
   </script>
