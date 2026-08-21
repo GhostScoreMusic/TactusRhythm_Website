@@ -3264,6 +3264,19 @@
       // back and forth on the smallest scroll wobble near the halfway point between two bars,
       // which read as the whole thing being too sensitive/twitchy.
       function nearestBarIndexForScroll(scrollTop) {
+        // The last bar's focal target lands exactly at the container's own natural scroll
+        // ceiling (the bottom spacer is sized precisely so calcFocalScrollTop's target for the
+        // last bar equals scrollHeight - clientHeight) -- so pinned-at-the-bottom should always
+        // mean "the last bar," full stop. But scrollHeight/clientHeight are browser-rounded
+        // integers while the row-height fraction below is computed from sub-pixel
+        // getBoundingClientRect() values, and real touch/momentum scrolling can settle a
+        // fraction of a pixel short of that ceiling -- both of which could put the fractional
+        // math's result just on the wrong side of the dead band, one bar short of the end.
+        // Checking the actual scroll boundary directly sidesteps all of that rounding entirely,
+        // same idea for pinned-at-the-top and bar 0.
+        const maxScrollTop = barsEl.scrollHeight - barsEl.clientHeight;
+        if (scrollTop >= maxScrollTop - 1) return bars.length - 1;
+        if (scrollTop <= 1) return 0;
         const sampleBar = barsEl.querySelector('.bar');
         const rowH = sampleBar ? sampleBar.getBoundingClientRect().height : 58;
         const rawF = scrollTop / rowH;
