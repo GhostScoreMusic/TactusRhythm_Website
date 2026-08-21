@@ -763,22 +763,31 @@
       text-transform: uppercase;
       margin-bottom: 10px;
     }
+    /* Matches the real app's segmentedNumbers exactly (EditorView.swift): the whole row is its
+       own bgElev1 card with a hairline border, and unselected cells have NO background of their
+       own -- just plain text -- with each cell stretching to fill the row evenly rather than a
+       fixed-width chip. Reused as-is for Notes Per Beat, Spans, and Pulses. */
     #tactusDemo .td-notes-row {
-      display: flex; gap: 6px; justify-content: center;
-      padding: 0 16px;
+      display: flex; gap: 4px;
+      margin: 0 16px;
+      padding: 6px;
+      background: var(--bg-elev-1);
+      border-radius: 12px;
+      border: 0.5px solid var(--hair);
     }
     #tactusDemo .td-note-btn {
-      width: 30px; height: 34px;
+      flex: 1 1 0;
+      height: 36px;
       display: flex; align-items: center; justify-content: center;
       font-family: var(--mono); font-variant-numeric: tabular-nums;
-      font-size: 13px; color: var(--fg-2);
+      font-size: 13px; font-weight: 500; color: var(--fg-2);
       letter-spacing: normal;
-      background: var(--bg-elev-3);
-      border: none; border-radius: 8px;
+      background: none;
+      border: none; border-radius: 6px;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    #tactusDemo .td-note-btn.selected { background: var(--accent); color: #0F0F10; font-weight: 700; }
+    #tactusDemo .td-note-btn.selected { background: var(--accent); color: #0F0F10; }
 
     /* Bar-level nav chevrons (top toolbar, leading side) -- moves by BAR, always landing on
        that bar's first element, matching the real app's stepBar exactly (EditorView.swift
