@@ -443,23 +443,52 @@
       touch-action: manipulation;
     }
     #tactusDemo .td-tempo-btn:active { background: var(--accent-dim); color: var(--fg); }
-    /* Native <select> for note value -- a real menu (tap opens the OS picker)
-       rather than a cycling button, and plain text options sidestep musical
-       Unicode glyphs that don't reliably render on every device/font (the
-       half-note symbol in particular came back as a missing-glyph box on a
-       real phone). The closed control shows the selected option truncated
-       with an ellipsis so it stays pill-width; the open list isn't clipped
-       by that width and shows the full label. */
+    /* Note-value popover menu -- matches the real app's own note glyphs
+       exactly (♩/♪/♬ Unicode plus a real vector asset for the half note,
+       since that one doesn't reliably render as Unicode -- the real app
+       doesn't use Unicode for it either, see NoteValueSymbol in
+       EditorView.swift). A plain <select> can't hold icons in its options at
+       all, so this is a real popover instead: tapping the glyph opens a list
+       of all six values, each with its own glyph and a clear text label. */
+    #tactusDemo .td-note-picker { position: relative; display: flex; }
     #tactusDemo .td-tempo-note {
-      font-family: var(--ui); font-size: 13px; font-weight: 500; color: var(--fg-3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--meter-font); font-size: 17px; color: var(--fg-3);
       background: none; border: none; line-height: 1;
-      padding: 4px 2px;
-      width: 64px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      padding: 4px 6px;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    #tactusDemo .td-tempo-note:active { color: var(--fg); }
+    #tactusDemo .td-tempo-note:active, #tactusDemo .td-tempo-note[aria-expanded="true"] { color: var(--fg); }
+    #tactusDemo .td-tempo-note svg { width: 11px; height: 18px; display: block; }
+    #tactusDemo .td-note-menu {
+      position: absolute; left: 0; bottom: calc(100% + 8px);
+      background: var(--bg-elev-2);
+      border: 0.5px solid var(--stroke);
+      border-radius: 12px;
+      padding: 6px;
+      min-width: 190px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+      z-index: 30;
+    }
+    #tactusDemo .td-note-menu[hidden] { display: none; }
+    #tactusDemo .td-note-row {
+      display: flex; align-items: center; gap: 12px;
+      width: 100%; padding: 9px 10px;
+      background: none; border: none; border-radius: 8px;
+      font-family: var(--ui); font-size: 14px; color: var(--fg2);
+      text-align: left;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tactusDemo .td-note-row:active { background: var(--accent-dim); }
+    #tactusDemo .td-note-row.selected { color: var(--accent); }
+    #tactusDemo .td-note-row-glyph {
+      width: 20px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--meter-font); font-size: 16px; color: inherit;
+    }
+    #tactusDemo .td-note-row-glyph svg { width: 9px; height: 15px; display: block; }
     #tactusDemo .td-tempo {
       font-family: var(--mono); font-variant-numeric: tabular-nums;
       font-size: 17px; font-weight: 700; color: var(--fg);
@@ -717,7 +746,8 @@
     #tactusDemo .td-bartempo-group { padding: 8px 14px; }
     #tactusDemo .td-bartempo-group .td-tempo-btn { width: 36px; height: 36px; font-size: 18px; }
     #tactusDemo .td-bartempo-group .td-tempo { font-size: 20px; min-width: 84px; }
-    #tactusDemo .td-bartempo-group .td-tempo-note { font-size: 15px; width: 88px; }
+    #tactusDemo .td-bartempo-group .td-tempo-note { font-size: 19px; padding: 4px 8px; }
+    #tactusDemo .td-bartempo-group .td-tempo-note svg { width: 13px; height: 22px; }
     #tactusDemo .td-bartempo-remove {
       font-family: var(--ui); font-size: 13px; font-weight: 500; color: #E5484D;
       background: none; border: none; padding: 8px;
@@ -1581,7 +1611,10 @@
             <div class="td-transport">
               <div class="td-tempo-group">
                 <button class="td-tempo-btn" id="tdTempoDown" type="button">&minus;</button>
-                <select class="td-tempo-note" id="tdTempoNoteSelect" aria-label="Note value"></select>
+                <div class="td-note-picker">
+                  <button class="td-tempo-note" id="tdTempoNoteBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Note value"><span id="tdTempoNoteGlyph"></span></button>
+                  <div class="td-note-menu" id="tdTempoNoteMenu" hidden></div>
+                </div>
                 <span class="td-tempo" id="tdTempoVal">120</span>
                 <button class="td-tempo-btn" id="tdTempoUp" type="button">+</button>
               </div>
@@ -1679,7 +1712,10 @@
             <div class="td-bartempo-body">
               <div class="td-tempo-group td-bartempo-group">
                 <button class="td-tempo-btn" id="tdBarTempoDown" type="button">&minus;</button>
-                <select class="td-tempo-note" id="tdBarTempoNoteSelect" aria-label="Note value"></select>
+                <div class="td-note-picker">
+                  <button class="td-tempo-note" id="tdBarTempoNoteBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Note value"><span id="tdBarTempoNoteGlyph"></span></button>
+                  <div class="td-note-menu" id="tdBarTempoNoteMenu" hidden></div>
+                </div>
                 <span class="td-tempo" id="tdBarTempoVal">120</span>
                 <button class="td-tempo-btn" id="tdBarTempoUp" type="button">+</button>
               </div>
@@ -2154,7 +2190,9 @@
       const tempoVal        = document.getElementById('tdTempoVal');
       const tempoDown       = document.getElementById('tdTempoDown');
       const tempoUp         = document.getElementById('tdTempoUp');
-      const tempoNoteSelect = document.getElementById('tdTempoNoteSelect');
+      const tempoNoteBtn    = document.getElementById('tdTempoNoteBtn');
+      const tempoNoteGlyph  = document.getElementById('tdTempoNoteGlyph');
+      const tempoNoteMenu   = document.getElementById('tdTempoNoteMenu');
 
       const kbScrim   = document.getElementById('tdKeyboardScrim');
       const kbSheet   = document.getElementById('tdKeyboardSheet');
@@ -2178,7 +2216,9 @@
       const btDown = document.getElementById('tdBarTempoDown');
       const btUp = document.getElementById('tdBarTempoUp');
       const btVal = document.getElementById('tdBarTempoVal');
-      const btNoteSelect = document.getElementById('tdBarTempoNoteSelect');
+      const btNoteBtn = document.getElementById('tdBarTempoNoteBtn');
+      const btNoteGlyph = document.getElementById('tdBarTempoNoteGlyph');
+      const btNoteMenu = document.getElementById('tdBarTempoNoteMenu');
       const btRemove = document.getElementById('tdBarTempoRemove');
 
       const MAX_BARS = 6;
@@ -2187,20 +2227,30 @@
 
       // Tempo is always stored (bpm, bar.tempo) as quarter-note-equivalent BPM --
       // matches real iOS/Android exactly, including which codes are valid (no
-      // 3/9/etc). The note-value select is purely a display/input convenience:
+      // 3/9/etc). The note-value picker is purely a display/input convenience:
       // choosing a new value keeps the *displayed* number the same and
       // recomputes the underlying raw tempo, same as the real apps'
       // cycleTempoNote(), so "same numeral, different implied pulse speed" --
       // not "same actual speed, different label". Playback (secPerBeat below)
       // only ever reads the raw number, so none of this touches actual audio
-      // timing. Plain text labels, not musical Unicode glyphs -- the half-note
-      // symbol in particular doesn't reliably render on every device/font (came
-      // back as a missing-glyph box on a real phone), and glyphs alone weren't
-      // readable as a note value at a glance anyway.
+      // timing.
       const NOTE_CYCLE = [2, 6, 4, 12, 8, 16];
-      const NOTE_LABELS = { 2: '1/2 note', 6: '1/4 note (dotted)', 4: '1/4 note', 12: '1/8 note (dotted)', 8: '1/8 note', 16: '1/16 note' };
+      const NOTE_LABELS = { 2: 'Half note', 6: 'Dotted quarter', 4: 'Quarter note', 12: 'Dotted eighth', 8: 'Eighth note', 16: 'Sixteenth note' };
       // Compact plain-text form for the small in-passage tempo badge below.
       const NOTE_SHORT = { 2: '1/2', 6: '1/4.', 4: '1/4', 12: '1/8.', 8: '1/8', 16: '1/16' };
+      // Same glyphs as the real app's NoteValueSymbol (EditorView.swift) -- plain Unicode for
+      // everything except the half note, which the real app itself doesn't trust to Unicode
+      // either (its own doc comment: "Uses a vector asset for the half note; Unicode for the
+      // rest"). This is that same asset (Assets.xcassets/halfNote.imageset/halfNote.svg),
+      // inlined with currentColor so it tints like the surrounding text.
+      const NOTE_UNICODE = { 6: '♩.', 4: '♩', 12: '♪.', 8: '♪', 16: '♬' };
+      const HALF_NOTE_SVG = '<svg viewBox="0 0 30 50" aria-hidden="true"><g transform="matrix(-1,0,0,-1,254,262)">'
+        + '<path d="M 237.68484,218.18353 C 234.289,220.0035 232.47956,223.29808 233.59262,225.77649 C 234.77988,228.42013 238.85963,229.16621 242.6992,227.44186 C 246.53876,225.7175 248.69136,222.17246 247.5041,219.52883 C 246.31683,216.88519 242.23709,216.13911 238.39752,217.86346 C 238.15755,217.97123 237.91124,218.0622 237.68484,218.18353 z M 238.79457,220.42569 C 239.0358,220.30136 239.28005,220.20766 239.53576,220.09282 C 242.80883,218.62288 245.96997,218.55375 246.59187,219.93851 C 247.21377,221.32327 245.06209,223.64013 241.78902,225.11008 C 238.51594,226.58002 235.3548,226.64915 234.73291,225.26439 C 234.15959,223.98781 235.94804,221.89278 238.79457,220.42569 z" fill="currentColor" stroke="none" opacity="0.9"/>'
+        + '<path d="M 234.05234,224.51692 L 234.05234,258.10449" stroke="currentColor" stroke-width="1.5" fill="none"/>'
+        + '</g></svg>';
+      function noteGlyphHTML(code) {
+        return code === 2 ? HALF_NOTE_SVG : NOTE_UNICODE[code];
+      }
       function quartersPerBeat(code) {
         return { 2: 2.0, 4: 1.0, 6: 1.5, 8: 0.5, 12: 0.75, 16: 0.25 }[code] ?? 1.0;
       }
@@ -2210,16 +2260,50 @@
         const displayed = displayedTempo(raw, denom) + deltaDisplayed;
         return Math.max(40, Math.min(240, rawFromDisplayed(displayed, denom)));
       }
-      function populateNoteSelect(selectEl) {
+      // Wires up a glyph button + popover menu pair (used for both the main and per-bar tempo
+      // pickers). getRaw/setRaw and getDenom/setDenom read and write whichever pair of state
+      // variables this instance controls (bpm/tempoNoteDenom, or editingTempo/editingNoteDenom).
+      // Selecting a row keeps the *displayed* number the same and recomputes the underlying raw
+      // tempo, same as the real apps' cycleTempoNote() -- afterChange runs whatever refresh/
+      // renderBars side effect the caller needs after that.
+      function setupNotePicker(btn, menuEl, getRaw, setRaw, getDenom, setDenom, afterChange) {
+        const rows = {};
+        menuEl.innerHTML = '';
         NOTE_CYCLE.forEach(code => {
-          const opt = document.createElement('option');
-          opt.value = String(code);
-          opt.textContent = NOTE_LABELS[code];
-          selectEl.appendChild(opt);
+          const row = document.createElement('button');
+          row.type = 'button';
+          row.className = 'td-note-row';
+          row.innerHTML = '<span class="td-note-row-glyph">' + noteGlyphHTML(code) + '</span><span>' + NOTE_LABELS[code] + '</span>';
+          row.addEventListener('click', () => {
+            const displayed = displayedTempo(getRaw(), getDenom());
+            setDenom(code);
+            setRaw(Math.max(40, Math.min(240, rawFromDisplayed(displayed, code))));
+            closeMenu();
+            afterChange();
+          });
+          menuEl.appendChild(row);
+          rows[code] = row;
+        });
+        function closeMenu() {
+          menuEl.hidden = true;
+          btn.setAttribute('aria-expanded', 'false');
+        }
+        function openMenu() {
+          NOTE_CYCLE.forEach(code => rows[code].classList.toggle('selected', code === getDenom()));
+          menuEl.hidden = false;
+          btn.setAttribute('aria-expanded', 'true');
+        }
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (menuEl.hidden) openMenu(); else closeMenu();
+        });
+        document.addEventListener('click', (e) => {
+          if (!menuEl.hidden && !menuEl.contains(e.target) && e.target !== btn) closeMenu();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !menuEl.hidden) closeMenu();
         });
       }
-      populateNoteSelect(tempoNoteSelect);
-      populateNoteSelect(btNoteSelect);
       function effectiveNoteDenomAt(barIdx) {
         for (let i = barIdx; i >= 0; i--) {
           if (bars[i].tempo != null) return bars[i].noteDenom || 4;
@@ -2227,11 +2311,11 @@
         return tempoNoteDenom;
       }
       function refreshMainTempo() {
-        tempoNoteSelect.value = String(tempoNoteDenom);
+        tempoNoteGlyph.innerHTML = noteGlyphHTML(tempoNoteDenom);
         tempoVal.textContent = displayedTempo(bpm, tempoNoteDenom);
       }
       function refreshBarTempo() {
-        btNoteSelect.value = String(editingNoteDenom);
+        btNoteGlyph.innerHTML = noteGlyphHTML(editingNoteDenom);
         btVal.textContent = displayedTempo(editingTempo, editingNoteDenom);
       }
 
@@ -2525,12 +2609,12 @@
       }
       btDown.addEventListener('click', () => { editingTempo = stepTempo(editingTempo, editingNoteDenom, -4); refreshBarTempo(); });
       btUp.addEventListener('click', () => { editingTempo = stepTempo(editingTempo, editingNoteDenom, 4); refreshBarTempo(); });
-      btNoteSelect.addEventListener('change', () => {
-        const displayed = displayedTempo(editingTempo, editingNoteDenom);
-        editingNoteDenom = parseInt(btNoteSelect.value, 10);
-        editingTempo = Math.max(40, Math.min(240, rawFromDisplayed(displayed, editingNoteDenom)));
-        refreshBarTempo();
-      });
+      setupNotePicker(
+        btNoteBtn, btNoteMenu,
+        () => editingTempo, (v) => { editingTempo = v; },
+        () => editingNoteDenom, (v) => { editingNoteDenom = v; },
+        refreshBarTempo
+      );
       btCancel.addEventListener('click', closeBarTempo);
       btScrim.addEventListener('click', closeBarTempo);
       btDone.addEventListener('click', () => {
@@ -2551,13 +2635,12 @@
       // ── Tempo ────────────────────────────────────────────────────
       tempoDown.addEventListener('click', () => { bpm = stepTempo(bpm, tempoNoteDenom, -4); refreshMainTempo(); renderBars(); });
       tempoUp.addEventListener('click', () => { bpm = stepTempo(bpm, tempoNoteDenom, 4); refreshMainTempo(); renderBars(); });
-      tempoNoteSelect.addEventListener('change', () => {
-        const displayed = displayedTempo(bpm, tempoNoteDenom);
-        tempoNoteDenom = parseInt(tempoNoteSelect.value, 10);
-        bpm = Math.max(40, Math.min(240, rawFromDisplayed(displayed, tempoNoteDenom)));
-        refreshMainTempo();
-        renderBars();
-      });
+      setupNotePicker(
+        tempoNoteBtn, tempoNoteMenu,
+        () => bpm, (v) => { bpm = v; },
+        () => tempoNoteDenom, (v) => { tempoNoteDenom = v; },
+        () => { refreshMainTempo(); renderBars(); }
+      );
 
       // ── Reset ────────────────────────────────────────────────────
       resetBtn.addEventListener('click', () => {
