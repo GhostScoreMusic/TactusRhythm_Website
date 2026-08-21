@@ -3199,6 +3199,10 @@
       // a second, competing snap to that wrong bar -- which is what let the resting bar drift to
       // the wrong place over the few seconds after playback actually stopped.
       let isProgrammaticScroll = false;
+      // Bumped every time a new snap starts, so a stale safety-timeout below (from an animation
+      // that got cancelled or already finished on its own) can tell it's no longer the current
+      // one and skip resetting the flag out from under a newer, still-running animation.
+      let scrollGuardToken = 0;
       function focusBar(barEl, durationMs, easeFn) {
         if (durationMs == null) durationMs = DRAG_SNAP_MS;
         if (easeFn == null) easeFn = dragSnapEase;
@@ -3209,6 +3213,17 @@
         const delta = to - from;
         if (Math.abs(delta) < 0.5) return;
         isProgrammaticScroll = true;
+        // Safety net: if requestAnimationFrame ever stops advancing before the animation reaches
+        // p>=1 -- a backgrounded/throttled tab, the OS pausing rAF under load, anything -- the
+        // normal "else" branch below that resets isProgrammaticScroll never runs, and the flag
+        // stays stuck true forever. Every future real scroll then gets silently ignored by the
+        // scroll/scrollend handlers' guard, which reads as exactly "can't highlight the last bar"
+        // (or any bar) and looks like general highlight/physics flakiness -- a plain setTimeout
+        // still fires even when rAF doesn't, so this guarantees the flag can't wedge permanently.
+        const myGuardToken = ++scrollGuardToken;
+        setTimeout(() => {
+          if (scrollGuardToken === myGuardToken) isProgrammaticScroll = false;
+        }, durationMs + 150);
         const start = performance.now();
         const step = now => {
           const p = Math.min(1, (now - start) / durationMs);
