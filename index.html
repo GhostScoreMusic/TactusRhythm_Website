@@ -728,16 +728,24 @@
       scrollbar-width: none; -ms-overflow-style: none;
     }
     #tactusDemo .td-inspector-strip-wrap::-webkit-scrollbar { display: none; }
-    #tactusDemo .td-inspector-strip { display: flex; gap: 8px; margin: 0 auto; }
+    #tactusDemo .td-inspector-strip { display: flex; align-items: flex-end; gap: 8px; margin: 0 auto; }
     #tactusDemo .td-inspector-strip-cell {
-      width: 60px; height: 60px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 8px;
-      border: 1px solid transparent;
+      flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    #tactusDemo .td-inspector-strip-cell.selected { border-color: var(--accent); }
+    /* The accent-outline (selected, or -- during Play Bar -- actively sounding) wraps just the
+       cluster box, not a tuplet cell's ratio label above it, matching the real app's strip
+       exactly (barPreviewStrip, EditorView.swift): the RoundedRectangle stroke overlays only
+       miniCluster's own clusterSize-square frame. */
+    #tactusDemo .td-inspector-strip-clusterbox {
+      width: 60px; height: 60px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      border: 1px solid transparent;
+    }
+    #tactusDemo .td-inspector-strip-cell.selected .td-inspector-strip-clusterbox { border-color: var(--accent); }
     #tactusDemo .cluster.md { width: 40px; height: 40px; }
     #tactusDemo .cluster.md .d { width: 12px; height: 12px; }
     #tactusDemo .td-inspector-cluster-wrap {
@@ -2748,10 +2756,22 @@
         bar.beats.forEach((slot, i) => {
           const cell = document.createElement('div');
           cell.className = 'td-inspector-strip-cell' + (i === beatIdx ? ' selected' : '');
+          if (isTuplet(slot)) {
+            const label = document.createElement('div');
+            label.className = 'tuplet-label';
+            label.textContent = slot.pulseCount + ':' + slot.spannedBeats;
+            const bracket = document.createElement('div');
+            bracket.className = 'tuplet-bracket';
+            cell.appendChild(label);
+            cell.appendChild(bracket);
+          }
+          const box = document.createElement('div');
+          box.className = 'td-inspector-strip-clusterbox';
           const mini = document.createElement('div');
           mini.className = 'cluster md';
           fillCluster(mini, bar, i, pulseCountOf(slot), false);
-          cell.appendChild(mini);
+          box.appendChild(mini);
+          cell.appendChild(box);
           cell.addEventListener('click', () => {
             if (playing || !inspecting) return;
             inspecting.beatIdx = i;
