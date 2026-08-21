@@ -717,6 +717,29 @@
     #tactusDemo .td-key span:last-child { color: var(--fg-3); }
     #tactusDemo .td-key:active { background: var(--accent-dim); transform: scale(0.94); }
 
+    /* Bar-preview strip -- every beat/element in the bar as a mini cluster so you can see (and
+       jump to) the whole bar at a glance, not just the one currently selected. Matches the real
+       app's strip exactly: row background Tactus.bgElev1, cell ~Tactus.clusterSize (60), and the
+       selected cell's RoundedRectangle(cornerRadius: 8) accent stroke. */
+    #tactusDemo .td-inspector-strip-wrap {
+      background: var(--bg-elev-1);
+      padding: 14px 16px;
+      display: flex; overflow-x: auto;
+      scrollbar-width: none; -ms-overflow-style: none;
+    }
+    #tactusDemo .td-inspector-strip-wrap::-webkit-scrollbar { display: none; }
+    #tactusDemo .td-inspector-strip { display: flex; gap: 8px; margin: 0 auto; }
+    #tactusDemo .td-inspector-strip-cell {
+      width: 60px; height: 60px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tactusDemo .td-inspector-strip-cell.selected { border-color: var(--accent); }
+    #tactusDemo .cluster.md { width: 40px; height: 40px; }
+    #tactusDemo .cluster.md .d { width: 12px; height: 12px; }
     #tactusDemo .td-inspector-cluster-wrap {
       display: flex; align-items: center; justify-content: center;
       padding: 20px 16px 4px;
@@ -1783,6 +1806,9 @@
               <button class="td-sheet-done" id="tdInspectorDone" type="button">Done</button>
             </div>
             <div class="td-sheet-body">
+              <div class="td-inspector-strip-wrap">
+                <div class="td-inspector-strip" id="tdInspectorStrip"></div>
+              </div>
               <div class="td-inspector-cluster-wrap">
                 <div class="cluster lg" id="tdInspectorCluster"></div>
               </div>
@@ -2308,6 +2334,7 @@
       const inTitle = document.getElementById('tdInspectorTitle');
       const inMeter = document.getElementById('tdInspectorMeter');
       const inCluster = document.getElementById('tdInspectorCluster');
+      const inStrip = document.getElementById('tdInspectorStrip');
       const inBody = document.getElementById('tdInspectorBody');
       const inPrevBar = document.getElementById('tdInPrevBar');
       const inNextBar = document.getElementById('tdInNextBar');
@@ -2701,6 +2728,7 @@
         inTitle.textContent = 'Bar ' + (barIdx + 1) + ' · Beat ' + (beatIdx + 1);
         inMeter.textContent = bar.num + '/' + bar.den;
         fillCluster(inCluster, bar, beatIdx, pulseCountOf(bar.beats[beatIdx]), true);
+        renderInspectorStrip();
         renderInspectorBody();
         inPrevBar.disabled = barIdx === 0;
         inNextBar.disabled = barIdx >= bars.length - 1;
@@ -2708,6 +2736,29 @@
         inNextBeat.disabled = beatIdx >= elementCount(bar) - 1;
         inBeatCount.textContent = (beatIdx + 1) + ' / ' + elementCount(bar);
         refreshPlayBarButton();
+      }
+      // Every beat/element in the current bar as its own mini cluster, so the whole bar is
+      // visible at a glance -- matches the real app's bar-preview strip. Tapping a cell jumps
+      // straight to that beat, same as Prev/Next Beat but direct.
+      function renderInspectorStrip() {
+        inStrip.innerHTML = '';
+        if (!inspecting) return;
+        const { barIdx, beatIdx } = inspecting;
+        const bar = bars[barIdx];
+        bar.beats.forEach((slot, i) => {
+          const cell = document.createElement('div');
+          cell.className = 'td-inspector-strip-cell' + (i === beatIdx ? ' selected' : '');
+          const mini = document.createElement('div');
+          mini.className = 'cluster md';
+          fillCluster(mini, bar, i, pulseCountOf(slot), false);
+          cell.appendChild(mini);
+          cell.addEventListener('click', () => {
+            if (playing || !inspecting) return;
+            inspecting.beatIdx = i;
+            refreshInspector();
+          });
+          inStrip.appendChild(cell);
+        });
       }
       function renderInspectorBody() {
         inBody.innerHTML = '';
@@ -3051,6 +3102,17 @@
       }
       function clearDotHit() {
         barsEl.querySelectorAll('.d.hit').forEach(d => d.classList.remove('hit'));
+        inCluster.querySelectorAll('.d.hit').forEach(d => d.classList.remove('hit'));
+        inStrip.querySelectorAll('.d.hit').forEach(d => d.classList.remove('hit'));
+      }
+      // Shared by the main bars view, the Inspector's own large cluster, and its bar-preview
+      // strip cells -- matches the real app showing the same live pulse flash in all three
+      // places during playback, not just the main view (which the Inspector sheet covers).
+      function flashDot(clusterEl, subIdx, subCount) {
+        const filled = DIE_FACE[subCount] || DIE_FACE[1];
+        const dot = clusterEl.children[filled[subIdx]];
+        if (!dot) return;
+        dot.classList.remove('hit'); void dot.offsetWidth; dot.classList.add('hit');
       }
       const FOCAL_OPACITY = [1.00, 0.78, 0.52, 0.30]; // dist 0,1,2,3 — matches Tactus.opacity(dist:)
       // The active bar always sits as the *second* visible line — exactly one
@@ -3251,14 +3313,21 @@
       function pulse(barIdx, beatIdx, subIdx, subCount) {
         clearDotHit();
         const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
-        if (!barEl) return;
-        const cluster = barEl.querySelectorAll('.cluster')[beatIdx];
-        if (!cluster) return;
-        const filled = DIE_FACE[subCount] || DIE_FACE[1];
-        const dot = cluster.children[filled[subIdx]];
-        if (!dot) return;
-        dot.classList.remove('hit'); void dot.offsetWidth; dot.classList.add('hit');
-        scrollClusterIntoView(cluster.parentElement, cluster);
+        if (barEl) {
+          const cluster = barEl.querySelectorAll('.cluster')[beatIdx];
+          if (cluster) {
+            flashDot(cluster, subIdx, subCount);
+            scrollClusterIntoView(cluster.parentElement, cluster);
+          }
+        }
+        // Also flash the Inspector's own large cluster and its bar-preview strip cell, if it's
+        // open and showing the bar currently sounding (only "Play Bar N" can make that true,
+        // since opening the Inspector at all is blocked while the main passage is playing).
+        if (inspecting && inspecting.barIdx === barIdx) {
+          flashDot(inCluster, subIdx, subCount);
+          const stripCluster = inStrip.children[beatIdx]?.querySelector('.cluster');
+          if (stripCluster) flashDot(stripCluster, subIdx, subCount);
+        }
       }
       function stopPlayback() {
         playToken++;
