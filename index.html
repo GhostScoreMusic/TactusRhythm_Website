@@ -2557,6 +2557,34 @@
         });
         applyFocalOpacity(activeBarIdx);
       }
+      // Which bar is resting on the focal line (the second visible line) for a
+      // given scrollTop — the inverse of calcFocalScrollTop's own math, since
+      // every bar is the same height and bar 0 starts one row down (top spacer).
+      function nearestBarIndexForScroll(scrollTop) {
+        const sampleBar = barsEl.querySelector('.bar');
+        const rowH = sampleBar ? sampleBar.getBoundingClientRect().height : 58;
+        const idx = Math.round(scrollTop / rowH);
+        return Math.max(0, Math.min(bars.length - 1, idx));
+      }
+      // A manual scroll never had anything wired up to pick a new active bar or
+      // snap back to the focal line — CSS scroll-snap alone doesn't know which
+      // bar should end up highlighted, and its own snap points didn't reliably
+      // win against inertial scrolling. Debounced so it only acts once scrolling
+      // has actually settled, not on every intermediate frame.
+      let scrollSettleTimer = null;
+      barsEl.addEventListener('scroll', () => {
+        if (playing) return; // pulse() already owns activeBarIdx during playback
+        clearTimeout(scrollSettleTimer);
+        scrollSettleTimer = setTimeout(() => {
+          const idx = nearestBarIndexForScroll(barsEl.scrollTop);
+          if (idx !== activeBarIdx) {
+            activeBarIdx = idx;
+            applyActiveBar();
+          }
+          const barEl = barsEl.querySelector('.bar[data-bar-index="' + idx + '"]');
+          if (barEl) focusBar(barEl);
+        }, 120);
+      }, { passive: true });
       // Scrolls a beat's cluster into view within its own bar's horizontal
       // strip only — scrollIntoView() would also walk up to #tdBars and fight
       // the vertical focal-scroll above, so this stays scoped to .clusters.
