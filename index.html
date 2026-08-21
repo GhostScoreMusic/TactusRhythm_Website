@@ -397,7 +397,11 @@
       position: absolute; right: 8px; top: 4px; z-index: 3;
       width: 18px; height: 1px; background: var(--accent); opacity: 0.6; pointer-events: none;
     }
-    #tactusDemo .td-bars { flex: 1 1 auto; overflow-y: auto; scroll-snap-type: y mandatory; }
+    /* No native scroll-snap here — the JS focal-scroll below fully owns snapping
+       (calcFocalScrollTop/focusBar), and having CSS mandatory snap engage at the
+       same time as the JS-driven scrollTo fought it every frame, which is what
+       actually made scrolling/highlighting feel laggy. */
+    #tactusDemo .td-bars { flex: 1 1 auto; overflow-y: auto; }
     #tactusDemo .td-empty {
       display: flex; align-items: center; justify-content: center;
       height: 100%; padding: 20px; text-align: center;
@@ -468,7 +472,6 @@
       background: var(--bg-elev-1);
       border-bottom: 0.5px solid var(--hair);
       position: relative;
-      scroll-snap-align: start;
       transition: background 320ms var(--ease-out), opacity 320ms var(--ease-out);
     }
     #tactusDemo .bar:last-child { border-bottom: 0; }
@@ -2535,8 +2538,42 @@
         const maxScrollTop = barsEl.scrollHeight - containerRect.height;
         return Math.max(0, Math.min(targetScrollTop, maxScrollTop));
       }
+      // Cubic-bezier evaluator for --ease-out (0.2, 0.65, 0.25, 1) so the JS-driven
+      // snap uses the exact same curve as the rest of the UI's motion, not the
+      // browser's own (slower, inconsistent-across-browsers) `smooth` scroll easing.
+      function cubicBezier(x1, y1, x2, y2) {
+        function bezierX(t) { const u = 1 - t; return 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t; }
+        function bezierY(t) { const u = 1 - t; return 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t; }
+        return function (x) {
+          let t = x;
+          for (let i = 0; i < 8; i++) {
+            const dx = bezierX(t) - x;
+            const d = 3 * (1 - t) * (1 - t) * x1 + 6 * (1 - t) * t * (x2 - x1) + 3 * t * t * (1 - x2);
+            if (Math.abs(d) < 1e-6) break;
+            t -= dx / d;
+          }
+          return bezierY(Math.max(0, Math.min(1, t)));
+        };
+      }
+      const focalEase = cubicBezier(0.2, 0.65, 0.25, 1);
+      // Matches the real app's fast, critically-damped snap spring (stiffness 500,
+      // dampingRatio ~1 settles in ~250-300ms) -- the native `smooth` scrollTo this
+      // replaced had no fixed duration and read as sluggish next to that.
+      const FOCAL_SNAP_MS = 260;
+      let focalSnapRaf = null;
       function focusBar(barEl) {
-        barsEl.scrollTo({ top: calcFocalScrollTop(barEl), behavior: 'smooth' });
+        if (focalSnapRaf) { cancelAnimationFrame(focalSnapRaf); focalSnapRaf = null; }
+        const from = barsEl.scrollTop;
+        const to = calcFocalScrollTop(barEl);
+        const delta = to - from;
+        if (Math.abs(delta) < 0.5) return;
+        const start = performance.now();
+        const step = now => {
+          const p = Math.min(1, (now - start) / FOCAL_SNAP_MS);
+          barsEl.scrollTop = from + delta * focalEase(p);
+          if (p < 1) { focalSnapRaf = requestAnimationFrame(step); } else { focalSnapRaf = null; }
+        };
+        focalSnapRaf = requestAnimationFrame(step);
       }
       function restToBar(barIdx) {
         const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
@@ -2567,23 +2604,36 @@
         return Math.max(0, Math.min(bars.length - 1, idx));
       }
       // A manual scroll never had anything wired up to pick a new active bar or
-      // snap back to the focal line — CSS scroll-snap alone doesn't know which
-      // bar should end up highlighted, and its own snap points didn't reliably
-      // win against inertial scrolling. Debounced so it only acts once scrolling
-      // has actually settled, not on every intermediate frame.
+      // snap back to the focal line. The real app updates the highlighted bar
+      // live, every frame, as your finger moves (FocalBarList.kt's drag handler
+      // tracks dragFocusedIndex continuously, with only a small dead-band to stop
+      // boundary jitter) and only animates a snap once the drag actually ends --
+      // so the highlight itself is never gated behind a debounce. Doing the
+      // highlight update on every scroll event (instead of waiting ~120ms after
+      // scrolling stopped, like before) is what actually fixes the "laggy"
+      // highlighting; the debounce below is only for triggering the focal-line
+      // snap-back, which does need an idle check since a raw scroll container
+      // has no explicit "drag ended" event of its own.
       let scrollSettleTimer = null;
       barsEl.addEventListener('scroll', () => {
         if (playing) return; // pulse() already owns activeBarIdx during playback
+        const idx = nearestBarIndexForScroll(barsEl.scrollTop);
+        if (idx !== activeBarIdx) {
+          activeBarIdx = idx;
+          applyActiveBar();
+        }
         clearTimeout(scrollSettleTimer);
         scrollSettleTimer = setTimeout(() => {
-          const idx = nearestBarIndexForScroll(barsEl.scrollTop);
-          if (idx !== activeBarIdx) {
-            activeBarIdx = idx;
-            applyActiveBar();
-          }
           const barEl = barsEl.querySelector('.bar[data-bar-index="' + idx + '"]');
           if (barEl) focusBar(barEl);
-        }, 120);
+        }, 80);
+      }, { passive: true });
+      barsEl.addEventListener('scrollend', () => {
+        if (playing) return;
+        clearTimeout(scrollSettleTimer);
+        const idx = nearestBarIndexForScroll(barsEl.scrollTop);
+        const barEl = barsEl.querySelector('.bar[data-bar-index="' + idx + '"]');
+        if (barEl) focusBar(barEl);
       }, { passive: true });
       // Scrolls a beat's cluster into view within its own bar's horizontal
       // strip only — scrollIntoView() would also walk up to #tdBars and fight
