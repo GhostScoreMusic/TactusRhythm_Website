@@ -402,8 +402,13 @@
     /* No native scroll-snap here — the JS focal-scroll below fully owns snapping
        (calcFocalScrollTop/focusBar), and having CSS mandatory snap engage at the
        same time as the JS-driven scrollTo fought it every frame, which is what
-       actually made scrolling/highlighting feel laggy. */
-    #tactusDemo .td-bars { flex: 1 1 auto; overflow-y: auto; }
+       actually made scrolling/highlighting feel laggy. overscroll-behavior-y: none
+       turns off the rubber-band/bounce stretch past the top and bottom -- the real
+       app has no such bounce either (a deliberate list setting, not an oversight),
+       and the elastic overscroll physics fighting the custom snap-back animation at
+       exactly the same boundary was the source of the visual glitches scrolling
+       past the bottom. */
+    #tactusDemo .td-bars { flex: 1 1 auto; overflow-y: auto; overscroll-behavior-y: none; }
     #tactusDemo .td-empty {
       display: flex; align-items: center; justify-content: center;
       height: 100%; padding: 20px; text-align: center;
