@@ -2675,12 +2675,20 @@
         soft:   { freq: 1600, gainDb: -9, decayMs: 28 },
       };
       const clickBufferCache = {};
-      function ensureAudio() {
+      // Resuming a suspended AudioContext is asynchronous -- awaiting it matters. Without this,
+      // ctx.currentTime can still read a stale/frozen value for a few ms right after resume()
+      // is called (not yet actually running), and every scheduled time below (startAt, each
+      // event's time, endAt) gets computed against that stale baseline. Once the context
+      // actually finishes resuming, currentTime jumps to the real clock and those already-
+      // computed times can end up in the past -- which is exactly the kind of race that makes a
+      // Web Audio buffer source silently not play at all, and throws off every delay computed
+      // from the same clock (including the end-of-passage timeout that resets the focus bar).
+      async function ensureAudio() {
         if (!audioCtx) {
           const Ctx = window.AudioContext || window.webkitAudioContext;
           audioCtx = new Ctx();
         }
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+        if (audioCtx.state === 'suspended') await audioCtx.resume();
         return audioCtx;
       }
       function buildClickBuffer(ctx, accent) {
@@ -2907,11 +2915,16 @@
         }
       }
 
-      playBtn.addEventListener('click', () => {
+      playBtn.addEventListener('click', async () => {
         if (playing) { stopPlayback(); return; }
         if (bars.length === 0) return;
-        const ctx = ensureAudio();
+        // Captured before the await so a second rapid click (e.g. Play then Stop again while
+        // still awaiting audio resume) supersedes this attempt instead of racing it -- playing
+        // isn't true yet at this point, so that same click would otherwise fall through to here
+        // a second time.
         const token = ++playToken;
+        const ctx = await ensureAudio();
+        if (token !== playToken) return;
         audioNodes = [];
         setPlayingUI(true);
         const secPerBeat = (tempo, den) => (60 / tempo) * (4 / den);
