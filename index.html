@@ -378,13 +378,15 @@
     }
     #tactusDemo .td-topbar-title { font-size: 16px; font-weight: 500; color: var(--fg); }
     #tactusDemo .td-topbar-reset {
-      width: 32px; height: 32px; border-radius: 50%;
+      height: 32px; border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
       border: 0.5px solid var(--stroke);
       background: none; color: var(--fg-2); flex-shrink: 0;
+      font-family: var(--ui); font-size: 13px; font-weight: 500;
+      padding: 0 14px;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
-    #tactusDemo .td-topbar-reset svg { width: 15px; height: 15px; }
     #tactusDemo .td-topbar-reset:active { color: var(--fg); border-color: var(--accent-dim); }
 
     #tactusDemo .td-bars-wrap { position: relative; flex: 1 1 auto; min-height: 0; display: flex; }
@@ -426,25 +428,36 @@
       flex-shrink: 0;
     }
     #tactusDemo .td-tempo-group {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 10px;
       background: var(--bg-elev-2);
-      border-radius: 20px;
-      padding: 5px 8px;
+      border-radius: 24px;
+      padding: 7px 10px;
     }
     #tactusDemo .td-tempo-btn {
-      width: 26px; height: 26px;
+      width: 34px; height: 34px;
       display: flex; align-items: center; justify-content: center;
       border-radius: 50%;
       background: var(--bg-elev-3); border: none; color: var(--fg-2);
-      font-size: 15px; line-height: 1;
+      font-size: 18px; line-height: 1;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
     #tactusDemo .td-tempo-btn:active { background: var(--accent-dim); color: var(--fg); }
+    /* Tappable note-value glyph -- cycles ♩/♪/♬/etc, same idea as the real
+       apps' note-value picker, just a tap-to-cycle instead of a full sheet
+       to match this pill's compact scale. */
+    #tactusDemo .td-tempo-note {
+      font-family: var(--meter-font); font-size: 16px; color: var(--fg-3);
+      background: none; border: none; line-height: 1;
+      padding: 4px 2px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tactusDemo .td-tempo-note:active { color: var(--fg); }
     #tactusDemo .td-tempo {
       font-family: var(--mono); font-variant-numeric: tabular-nums;
-      font-size: 14px; font-weight: 700; color: var(--fg);
-      min-width: 60px; text-align: center; letter-spacing: normal;
+      font-size: 17px; font-weight: 700; color: var(--fg);
+      min-width: 68px; text-align: center; letter-spacing: normal;
     }
     #tactusDemo .td-play {
       width: 50px; height: 50px; flex-shrink: 0;
@@ -1545,9 +1558,7 @@
             <div class="td-topbar">
               <span class="td-topbar-back">&lsaquo;</span>
               <span class="td-topbar-title">Untitled</span>
-              <button class="td-topbar-reset" id="tdResetBtn" type="button" aria-label="Reset">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0 1 13.66-5.66M20 12a8 8 0 0 1-13.66 5.66M4 4v5h5M20 20v-5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
+              <button class="td-topbar-reset" id="tdResetBtn" type="button">Reset</button>
             </div>
             <div class="td-bars-wrap">
               <div class="td-bars" id="tdBars">
