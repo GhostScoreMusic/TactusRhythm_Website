@@ -728,31 +728,30 @@
        selected cell's RoundedRectangle(cornerRadius: 8) accent stroke. */
     #tactusDemo .td-inspector-strip-wrap {
       background: var(--bg-elev-1);
-      padding: 14px 16px;
+      padding: 10px 16px;
       display: flex; overflow-x: auto;
       scrollbar-width: none; -ms-overflow-style: none;
     }
     #tactusDemo .td-inspector-strip-wrap::-webkit-scrollbar { display: none; }
-    #tactusDemo .td-inspector-strip { display: flex; align-items: flex-end; gap: 8px; margin: 0 auto; }
+    #tactusDemo .td-inspector-strip { display: flex; align-items: flex-end; gap: 6px; margin: 0 auto; }
     #tactusDemo .td-inspector-strip-cell {
       flex-shrink: 0;
       display: flex; flex-direction: column; align-items: center; gap: 2px;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    /* The accent-outline (selected, or -- during Play Bar -- actively sounding) wraps just the
-       cluster box, not a tuplet cell's ratio label above it, matching the real app's strip
-       exactly (barPreviewStrip, EditorView.swift): the RoundedRectangle stroke overlays only
-       miniCluster's own clusterSize-square frame. */
+    /* Deliberately smaller than the real app's literal clusterSize (60): at that size the strip
+       read as a second accent-editing surface rather than a compact nav aid pointing at the big
+       cluster below, so it's sized to match the main bars view's own small (non-editable)
+       clusters instead -- same visual language already used elsewhere as "preview, not edit". */
     #tactusDemo .td-inspector-strip-clusterbox {
-      width: 60px; height: 60px;
+      width: 36px; height: 36px;
       display: flex; align-items: center; justify-content: center;
-      border-radius: 8px;
+      border-radius: 7px;
       border: 1px solid transparent;
     }
     #tactusDemo .td-inspector-strip-cell.selected .td-inspector-strip-clusterbox { border-color: var(--accent); }
-    #tactusDemo .cluster.md { width: 40px; height: 40px; }
-    #tactusDemo .cluster.md .d { width: 12px; height: 12px; }
+    #tactusDemo .td-inspector-strip-clusterbox .cluster { width: 30px; height: 30px; }
     #tactusDemo .td-inspector-cluster-wrap {
       display: flex; align-items: center; justify-content: center;
       padding: 20px 16px 4px;
@@ -2560,6 +2559,9 @@
               cycleAccent(bar, beatIdx, subIdx);
               fillCluster(el, bar, beatIdx, subCount, true);
               renderBars();
+              if (inspecting && bars[inspecting.barIdx] === bar && inspecting.beatIdx === beatIdx) {
+                renderInspectorStrip();
+              }
             });
           }
           el.appendChild(d);
@@ -2782,7 +2784,7 @@
           const box = document.createElement('div');
           box.className = 'td-inspector-strip-clusterbox';
           const mini = document.createElement('div');
-          mini.className = 'cluster md';
+          mini.className = 'cluster';
           fillCluster(mini, bar, i, pulseCountOf(slot), false);
           box.appendChild(mini);
           cell.appendChild(box);
