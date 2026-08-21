@@ -2759,17 +2759,33 @@
       const focalEase = cubicBezier(0.16, 1, 0.3, 1);
       const FOCAL_SNAP_MS = 170;
       let focalSnapRaf = null;
+      // Set for the duration of the snap animation below so the scroll handler can tell "my own
+      // programmatic scrollTop writes" apart from real user scrolling -- every frame of the
+      // animation fires a native 'scroll' event same as a finger would, and by the time this
+      // fires after a Stop, `playing` is already false, so without this those events were being
+      // read as real scrolling. That silently reassigned activeBarIdx/manualStartBarIdx to
+      // whatever bar the animation was passing through mid-flight -- sometimes even re-triggering
+      // a second, competing snap to that wrong bar -- which is what let the resting bar drift to
+      // the wrong place over the few seconds after playback actually stopped.
+      let isProgrammaticScroll = false;
       function focusBar(barEl) {
         if (focalSnapRaf) { cancelAnimationFrame(focalSnapRaf); focalSnapRaf = null; }
+        isProgrammaticScroll = false;
         const from = barsEl.scrollTop;
         const to = calcFocalScrollTop(barEl);
         const delta = to - from;
         if (Math.abs(delta) < 0.5) return;
+        isProgrammaticScroll = true;
         const start = performance.now();
         const step = now => {
           const p = Math.min(1, (now - start) / FOCAL_SNAP_MS);
           barsEl.scrollTop = from + delta * focalEase(p);
-          if (p < 1) { focalSnapRaf = requestAnimationFrame(step); } else { focalSnapRaf = null; }
+          if (p < 1) {
+            focalSnapRaf = requestAnimationFrame(step);
+          } else {
+            focalSnapRaf = null;
+            isProgrammaticScroll = false;
+          }
         };
         focalSnapRaf = requestAnimationFrame(step);
       }
@@ -2829,7 +2845,8 @@
       // genuine continuous scrolling, which naturally keeps reporting the same new index.
       let pendingHighlightIdx = null;
       barsEl.addEventListener('scroll', () => {
-        if (playing) return; // pulse() already owns activeBarIdx during playback
+        if (playing) return; // pulse()/focusOnBar() already own activeBarIdx during playback
+        if (isProgrammaticScroll) return; // this is focusBar()'s own snap animation, not real input
         const idx = nearestBarIndexForScroll(barsEl.scrollTop);
         if (idx === activeBarIdx) {
           pendingHighlightIdx = null;
@@ -2845,6 +2862,7 @@
       }, { passive: true });
       barsEl.addEventListener('scrollend', () => {
         if (playing) return;
+        if (isProgrammaticScroll) return; // this is focusBar()'s own snap animation, not real input
         clearTimeout(scrollSettleTimer);
         settleOnBar();
       }, { passive: true });
