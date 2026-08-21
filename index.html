@@ -2862,14 +2862,20 @@
           clustersEl.scrollBy({ left: itemRect.right - containerRect.right + margin, behavior: 'smooth' });
         }
       }
+      // Matches the real app's BAR_FOCUS_LEAD_TIME_MS (FocalBarList.kt) exactly: the auto-scroll
+      // to a bar during playback is scheduled to *arrive* at its downbeat, not start there --
+      // scrolling only once the beat has already landed reads as the highlight lagging behind
+      // the click, since the focal-snap animation itself still takes ~170ms on top of that.
+      const BAR_FOCUS_LEAD_SEC = 0.3;
+      function focusOnBar(barIdx) {
+        if (barIdx === activeBarIdx) return;
+        activeBarIdx = barIdx;
+        applyActiveBar();
+        const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
+        if (barEl) focusBar(barEl);
+      }
       function pulse(barIdx, beatIdx, subIdx, subCount) {
         clearDotHit();
-        if (barIdx !== activeBarIdx) {
-          activeBarIdx = barIdx;
-          applyActiveBar();
-          const newBarEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
-          if (newBarEl) focusBar(newBarEl);
-        }
         const barEl = barsEl.querySelector('.bar[data-bar-index="' + barIdx + '"]');
         if (!barEl) return;
         const cluster = barEl.querySelectorAll('.cluster')[beatIdx];
@@ -2908,12 +2914,14 @@
         const startAt = ctx.currentTime + 0.08;
         let t = startAt;
         const events = [];
+        const barStarts = []; // wall time each played bar's downbeat lands, for the lead-scroll below
         // Matches the real app's manualStartBarIndex: scrolling to a bar and leaving it
         // highlighted sets it as where Play begins, not always bar 0 -- Play here always
         // scheduled the whole passage from bar 0 regardless, ignoring whichever bar you'd
         // scrolled to and highlighted.
         bars.forEach((bar, barIdx) => {
           if (barIdx < manualStartBarIdx) return;
+          barStarts.push({ barIdx, time: t });
           const tempo = effectiveTempoAt(barIdx);
           const beatDur = secPerBeat(tempo, bar.den);
           bar.beats.forEach((subCount, beatIdx) => {
@@ -2924,7 +2932,7 @@
         });
         const endAt = t;
         events.forEach(ev => scheduleClick(ctx, ev.time, ev.accent));
-        // Each pulse (and the focal-scroll it triggers) is its own timer rather
+        // Each pulse/focus change (and the focal-scroll it triggers) is its own timer rather
         // than a rAF poll — rAF throttles to a crawl in a backgrounded tab, but
         // a real user can easily switch tabs mid-playback, so the highlight and
         // scroll need to stay on schedule regardless of tab visibility.
@@ -2933,6 +2941,15 @@
           setTimeout(() => {
             if (token !== playToken) return;
             pulse(ev.barIdx, ev.beatIdx, ev.subIdx, ev.subCount);
+          }, delayMs);
+        });
+        // Scheduled separately from pulse() and lead-timed by BAR_FOCUS_LEAD_SEC so the
+        // scroll-to-new-bar arrives at the downbeat instead of starting there.
+        barStarts.forEach(bs => {
+          const delayMs = Math.max(0, (bs.time - BAR_FOCUS_LEAD_SEC - ctx.currentTime) * 1000);
+          setTimeout(() => {
+            if (token !== playToken) return;
+            focusOnBar(bs.barIdx);
           }, delayMs);
         });
         setTimeout(() => { if (token === playToken) stopPlayback(); }, (endAt - ctx.currentTime) * 1000 + 80);
