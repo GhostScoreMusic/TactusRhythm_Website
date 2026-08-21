@@ -489,6 +489,7 @@
       font-family: var(--meter-font); font-size: 16px; color: inherit;
     }
     #tactusDemo .td-note-row-glyph svg { width: 9px; height: 15px; display: block; }
+    #tactusDemo .td-tempo-eq { font-family: var(--ui); font-size: 15px; color: var(--fg-3); }
     #tactusDemo .td-tempo {
       font-family: var(--mono); font-variant-numeric: tabular-nums;
       font-size: 17px; font-weight: 700; color: var(--fg);
@@ -531,8 +532,10 @@
     #tactusDemo .bar-tempo-label {
       font-family: var(--mono); font-variant-numeric: tabular-nums;
       font-size: 10px; color: var(--fg-4);
+      display: inline-flex; align-items: center; gap: 3px;
     }
     #tactusDemo .bar-tempo-label.explicit { color: var(--accent); }
+    #tactusDemo .bar-tempo-label svg { width: 5px; height: 9px; display: block; }
     #tactusDemo .bar-tempo-dash {
       width: 22px; height: 1px; margin-top: 1px;
       background-image: repeating-linear-gradient(to right, var(--fg-4) 0 3px, transparent 3px 6px);
@@ -1615,6 +1618,7 @@
                   <button class="td-tempo-note" id="tdTempoNoteBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Note value"><span id="tdTempoNoteGlyph"></span></button>
                   <div class="td-note-menu" id="tdTempoNoteMenu" hidden></div>
                 </div>
+                <span class="td-tempo-eq">=</span>
                 <span class="td-tempo" id="tdTempoVal">120</span>
                 <button class="td-tempo-btn" id="tdTempoUp" type="button">+</button>
               </div>
@@ -1716,6 +1720,7 @@
                   <button class="td-tempo-note" id="tdBarTempoNoteBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Note value"><span id="tdBarTempoNoteGlyph"></span></button>
                   <div class="td-note-menu" id="tdBarTempoNoteMenu" hidden></div>
                 </div>
+                <span class="td-tempo-eq">=</span>
                 <span class="td-tempo" id="tdBarTempoVal">120</span>
                 <button class="td-tempo-btn" id="tdBarTempoUp" type="button">+</button>
               </div>
@@ -2236,8 +2241,6 @@
       // timing.
       const NOTE_CYCLE = [2, 6, 4, 12, 8, 16];
       const NOTE_LABELS = { 2: 'Half note', 6: 'Dotted quarter', 4: 'Quarter note', 12: 'Dotted eighth', 8: 'Eighth note', 16: 'Sixteenth note' };
-      // Compact plain-text form for the small in-passage tempo badge below.
-      const NOTE_SHORT = { 2: '1/2', 6: '1/4.', 4: '1/4', 12: '1/8.', 8: '1/8', 16: '1/16' };
       // Same glyphs as the real app's NoteValueSymbol (EditorView.swift) -- plain Unicode for
       // everything except the half note, which the real app itself doesn't trust to Unicode
       // either (its own doc comment: "Uses a vector asset for the half note; Unicode for the
@@ -2438,7 +2441,7 @@
             const label = document.createElement('span');
             label.className = 'bar-tempo-label explicit';
             const denom = effectiveNoteDenomAt(barIdx);
-            label.textContent = NOTE_SHORT[denom] + ' = ' + displayedTempo(effectiveTempoAt(barIdx), denom);
+            label.innerHTML = noteGlyphHTML(denom) + ' = ' + displayedTempo(effectiveTempoAt(barIdx), denom);
             tempoRow.appendChild(label);
           } else {
             const dash = document.createElement('span');
