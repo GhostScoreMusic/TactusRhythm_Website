@@ -2705,28 +2705,47 @@
       // snap-back, which does need an idle check since a raw scroll container
       // has no explicit "drag ended" event of its own.
       let scrollSettleTimer = null;
+      // A single noisy scroll-event sample (real touch scrolling on iOS reports scrollTop with
+      // occasional one-frame blips during momentum/rubber-band settling, even while the visible
+      // content isn't actually moving) could still cross the dead band above and flip the
+      // highlight, then flip straight back next frame -- that's the flicker/jitter this fixes.
+      // Requiring the same candidate index on two consecutive scroll events (usually ~16ms apart
+      // during a real drag, not perceptible as lag) filters a one-off blip without waiting on
+      // genuine continuous scrolling, which naturally keeps reporting the same new index.
+      let pendingHighlightIdx = null;
       barsEl.addEventListener('scroll', () => {
         if (playing) return; // pulse() already owns activeBarIdx during playback
         const idx = nearestBarIndexForScroll(barsEl.scrollTop);
-        if (idx !== activeBarIdx) {
+        if (idx === activeBarIdx) {
+          pendingHighlightIdx = null;
+        } else if (idx === pendingHighlightIdx) {
           activeBarIdx = idx;
           applyActiveBar();
+          pendingHighlightIdx = null;
+        } else {
+          pendingHighlightIdx = idx;
         }
         clearTimeout(scrollSettleTimer);
-        scrollSettleTimer = setTimeout(() => {
-          manualStartBarIdx = idx;
-          const barEl = barsEl.querySelector('.bar[data-bar-index="' + idx + '"]');
-          if (barEl) focusBar(barEl);
-        }, 80);
+        scrollSettleTimer = setTimeout(() => settleOnBar(), 80);
       }, { passive: true });
       barsEl.addEventListener('scrollend', () => {
         if (playing) return;
         clearTimeout(scrollSettleTimer);
+        settleOnBar();
+      }, { passive: true });
+      // Recomputes fresh from the actual current scrollTop rather than trusting whatever index a
+      // particular event closed over -- that could still be a pending, not-yet-confirmed value
+      // from the 2-event check above -- and force-syncs activeBarIdx/the DOM to match, so the
+      // bar that's actually snapped to is always the one left highlighted.
+      function settleOnBar() {
         const idx = nearestBarIndexForScroll(barsEl.scrollTop);
+        pendingHighlightIdx = null;
         manualStartBarIdx = idx;
+        activeBarIdx = idx;
+        applyActiveBar();
         const barEl = barsEl.querySelector('.bar[data-bar-index="' + idx + '"]');
         if (barEl) focusBar(barEl);
-      }, { passive: true });
+      }
       // Scrolls a beat's cluster into view within its own bar's horizontal
       // strip only — scrollIntoView() would also walk up to #tdBars and fight
       // the vertical focal-scroll above, so this stays scoped to .clusters.
