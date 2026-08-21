@@ -2613,9 +2613,11 @@
         const maxScrollTop = barsEl.scrollHeight - containerRect.height;
         return Math.max(0, Math.min(targetScrollTop, maxScrollTop));
       }
-      // Cubic-bezier evaluator for --ease-out (0.2, 0.65, 0.25, 1) so the JS-driven
-      // snap uses the exact same curve as the rest of the UI's motion, not the
-      // browser's own (slower, inconsistent-across-browsers) `smooth` scroll easing.
+      // Cubic-bezier evaluator, used below for a snappier curve than the site's
+      // general --ease-out (0.2, 0.65, 0.25, 1) -- that one has a long soft tail
+      // meant for fades/scale-ins, which read as "loose" for a bar locking into
+      // place. This is a tighter decelerate-hard curve, closer to how the real
+      // app's critically-damped spring actually settles.
       function cubicBezier(x1, y1, x2, y2) {
         function bezierX(t) { const u = 1 - t; return 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t; }
         function bezierY(t) { const u = 1 - t; return 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t; }
@@ -2630,11 +2632,8 @@
           return bezierY(Math.max(0, Math.min(1, t)));
         };
       }
-      const focalEase = cubicBezier(0.2, 0.65, 0.25, 1);
-      // Matches the real app's fast, critically-damped snap spring (stiffness 500,
-      // dampingRatio ~1 settles in ~250-300ms) -- the native `smooth` scrollTo this
-      // replaced had no fixed duration and read as sluggish next to that.
-      const FOCAL_SNAP_MS = 260;
+      const focalEase = cubicBezier(0.16, 1, 0.3, 1);
+      const FOCAL_SNAP_MS = 170;
       let focalSnapRaf = null;
       function focusBar(barEl) {
         if (focalSnapRaf) { cancelAnimationFrame(focalSnapRaf); focalSnapRaf = null; }
@@ -2746,6 +2745,15 @@
         audioNodes.forEach(src => { try { src.stop(); } catch (e) {} });
         audioNodes = [];
         setPlayingUI(false); clearDotHit();
+        // Matches the real app's stop-transition (FocalBarList.kt/EditorView.swift both
+        // return focus to the start bar on stop) -- otherwise the view was left wherever
+        // playback happened to end, instead of resting back on the highlighted start bar.
+        if (bars.length > 0) {
+          activeBarIdx = 0;
+          applyActiveBar();
+          const barEl = barsEl.querySelector('.bar[data-bar-index="0"]');
+          if (barEl) focusBar(barEl);
+        }
       }
 
       playBtn.addEventListener('click', () => {
