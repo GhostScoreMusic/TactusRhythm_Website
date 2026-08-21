@@ -2233,6 +2233,11 @@
       let queue = [];          // meters queued in the keyboard sheet before Done
       let inspecting = null;   // { barIdx, beatIdx }
       let activeBarIdx = 0;    // the bar shown highlighted — at rest, and mid-playback
+      // Matches the real app's manualStartBarIndex: separate from activeBarIdx, which also
+      // moves with live playback progress. Only updated when a scroll actually settles (not on
+      // every live-highlight update while scrolling), same as the real app's scrub-then-release
+      // gesture -- Play starts from here, and Stop returns the view here, not to bar 0.
+      let manualStartBarIdx = 0;
       let playing = false;
       let playToken = 0;
       let audioCtx = null;
@@ -2434,6 +2439,7 @@
         }));
         closeKeyboard();
         activeBarIdx = 0;
+        manualStartBarIdx = 0;
         renderBars();
         restToBar(0); // ready at the beginning, bar 1 sitting on the second line
       });
@@ -2546,6 +2552,7 @@
         tempoNoteDenom = 4;
         refreshMainTempo();
         activeBarIdx = 0;
+        manualStartBarIdx = 0;
         renderBars();
       });
 
@@ -2705,6 +2712,7 @@
         }
         clearTimeout(scrollSettleTimer);
         scrollSettleTimer = setTimeout(() => {
+          manualStartBarIdx = idx;
           const barEl = barsEl.querySelector('.bar[data-bar-index="' + idx + '"]');
           if (barEl) focusBar(barEl);
         }, 80);
@@ -2713,6 +2721,7 @@
         if (playing) return;
         clearTimeout(scrollSettleTimer);
         const idx = nearestBarIndexForScroll(barsEl.scrollTop);
+        manualStartBarIdx = idx;
         const barEl = barsEl.querySelector('.bar[data-bar-index="' + idx + '"]');
         if (barEl) focusBar(barEl);
       }, { passive: true });
@@ -2753,12 +2762,13 @@
         audioNodes = [];
         setPlayingUI(false); clearDotHit();
         // Matches the real app's stop-transition (FocalBarList.kt/EditorView.swift both
-        // return focus to the start bar on stop) -- otherwise the view was left wherever
-        // playback happened to end, instead of resting back on the highlighted start bar.
+        // return focus to manualStartBarIndex on stop, not always bar 0) -- otherwise the
+        // view was left wherever playback happened to end, instead of resting back on
+        // whichever bar the user had actually scrolled to and highlighted.
         if (bars.length > 0) {
-          activeBarIdx = 0;
+          activeBarIdx = manualStartBarIdx;
           applyActiveBar();
-          const barEl = barsEl.querySelector('.bar[data-bar-index="0"]');
+          const barEl = barsEl.querySelector('.bar[data-bar-index="' + manualStartBarIdx + '"]');
           if (barEl) focusBar(barEl);
         }
       }
@@ -2774,7 +2784,12 @@
         const startAt = ctx.currentTime + 0.08;
         let t = startAt;
         const events = [];
+        // Matches the real app's manualStartBarIndex: scrolling to a bar and leaving it
+        // highlighted sets it as where Play begins, not always bar 0 -- Play here always
+        // scheduled the whole passage from bar 0 regardless, ignoring whichever bar you'd
+        // scrolled to and highlighted.
         bars.forEach((bar, barIdx) => {
+          if (barIdx < manualStartBarIdx) return;
           const tempo = effectiveTempoAt(barIdx);
           const beatDur = secPerBeat(tempo, bar.den);
           bar.beats.forEach((subCount, beatIdx) => {
