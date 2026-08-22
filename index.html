@@ -640,7 +640,11 @@
       background: var(--scrim);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 280ms var(--ease-sheet);
+      /* --ease-sheet was never actually defined in tactus-tokens.css -- an invalid var()
+         reference invalidates the whole transition shorthand, so every sheet (Beat Inspector,
+         Meter Keyboard, Bar Tempo) was snapping open/closed instantly instead of animating.
+         --ease-out is the site's existing standard easing, already used everywhere else. */
+      transition: opacity 280ms var(--ease-out);
       z-index: 5;
     }
     #tactusDemo .td-sheet-scrim.is-open { opacity: 1; pointer-events: auto; }
@@ -651,7 +655,7 @@
       border-radius: 20px 20px 0 0;
       box-shadow: 0 -20px 50px -12px rgba(0,0,0,0.6);
       transform: translateY(102%);
-      transition: transform 320ms var(--ease-sheet);
+      transition: transform 320ms var(--ease-out);
       display: flex; flex-direction: column;
       z-index: 6;
     }
@@ -3435,6 +3439,17 @@
         // open and showing the bar currently sounding (only "Play Bar N" can make that true,
         // since opening the Inspector at all is blocked while the main passage is playing).
         if (inspecting && inspecting.barIdx === barIdx) {
+          // Play Bar previews every beat in the bar in turn, not just whichever one was
+          // selected when it was pressed -- follow along so the big cluster (and title/strip
+          // selection) always match the beat actually sounding. Without this, flashDot(inCluster,
+          // subIdx, subCount) was called with the SOUNDING beat's subIdx/subCount against a
+          // cluster still rendered for whichever beat was selected at Play-time -- a die-face
+          // layout mismatch that looked like the dots flashing in the wrong places, and the
+          // reason playback never appeared to "start at beat one" even though it always did.
+          if (inspecting.beatIdx !== beatIdx) {
+            inspecting.beatIdx = beatIdx;
+            refreshInspector();
+          }
           flashDot(inCluster, subIdx, subCount);
           const stripCluster = inStrip.children[beatIdx]?.querySelector('.cluster');
           if (stripCluster) flashDot(stripCluster, subIdx, subCount);
