@@ -1074,22 +1074,35 @@
       /* So a direct #try-it link doesn't land with the heading tucked under the sticky nav. */
       scroll-margin-top: 80px;
     }
+    /* Positioning wrapper for the bottom fade below -- that has to sit on a non-scrolling
+       ancestor, since an ::after on .try-it-list itself would just scroll away with the rest
+       of the content instead of staying put as a "there's more" cue. */
+    .try-it-list-wrap {
+      position: relative;
+      max-width: 420px; margin: 0 0 40px;
+    }
+    .try-it-list-wrap::after {
+      content: ''; position: absolute; left: 0; right: 6px; bottom: 0; height: 28px;
+      background: linear-gradient(transparent, var(--bg));
+      pointer-events: none;
+    }
     .try-it-list {
-      list-style: none; margin: 0 0 40px; padding: 0;
+      list-style: none; margin: 0; padding: 0;
       display: flex; flex-direction: column; gap: 8px;
       font-size: 14px; color: var(--fg-3); line-height: 1.5;
-      max-width: 420px;
       /* Fixed-height scroll window rather than letting the list grow -- more items (the Beat
          Inspector one included) shouldn't push the actual demo further down the page. Capped
          short of a round 4 items so the next one peeks in cut off, hinting there's more to
-         scroll rather than looking like the full list. */
+         scroll rather than looking like the full list -- backed up by the fade above and a
+         visible (not just-barely-there) scrollbar thumb, since the peek alone wasn't a strong
+         enough cue on its own. */
       max-height: 100px;
       overflow-y: auto;
       scrollbar-width: thin;
     }
     .try-it-list::-webkit-scrollbar { width: 6px; }
     .try-it-list::-webkit-scrollbar-track { background: transparent; }
-    .try-it-list::-webkit-scrollbar-thumb { background: var(--hair); border-radius: 3px; }
+    .try-it-list::-webkit-scrollbar-thumb { background: var(--fg-4); border-radius: 3px; }
     .try-it-footnote {
       max-width: 420px; margin: 20px 0 0;
       font-size: 13px; color: var(--fg-4); line-height: 1.6;
@@ -1737,13 +1750,15 @@
       <p class="lede" style="margin-bottom: 28px;">
         A simplified version of the app.
       </p>
-      <ul class="try-it-list">
-        <li>Tap + Add bar to build a passage</li>
-        <li>Tap a beat, then tap a dot to change its accent</li>
-        <li>Tap a beat to open Beat Inspector, then scroll down to change its subdivisions</li>
-        <li>Tap the tempo marker above a bar to set a tempo change</li>
-        <li>Press play</li>
-      </ul>
+      <div class="try-it-list-wrap">
+        <ul class="try-it-list">
+          <li>Tap + Add bar to build a passage</li>
+          <li>Tap a beat, then tap a dot to change its accent</li>
+          <li>Tap a beat to open Beat Inspector, then scroll down to change its subdivisions</li>
+          <li>Tap the tempo marker above a bar to set a tempo change</li>
+          <li>Press play</li>
+        </ul>
+      </div>
 
       <div class="app-shot tactus-demo-shot">
         <div class="tactus-demo" id="tactusDemo" role="group" aria-label="Interactive Tactus demo: build and play a passage">
@@ -2681,21 +2696,21 @@
         });
         // Top and bottom spacers — without room to scroll "past" both ends, the
         // browser clamps scrollTop at the natural content edges, so bar 1 could
-        // never rest on the second line (nothing to scroll into above it) and
+        // never rest on the third line (nothing to scroll into above it) and
         // the last couple of bars could never be pulled up to it either (nothing
         // below). Both spacers fake that room; the top one is what makes bar 1
-        // sit on line 2 with blank space above it, same as every other bar.
+        // sit on line 3 with blank space above it, same as every other bar.
         const containerHeight = barsEl.getBoundingClientRect().height;
         const firstBar = barsEl.querySelector('.bar');
         const rowH = firstBar.getBoundingClientRect().height;
-        barsEl.style.scrollPaddingTop = rowH + 'px';
+        barsEl.style.scrollPaddingTop = (2 * rowH) + 'px';
         const topSpacer = document.createElement('div');
         topSpacer.setAttribute('aria-hidden', 'true');
-        topSpacer.style.height = rowH + 'px';
+        topSpacer.style.height = (2 * rowH) + 'px';
         barsEl.insertBefore(topSpacer, firstBar);
         const bottomSpacer = document.createElement('div');
         bottomSpacer.setAttribute('aria-hidden', 'true');
-        bottomSpacer.style.height = Math.max(0, containerHeight - 2 * rowH) + 'px';
+        bottomSpacer.style.height = Math.max(0, containerHeight - 3 * rowH) + 'px';
         barsEl.appendChild(bottomSpacer);
         positionFocalTick();
         applyActiveBar();
@@ -2705,7 +2720,7 @@
         const tick = document.getElementById('tdFocalTick');
         const sampleBar = barsEl.querySelector('.bar');
         const rowH = sampleBar ? sampleBar.getBoundingClientRect().height : 58;
-        tick.style.top = rowH + 'px';
+        tick.style.top = (2 * rowH) + 'px';
       }
 
       // ── Add Bars sheet ─────────────────────────────────────────────
@@ -3181,16 +3196,17 @@
         dot.classList.remove('hit'); void dot.offsetWidth; dot.classList.add('hit');
       }
       const FOCAL_OPACITY = [1.00, 0.78, 0.52, 0.30]; // dist 0,1,2,3 — matches Tactus.opacity(dist:)
-      // The active bar always sits as the *second* visible line — exactly one
-      // row down from the top — so the row before it stays visible as "the bar
-      // that's past," and even bar 1 shows the same way with blank space above.
-      // Scroll-snap (see .td-bars CSS) owns the actual snap points; this just
-      // computes the target and lets native smooth scrolling get there.
+      // The active bar always sits as the *third* visible line — two rows down
+      // from the top — matching the real apps, so the two rows before it stay
+      // visible as "the bars that passed," and even bar 1 shows the same way
+      // with blank space above. Scroll-snap (see .td-bars CSS) owns the actual
+      // snap points; this just computes the target and lets native smooth
+      // scrolling get there.
       function calcFocalScrollTop(barEl) {
         const containerRect = barsEl.getBoundingClientRect();
         const barRect = barEl.getBoundingClientRect();
         const barAbsoluteTop = (barRect.top - containerRect.top) + barsEl.scrollTop;
-        const targetScrollTop = barAbsoluteTop - barRect.height;
+        const targetScrollTop = barAbsoluteTop - 2 * barRect.height;
         const maxScrollTop = barsEl.scrollHeight - containerRect.height;
         return Math.max(0, Math.min(targetScrollTop, maxScrollTop));
       }
@@ -3293,9 +3309,9 @@
         });
         applyFocalOpacity(activeBarIdx);
       }
-      // Which bar is resting on the focal line (the second visible line) for a
+      // Which bar is resting on the focal line (the third visible line) for a
       // given scrollTop — the inverse of calcFocalScrollTop's own math, since
-      // every bar is the same height and bar 0 starts one row down (top spacer).
+      // every bar is the same height and bar 0 starts two rows down (top spacer).
       // ±0.55 dead band around the current active index -- matches the real app's own drag
       // handler (FocalBarList.kt) exactly. Without it, a plain Math.round flips the highlight
       // back and forth on the smallest scroll wobble near the halfway point between two bars,
