@@ -1076,7 +1076,17 @@
       display: flex; flex-direction: column; gap: 8px;
       font-size: 14px; color: var(--fg-3); line-height: 1.5;
       max-width: 420px;
+      /* Fixed-height scroll window rather than letting the list grow -- more items (the Beat
+         Inspector one included) shouldn't push the actual demo further down the page. Capped
+         short of a round 4 items so the next one peeks in cut off, hinting there's more to
+         scroll rather than looking like the full list. */
+      max-height: 100px;
+      overflow-y: auto;
+      scrollbar-width: thin;
     }
+    .try-it-list::-webkit-scrollbar { width: 6px; }
+    .try-it-list::-webkit-scrollbar-track { background: transparent; }
+    .try-it-list::-webkit-scrollbar-thumb { background: var(--hair); border-radius: 3px; }
     .try-it-list li {
       position: relative; padding-left: 16px;
     }
@@ -1718,6 +1728,7 @@
       <ul class="try-it-list">
         <li>Tap + Add bar to build a passage</li>
         <li>Tap a beat, then tap a dot to change its accent</li>
+        <li>Tap a beat to open Beat Inspector, then scroll down to change its subdivisions</li>
         <li>Tap the tempo marker above a bar to set a tempo change</li>
         <li>Press play</li>
       </ul>
