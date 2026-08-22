@@ -762,8 +762,20 @@
     #tactusDemo .td-inspector-strip-cell.selected .td-inspector-strip-clusterbox { border-color: var(--accent); }
     #tactusDemo .td-inspector-strip-clusterbox .cluster { width: 30px; height: 30px; }
     #tactusDemo .td-inspector-cluster-wrap {
+      position: relative;
       display: flex; align-items: center; justify-content: center;
       padding: 20px 16px 4px;
+    }
+    /* Beat-to-beat crossfade (matches the real Android app's Crossfade -- the old cluster's
+       dots fade out at their old positions while the new beat's cluster fades in on top, rather
+       than iOS's fancier per-dot reposition, which would mean tracking dot identity across
+       different pulse counts). #tdInspectorCluster itself fades in via .cluster.lg's own
+       transition below; .cluster-ghost is a cloned snapshot of what it looked like right before
+       the swap, absolutely positioned over the same spot so the two fades visually overlap. */
+    #tactusDemo .cluster.lg { transition: opacity 150ms var(--ease-out); }
+    #tactusDemo .cluster-ghost {
+      position: absolute; pointer-events: none;
+      transition: opacity 150ms var(--ease-out);
     }
     #tactusDemo .td-inspector-hint {
       text-align: center;
@@ -2791,6 +2803,35 @@
         inScrim.classList.remove('is-open');
         inSheet.classList.remove('is-open');
         inspecting = null;
+        lastInspectorClusterKey = null;
+      }
+      // Which { barIdx, beatIdx } the big cluster was last drawn for -- null right after opening,
+      // so the very first render of a session just fills in (nothing to crossfade from yet).
+      let lastInspectorClusterKey = null;
+      // Clones the cluster's current on-screen look into an absolutely-positioned "ghost" that
+      // fades out in place, while the live element is refilled for the new beat and faded in --
+      // both fades run at once, overlapping into a crossfade (matches the real Android app's
+      // Crossfade between beats; see the .cluster-ghost CSS comment for why not iOS's per-dot
+      // reposition instead).
+      function crossfadeCluster(bar, beatIdx) {
+        const wrap = inCluster.parentElement;
+        const wrapRect = wrap.getBoundingClientRect();
+        const liveRect = inCluster.getBoundingClientRect();
+        const ghost = inCluster.cloneNode(true);
+        ghost.removeAttribute('id');
+        ghost.className = 'cluster lg cluster-ghost';
+        ghost.style.left = (liveRect.left - wrapRect.left) + 'px';
+        ghost.style.top = (liveRect.top - wrapRect.top) + 'px';
+        ghost.style.width = liveRect.width + 'px';
+        ghost.style.height = liveRect.height + 'px';
+        wrap.appendChild(ghost);
+        requestAnimationFrame(() => { ghost.style.opacity = '0'; });
+        setTimeout(() => ghost.remove(), 200);
+
+        inCluster.style.opacity = '0';
+        fillCluster(inCluster, bar, beatIdx, pulseCountOf(bar.beats[beatIdx]), true);
+        void inCluster.offsetWidth; // force reflow so the opacity:0 above actually applies before...
+        requestAnimationFrame(() => { inCluster.style.opacity = '1'; }); // ...fading back to 1.
       }
       // Redraws everything the current { barIdx, beatIdx } selection drives -- called after
       // every nav/edit action instead of each one patching its own slice, since so much of the
@@ -2801,7 +2842,13 @@
         const bar = bars[barIdx];
         inTitle.textContent = 'Bar ' + (barIdx + 1) + ' · Beat ' + (beatIdx + 1);
         inMeter.textContent = bar.num + '/' + bar.den;
-        fillCluster(inCluster, bar, beatIdx, pulseCountOf(bar.beats[beatIdx]), true);
+        const clusterKey = barIdx + ':' + beatIdx;
+        if (lastInspectorClusterKey !== null && lastInspectorClusterKey !== clusterKey) {
+          crossfadeCluster(bar, beatIdx);
+        } else {
+          fillCluster(inCluster, bar, beatIdx, pulseCountOf(bar.beats[beatIdx]), true);
+        }
+        lastInspectorClusterKey = clusterKey;
         renderInspectorStrip();
         renderInspectorBody();
         inPrevBar.disabled = barIdx === 0;
