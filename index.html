@@ -357,7 +357,10 @@
     #tactusDemo {
       position: relative;
       display: flex; flex-direction: column;
-      height: 460px;
+      /* Tall enough that Beat Inspector's strip + big cluster + hint + Notes Per Beat row all
+         fit without needing its own internal scroll in the common (non-tuplet) case -- at 460px
+         reaching subdivisions required a scroll nothing hinted at. */
+      height: 640px;
       background: var(--bg);
       border-radius: 36px;
       overflow: hidden;
@@ -1087,6 +1090,15 @@
     .try-it-list::-webkit-scrollbar { width: 6px; }
     .try-it-list::-webkit-scrollbar-track { background: transparent; }
     .try-it-list::-webkit-scrollbar-thumb { background: var(--hair); border-radius: 3px; }
+    .try-it-footnote {
+      max-width: 420px; margin: 20px 0 0;
+      font-size: 13px; color: var(--fg-4); line-height: 1.6;
+    }
+    .try-it-footnote a {
+      color: var(--fg-2); text-decoration: none;
+      border-bottom: 0.5px solid var(--stroke);
+    }
+    .try-it-footnote a:hover { color: var(--accent); border-color: var(--accent); }
     .try-it-list li {
       position: relative; padding-left: 16px;
     }
@@ -1885,6 +1897,13 @@
 
         </div>
       </div>
+
+      <p class="try-it-footnote">
+        This is a slice of the app, capped to keep it simple to try. The full app adds
+        conducted feel, practice speed, count-in, a tempo shape editor, Ableton Link sync, and a
+        lot more &mdash;
+        <a href="#power-features">see everything else it can do &rarr;</a>
+      </p>
     </div>
   </section>
 
@@ -1962,7 +1981,7 @@
   </section>
 
   <!-- ── Section 07 — Power features grid ───────────────────────────── -->
-  <section class="feature" data-screen-label="05 Power features">
+  <section class="feature" id="power-features" data-screen-label="05 Power features">
     <div class="wrap">
       <h2 style="margin-bottom: 48px;">Everything else.</h2>
 
