@@ -369,17 +369,19 @@
     }
     #tactusDemo .td-screen-main { display: flex; flex-direction: column; height: 100%; }
     #tactusDemo .td-topbar {
-      display: flex; align-items: center; justify-content: space-between;
+      position: relative;
+      display: flex; align-items: center; justify-content: flex-end;
       padding: 16px 16px 12px;
       flex-shrink: 0;
     }
-    #tactusDemo .td-topbar-back {
-      width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      border: 0.5px solid var(--stroke);
-      color: var(--fg-2); font-size: 16px; flex-shrink: 0;
+    /* Centered on the topbar's full width via absolute positioning, not flex auto-margins --
+       the reset button is the only other element and it's flush right, so there's nothing to
+       center "between" the way the old back-button/title/reset trio did. */
+    #tactusDemo .td-topbar-title {
+      position: absolute; left: 0; right: 0;
+      text-align: center; pointer-events: none;
+      font-size: 16px; font-weight: 500; color: var(--fg);
     }
-    #tactusDemo .td-topbar-title { font-size: 16px; font-weight: 500; color: var(--fg); }
     #tactusDemo .td-topbar-reset {
       height: 32px; border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
@@ -1765,7 +1767,6 @@
 
           <div class="td-screen-main">
             <div class="td-topbar">
-              <span class="td-topbar-back">&lsaquo;</span>
               <span class="td-topbar-title">Untitled</span>
               <button class="td-topbar-reset" id="tdResetBtn" type="button">Reset</button>
             </div>
