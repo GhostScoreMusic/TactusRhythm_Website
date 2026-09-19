@@ -70,8 +70,8 @@
   /* ── Text ──────────────────────────────────────────────────── */
   --fg:           rgba(255,255,255,0.92);
   --fg-2:         rgba(255,255,255,0.68);
-  --fg-3:         rgba(255,255,255,0.42);
-  --fg-4:         rgba(255,255,255,0.20);
+  --fg-3:         rgba(255,255,255,0.46);   /* readable quiet text -- 4.7:1 on --bg, WCAG AA */
+  --fg-4:         rgba(255,255,255,0.20);   /* decorative/disabled only, not for text */
 
   /* ── Dot weights (the product) ─────────────────────────────── */
   --dot-strong:   rgba(255,255,255,1.00);
@@ -152,7 +152,7 @@
 .t-section  { font-family: var(--ui); font-size: 12px; font-weight: 500; letter-spacing: -0.005em; color: var(--fg-3); }
 .t-title    { font-family: var(--ui);   font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
 .t-label    { font-family: var(--ui);   font-size: 13px; font-weight: 400; color: var(--fg-3); }
-.t-helper   { font-family: var(--ui);   font-size: 11px; font-weight: 400; color: var(--fg-4); letter-spacing: 0; }
+.t-helper   { font-family: var(--ui);   font-size: 11px; font-weight: 400; color: var(--fg-3); letter-spacing: 0; }
 
 /* ── Dot animation ──────────────────────────────────────────── */
 /* No glow on the dot itself — the glow lives on the active-bar edge
