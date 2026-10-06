@@ -28,3 +28,4 @@ All pages are static HTML, no build step. Open `index.html` in a browser to prev
 
 - **Walkthrough video:** `assets/video/walkthrough.mp4` is the current cut, replace if you re-record.
 - **Android:** the site currently says Android is coming soon (hero trust line, FAQ, and `privacy.html`). Once Android actually ships, update those three spots, the App Store link and price block, and the `SoftwareApplication` structured data in `index.html` (currently `"operatingSystem": "iOS"` only).
+- 
